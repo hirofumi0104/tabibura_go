@@ -1,0 +1,34 @@
+<h1>下書き一覧</h1>
+
+<%= form_with(url: draft_posts_path, method: :get, local: true) do %>
+  <%= select_tag :itinerary, options_for_select(itinerary.map { |category| [category, category] }, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
+  <%= submit_tag '検索' %>
+<% end %>
+
+
+<% if @posts.any? %>
+<% @posts.each do |post| %>
+  <div>
+    <p><%= image_tag post.main_image, size: "200x200" %></p>
+    <p><%= post.itinerary %></p>
+    <p><%= post.caption %></p>
+    <%= link_to "詳細を見る", post_path(post.id) %>
+    
+    <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
+      <%= f.radio_button :status, 'published' %>
+      <%= f.label :status_published, '公開する' %>
+      
+      <%= f.radio_button :status, 'unpublished' %>
+      <%= f.label :status_unpublished, '非公開にする' %>
+      
+      <%= f.submit '更新' %>
+    <% end %>
+    
+    <%= link_to '編集', edit_post_path(post, from_draft: true) %>
+    <%= link_to '削除', post, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
+    
+  </div>
+<% end %>
+<% else %>
+  <p>下書きはありません。</p>
+<% end %>

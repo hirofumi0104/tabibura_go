@@ -1,0 +1,21 @@
+<h1>いいねした投稿一覧</h1>
+
+<%= form_with(url: nice_posts_path, method: :get, local: true) do %>
+  <%= select_tag :itinerary, options_for_select(itinerary.map { |category| [category, category] }, @itinerary), include_blank: 'すべてのカテゴリ' %>
+  <%= submit_tag '検索' %>
+<% end %>
+
+<% if @favorite_posts.present? %>
+  <ul>
+    <% @favorite_posts.each do |post| %>
+        <p><%= image_tag post.main_image, size: "200x200" %></p>
+        <%= link_to post.user.name, user_path(post.user) %>
+        <p><%= post.itinerary %></p>
+        <p><%= post.caption %></p>
+        <%= link_to '詳細を見る', post_path(post) %>
+        <%= button_to 'いいね一覧から消す', post_favorites_path(post, current_user.favorites.find_by(post: post)), method: :delete, class: 'btn btn-danger' %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>まだいいねした投稿がありません。</p>
+<% end %>

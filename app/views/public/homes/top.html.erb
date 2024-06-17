@@ -1,0 +1,19 @@
+<h1>ようこそ旅ブラ_goへ</h1>
+
+<h3>新着投稿</h3>
+ <% @posts.each do |post| %>
+  <p><%= link_to post.user.name, user_path(post.user.id) %></p>
+  <p>
+    <%= image_tag post.main_image, height: 100, width: 100 if post.main_image.attached? %>
+  </p>
+  <p><%= post.itinerary %></p>
+  <p><%= post.caption %></p>
+  <%= link_to "詳細を見る", post_path(post.id) %>
+ <% end %>
+ 
+ <%= link_to "投稿一覧ページへ", posts_path %>
+ 
+ <% if user_signed_in? %>
+ <%= link_to "投稿ページへ", new_post_path %>
+ <% end %>
+<p>Find me in app/views/public/homes/top.html.erb</p>

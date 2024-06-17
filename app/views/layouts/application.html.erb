@@ -5,12 +5,25 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+    
+    <!-- TurboLinksを無効化 -->
+    <meta name="turbo-visit-control" content="reload">
+    <script src="https://kit.fontawesome.com/c875564d79.js" crossorigin="anonymous"></script>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload', as: 'style', crossorigin: 'anonymous', 'integrity': 'SHA-512-/u3+NrjrsKos5nxJcZfPMAyDjEwobdEz0IfT6qkVasf0tbuzfO4AkVoRMAwQWlD9PjBQ1cJ+ZvFz5yx0g8i92w==' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', as: 'script', crossorigin: 'anonymous', 'integrity': 'SHA-512-U3+NrjrsKos5nxJcZfPMAyDjEwobdEz0IfT6qkVasf0tbuzfO4AkVoRMAwQWlD9PjBQ1cJ+ZvFz5yx0g8i92w==' %>
+</head>
 
   <body>
+    <%= render 'layouts/header' %>
+     
+    <% if notice.present? %>
+      <div class="alert alert-notice"><%= notice %></div>
+    <% end %>
+    
+    <% if alert.present? %>
+      <div class="alert alert-alert"><%= alert %></div>
+    <% end %>
+    
     <%= yield %>
   </body>
 </html>

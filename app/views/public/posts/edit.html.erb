@@ -1,0 +1,56 @@
+<h1>投稿編集ページ</h1>
+<%= form_with(model: @post, local: true) do |form| %>
+
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+      <ul>
+        <% @post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.label :itinerary,"旅先" %>
+  <br>
+  <%= form.select :itinerary, options_for_select(itinerary, selected: @post.itinerary) %>
+  <br>
+  <%= form.label :caption,"旅先説明" %>
+  <br>
+  <%= form.text_area :caption, value: @post.caption %>
+  
+  <h3><%= form.label :main_image,"見出し写真" %></h3>
+  <br>
+  <%= form.file_field :main_image %>
+  
+  <h3></h3>
+  <div id="images">
+    <%= form.fields_for :images do |image_form| %>
+      <div class="nested-fields">
+        <%= image_form.label :image,"写真" %>
+        <br>
+        <%= image_form.file_field :image %>
+        <br>
+        <%= image_form.label :description,"説明" %>
+        <br>
+        <%= image_form.text_area :description %>
+        <%= link_to '削除', '#', class: 'remove_fields' %>
+        <%= image_form.hidden_field :_destroy %>
+      </div>
+    <% end %>
+  </div>
+  
+  <%= link_to 'レポートの追加', '#', class: 'add_fields', data: { id: 'new_image', fields: form.fields_for(:images, Image.new, child_index: 'new_image') { |p| render('public/posts/image_fields', f: p) }.gsub("\n", "") } %>
+  <br>
+  <%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %>
+  <br>
+  <%= form.text_field :tag_list, value: @post.tag_list.split(",").map(&:strip).join(", "), placeholder: "タグをカンマで区切って入力" %>
+  <br>
+
+  
+  <%= form.submit @from_draft ? "投稿しますか" : "更新", name: "submit_post" %>
+  <%= form.submit "下書き保存", name: "save_as_draft" %>
+<% end %>
+
+<%= javascript_pack_tag 'application' %>

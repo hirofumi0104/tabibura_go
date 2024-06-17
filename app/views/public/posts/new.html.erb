@@ -1,0 +1,47 @@
+<h1>投稿ページ</h1>
+<%= form_with(model: @post, local: true) do |form| %>
+
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> 入力をお願いします</h2>
+      <ul>
+        <% @post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.label :itinerary,"旅先" %>
+  <br>
+  <%= form.select :itinerary, options_for_select(itinerary) %>
+  <br>
+  
+  <%= form.label :caption,"旅先説明" %>
+  <br>
+  <%= form.text_area :caption %>
+  
+  <h3><%= form.label :main_image,"見出し写真" %></h3>
+  <br>
+  <%= form.file_field :main_image %>
+  
+  <h3>旅先レポート</h3>
+  <div id="images">
+    <%= form.fields_for :images do |image_form| %>
+      <%= render 'public/posts/image_fields', f: image_form %>
+    <% end %>
+  </div>
+  
+  <%= link_to 'レポート追加', '#', class: 'add_fields', data: { id: 'new_image', fields: form.fields_for(:images, Image.new, child_index: 'new_image') { |p| render('image_fields', f: p) }.gsub("\n", "") } %>
+  <br>
+  
+  <%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %>
+  <br>
+    <%= form.text_field :tag_list, value: @post.tag_list.present? ? @post.tag_list.join(", ") : "", placeholder: "タグをカンマで区切って入力" %>
+  <br>
+  
+  <%= form.submit "投稿", name: "submit_post" %>
+  <%= form.submit "下書きを保存", name: "save_as_draft" %>
+<% end %>
+
+<%= javascript_pack_tag 'application' %>

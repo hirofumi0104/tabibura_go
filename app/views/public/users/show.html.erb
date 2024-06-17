@@ -1,0 +1,75 @@
+<h1>マイページ</h1>
+
+<div>
+  <% if @user.profile_image.attached? %>
+    <%= image_tag rails_blob_path(@user.profile_image, only_path: true), class: "profile-image", size: "100x100" %>
+  <% else %>
+    <p>プロフィール画像がありません</p>
+  <% end %>
+  <%= @user. name %>
+  <%= @user.biography %>
+</div>
+<h5>follows</h5>
+  <p><%= link_to @user.followings.count, user_followings_path(@user) %></p>
+<h5>followers</h5>
+  <p><%= link_to @user.followers.count, user_followers_path(@user) %></p>
+
+<div class="row">
+  <% if current_user != @user %>
+    <td><%= render "layouts/followbtn", user: @user, options: { class: ""} %></td>
+  <% end %>
+</div>
+
+<% if current_user == @user %>
+  <%= link_to "会員情報編集", edit_information_user_path %>
+  <%= link_to "下書き一覧", draft_posts_path %>
+  <%= link_to "いいねした投稿一覧", nice_posts_path %>
+<% end %>
+
+<h2>通知</h2>
+<% if @notifications.any? %>
+  <ul>
+    <% @notifications.each do |notification| %>
+      <li class="<%= 'unread' unless notification.read %>">
+        <%= link_to "投稿「#{notification.post.caption}」に新しいコメントが付きました", mark_as_read_and_destroy_notification_path(notification), method: :patch %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>通知はありません。</p>
+<% end %>
+
+<h2>ユーザーの投稿</h2>
+
+<%= form_with(url: user_path(@user), method: :get, local: true) do %>
+  <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
+  <%= submit_tag '検索' %>
+<% end %>
+
+<% if @posts.any? %>
+<% @posts.each do |post| %>
+  <div>
+    <p><%= image_tag post.main_image, size: "200x200" %></p>
+    <h4><%= post.itinerary %></h4>
+    <p><%= post.caption %></p>
+    
+    <% if current_user == post.user %>
+      <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
+        <%= f.radio_button :status, 'published' %>
+        <%= f.label :status_published, '公開する' %>
+        
+        <%= f.radio_button :status, 'unpublished' %>
+        <%= f.label :status_unpublished, '非公開にする' %>
+        
+        <%= f.submit '更新' %>
+      <% end %>
+      <%= link_to '編集', edit_post_path(post), class: 'btn btn-primary' %>
+      <%= link_to '削除', post, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
+    <% end %>
+    <%= render partial: 'layouts/nice', locals: { post: post } %><br>
+    <%= link_to "詳細を見る", post_path(post.id) %>
+  </div>
+<% end %>
+<% else %>
+  <p>投稿はありません。</p>
+<% end %>

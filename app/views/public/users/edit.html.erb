@@ -1,0 +1,89 @@
+<head>
+  <!-- TurboLinksを無効化 -->
+  <meta name="turbo-visit-control" content="reload">
+  <!-- その他の設定 -->
+</head>
+
+<h1>プロフィール編集</h1>
+
+<%= form_for([:public, @user], url: update_information_user_path(@user), html: { method: :patch, multipart: true }) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "ユーザーネーム" %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email, "メールアドレス" %><br>
+    <%= f.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= f.label :biography, "自己紹介入力欄" %><br>
+    <%= f.text_area :biography %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :profile_image, "プロフィール画像" %><br>
+    <%= f.file_field :profile_image %>
+  </div>
+  
+ <!-- 退会確認用のチェックボックス -->
+  <div class="field" id="withdrawal-checkbox">
+    <%= f.check_box :withdrawal_confirmation, id: 'withdrawal_confirmation' %>
+    <%= f.label :withdrawal_confirmation, "退会する場合はこちらのボタンをチェックにしてください", for: 'withdrawal_confirmation' %>
+  </div>
+
+  <!-- 退会ボタン -->
+  <div class="field" id="withdrawal-button" style="display: none;">
+    <%= link_to "退会する", unsubscribe_user_path(@user), method: :delete, data: { confirm: "本当に退会しますか？" }, class: 'btn btn-danger' %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit "更新" %>
+  </div>
+<% end %>
+
+<%= link_to "戻る", :back %>
+
+<!--退会チェックボタンの監視Java-->
+<script>
+document.addEventListener("turbolinks:load", function() {
+  const withdrawalCheckbox = document.querySelector('#withdrawal_confirmation');
+  const withdrawalButton = document.querySelector('#withdrawal-button');
+
+  if (!withdrawalCheckbox || !withdrawalButton) {
+    console.error('退会チェックボックスまたは退会ボタンが見つかりません。');
+    return;
+  }
+
+  console.log('退会チェックボックスと退会ボタンが見つかりました。');
+
+  // 初期表示時にチェック状態を確認して退会ボタンを表示するか判定
+  if (withdrawalCheckbox.checked) {
+    withdrawalButton.style.display = 'block';
+    console.log('退会チェックボックスは初期表示時にチェックされています。');
+  }
+
+  // チェックボックスの変更イベントを監視
+  withdrawalCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+      withdrawalButton.style.display = 'block';
+      console.log('退会チェックボックスがチェックされました。');
+    } else {
+      withdrawalButton.style.display = 'none';
+      console.log('退会チェックボックスのチェックが外されました。');
+    }
+  });
+});
+</script>

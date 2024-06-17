@@ -1,0 +1,13 @@
+<!--投稿画面のrender-->
+<div class="nested-fields">
+  <%= f.label :image,"写真" %>
+  <br>
+  <%= f.file_field :image %>
+  <br>
+  <%= f.label :description,"説明" %>
+  <br>
+  <%= f.text_area :description %>
+
+  <%= link_to '削除', '#', class: 'remove_fields' %>
+  <%= f.hidden_field :_destroy %>
+</div>

@@ -1,0 +1,51 @@
+<h1>投稿一覧ページ</h1>
+
+<%= form_with(url: posts_path, method: :get, local: true) do %>
+  <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
+  <%= submit_tag '検索' %>
+<% end %>
+
+<% if @posts.any? %>
+  <ul>
+    <% @posts.each do |post| %>
+      <div>
+        <p><%= image_tag post.main_image, size: "200x200" %></p>
+        <p><%= link_to post.user.name, user_path(post.user.id) %></p>
+        <p><%= post.itinerary %></p>
+        <p><%= post.caption %></p>
+        <%= render partial: 'layouts/nice', locals: { post: post } %><br>
+        
+        <div class="row">
+          <%= render "layouts/followbtn", user: post.user, options: { class: "" } %>
+        </div>
+
+        
+        <%= link_to "詳細を見る", post_path(post.id) %>
+      </div>
+    <% end %>
+  </ul>
+<% else %>
+  <p>投稿はありません。</p>
+<% end %>
+
+<% if @total_posts && @posts_per_page && @total_posts > @posts_per_page %>
+  <div class="pagination">
+    <% total_pages = (@total_posts.to_f / @posts_per_page).ceil %>
+
+    <% if @page > 1 %>
+      <%= link_to '前へ', posts_path(request.query_parameters.merge(page: @page - 1)) %>
+    <% end %>
+
+    <% (1..total_pages).each do |page| %>
+      <% if page == @page %>
+        <strong><%= page %></strong>
+      <% else %>
+        <%= link_to page, posts_path(request.query_parameters.merge(page: page)) %>
+      <% end %>
+    <% end %>
+
+    <% if @page < total_pages %>
+      <%= link_to '次へ', posts_path(request.query_parameters.merge(page: @page + 1)) %>
+    <% end %>
+  </div>
+<% end %>

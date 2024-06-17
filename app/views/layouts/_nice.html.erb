@@ -1,0 +1,13 @@
+<% unless current_user == post.user %>
+  <% if current_user.favorites.exists?(post: post) %>
+    <%= link_to post_favorites_path(post, current_user.favorites.find_by(post: post)), method: :delete, class: 'btn' do %>
+      <i class="fas fa-heart" style="color: red;"></i>
+      <%= post.favorites.count %>
+    <% end %>
+  <% else %>
+    <%= link_to post_favorites_path(post_id: post.id), method: :post, class: 'btn' do %>
+       <i class="far fa-heart"></i> 
+       <%= post.favorites.count %>
+    <% end %>
+  <% end %>
+<% end %>
