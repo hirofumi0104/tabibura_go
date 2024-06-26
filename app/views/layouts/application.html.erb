@@ -13,7 +13,30 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', as: 'script', crossorigin: 'anonymous', 'integrity': 'SHA-512-U3+NrjrsKos5nxJcZfPMAyDjEwobdEz0IfT6qkVasf0tbuzfO4AkVoRMAwQWlD9PjBQ1cJ+ZvFz5yx0g8i92w==' %>
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     
-</head>
+    <script>
+      async function initMap() {
+        // サーバーからAPIキーを取得
+        const response = await fetch('/maps-api-key');
+        const apiKey = await response.text();
+
+        // 取得したAPIキーを使用してスクリプトを動的にロード
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=loadMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+
+      function loadMap() {
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 8
+        });
+      }
+
+      window.onload = initMap;
+    </script>
+  </head>
 
   <body>
     <%= render 'layouts/header' %>
