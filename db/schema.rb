@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_17_114659) do
+ActiveRecord::Schema.define(version: 2024_06_24_173544) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -77,6 +77,16 @@ ActiveRecord::Schema.define(version: 2024_06_17_114659) do
     t.index ["post_id"], name: "index_images_on_post_id"
   end
 
+  create_table "maps", force: :cascade do |t|
+    t.integer "post_id", null: false
+    t.string "address"
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_id"], name: "index_maps_on_post_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "post_id", null: false
@@ -106,6 +116,17 @@ ActiveRecord::Schema.define(version: 2024_06_17_114659) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.text "reason"
+    t.string "reportable_type", null: false
+    t.integer "reportable_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable"
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
   create_table "taggings", force: :cascade do |t|
     t.integer "post_id", null: false
     t.integer "tag_id", null: false
@@ -132,6 +153,7 @@ ActiveRecord::Schema.define(version: 2024_06_17_114659) do
     t.string "profile_image"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_active"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -141,9 +163,11 @@ ActiveRecord::Schema.define(version: 2024_06_17_114659) do
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "images", "posts"
+  add_foreign_key "maps", "posts"
   add_foreign_key "notifications", "comments"
   add_foreign_key "notifications", "posts"
   add_foreign_key "notifications", "users"
+  add_foreign_key "reports", "users"
   add_foreign_key "taggings", "posts"
   add_foreign_key "taggings", "tags"
 end

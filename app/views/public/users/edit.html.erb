@@ -1,60 +1,63 @@
-<head>
-  <!-- TurboLinksを無効化 -->
-  <meta name="turbo-visit-control" content="reload">
-  <!-- その他の設定 -->
-</head>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card mt-4">
+        <div class="card-body">
+          <h1 class="text-center mb-4">プロフィール編集</h1>
 
-<h1>プロフィール編集</h1>
+          <%= form_for([:public, @user], url: update_information_user_path(@user), html: { method: :patch, multipart: true }) do |f| %>
+            <% if @user.errors.any? %>
+              <div id="error_explanation" class="alert alert-danger">
+                <h2><%= pluralize(@user.errors.count, "エラー") %>があります:</h2>
+                <ul>
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
 
-<%= form_for([:public, @user], url: update_information_user_path(@user), html: { method: :patch, multipart: true }) do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+            <div class="form-group">
+              <%= f.label :name, "ユーザーネーム" %>
+              <%= f.text_field :name, class: 'form-control', placeholder: 'ユーザーネームを入力してください' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :email, "メールアドレス" %>
+              <%= f.email_field :email, class: 'form-control', placeholder: 'メールアドレスを入力してください' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :biography, "自己紹介" %>
+              <%= f.text_area :biography, class: 'form-control', placeholder: '自己紹介を入力してください', rows: 4 %>
+            </div>
+            
+            <div class="form-group">
+              <%= f.label :profile_image, "プロフィール画像" %>
+              <%= f.file_field :profile_image, class: 'form-control-file' %>
+            </div>
+            
+            <!-- 退会確認用のチェックボックス -->
+            <div class="form-check mb-3">
+              <%= f.check_box :withdrawal_confirmation, id: 'withdrawal_confirmation', class: 'form-check-input' %>
+              <%= f.label :withdrawal_confirmation, "退会する場合はこちらのボタンをチェックにしてください", for: 'withdrawal_confirmation', class: 'form-check-label' %>
+            </div>
+
+            <!-- 退会ボタン -->
+            <div id="withdrawal-button" class="mb-3" style="display: none;">
+              <%= link_to "退会する", unsubscribe_user_path(@user), method: :delete, data: { confirm: "本当に退会しますか？" }, class: 'btn btn-danger' %>
+            </div>
+            
+            <div class="text-center">
+              <%= f.submit "更新", class: 'btn btn-primary mr-2' %>
+              <%= link_to "戻る", :back, class: 'btn btn-secondary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :name, "ユーザーネーム" %><br>
-    <%= f.text_field :name %>
   </div>
-
-  <div class="field">
-    <%= f.label :email, "メールアドレス" %><br>
-    <%= f.email_field :email %>
-  </div>
-
-  <div class="field">
-    <%= f.label :biography, "自己紹介入力欄" %><br>
-    <%= f.text_area :biography %>
-  </div>
-  
-  <div class="field">
-    <%= f.label :profile_image, "プロフィール画像" %><br>
-    <%= f.file_field :profile_image %>
-  </div>
-  
- <!-- 退会確認用のチェックボックス -->
-  <div class="field" id="withdrawal-checkbox">
-    <%= f.check_box :withdrawal_confirmation, id: 'withdrawal_confirmation' %>
-    <%= f.label :withdrawal_confirmation, "退会する場合はこちらのボタンをチェックにしてください", for: 'withdrawal_confirmation' %>
-  </div>
-
-  <!-- 退会ボタン -->
-  <div class="field" id="withdrawal-button" style="display: none;">
-    <%= link_to "退会する", unsubscribe_user_path(@user), method: :delete, data: { confirm: "本当に退会しますか？" }, class: 'btn btn-danger' %>
-  </div>
-  
-  <div class="actions">
-    <%= f.submit "更新" %>
-  </div>
-<% end %>
-
-<%= link_to "戻る", :back %>
+</div>
 
 <!--退会チェックボタンの監視Java-->
 <script>

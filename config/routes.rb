@@ -1,15 +1,31 @@
 Rails.application.routes.draw do
 
- 
   get 'comments/create'
   get 'comments/destroy'
+  resources :reports, only: [:create] do
+  member do
+      patch 'cancel_report', to: 'reports#cancel_report'
+    end
+  end
+  
   devise_for :admin, skip: [:registrations, :passwords] , controllers: {
   sessions: "admin/sessions"
 }
 
   namespace :admin do
-    get 'top' => 'homes#top', as: 'top'
+      get 'top' => 'homes#top', as: 'top'
+      resources :users, only: [:show, :index] do
+        member do
+          get 'posts'
+          patch :activate
+          patch :deactivate
+        end
+      end
+      resources :reports, only: [:top] 
   end
+  
+  delete 'admin/reports/:id/delete_reported_post', to: 'reports#delete_reported_post', as: 'admin_delete_reported_post'
+  patch 'reports/:id/cancel_comment_report', to: 'reports#cancel_comment_report', as: 'cancel_comment_report'
   
   devise_for :users, controllers: {
   registrations: "public/registrations",
@@ -25,7 +41,7 @@ Rails.application.routes.draw do
       root 'homes#top'
       get 'homes/about'
       # userページ
-      resources :users, only: [:show, :edit, :update] do
+      resources :users, only: [:show, :index, :edit, :update] do
       # フォロー機能
        resource :relationships, only: [:create, :destroy]
       	get "followings" => "relationships#followings", as: "followings"
@@ -54,6 +70,7 @@ Rails.application.routes.draw do
       resources :notifications, only: [] do
       member do
         patch :mark_as_read_and_destroy
+        patch 'send_unpublish_notification'
       end
     end
 

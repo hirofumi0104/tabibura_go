@@ -1,8 +1,39 @@
-<h1><%= @user.name %>のフォロー/フォロワー</h1>
-<ul>
-  <% @users.each do |user| %>
-    <li>
-      <%= link_to user.name, user %>
-    </li>
-  <% end %>
-</ul>
+<div class="card">
+  <div class="card-header text-center">
+    <h1 class="my-4"><%= @user.name %>の<%= action_name == 'followers' ? 'フォロワー' : 'フォロー中' %></h1>
+  </div>
+
+  <div style="overflow-y: auto; max-height: 400px;"> <!-- スクロール可能な領域 -->
+    <% if @users.any? %>
+      <ul class="list-group list-group-flush">
+        <% @users.each do |user| %>
+          <li class="list-group-item d-flex justify-content-center align-items-center">
+            <div class="d-flex align-items-center">
+              <% if user.profile_image.present? %>
+                <%= image_tag(user.profile_image, alt: user.name, class: "rounded-circle mr-3", width: "70", height: "70") %>
+              <% else %>
+                <%= image_tag("User.png", class: "rounded-circle mr-3", width: "70", height: "70", alt: "プロフィール画像がありません") %>
+              <% end %>
+              <%= link_to user.name, user, class: "text-decoration-none text-dark font-weight-bold" %>
+            </div>
+            
+            <div class="d-flex flex-column align-items-center ml-auto">
+              <%= link_to user, class: "btn btn-primary btn-sm mb-2", title: "プロフィールを見る" do %>
+                <i class="fas fa-user fa-lg mb-2"></i>
+                <span>プロフィール</span>
+              <% end %>
+              
+              <% unless current_user.nil? || current_user.guest? %>
+                <%= render "layouts/followbtn", user: user, options: { class: "btn-sm" } %>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="card-body text-center">
+        <p class="card-text">フォローしているユーザーまたはフォロワーがいません。</p>
+      </div>
+    <% end %>
+  </div>
+</div>

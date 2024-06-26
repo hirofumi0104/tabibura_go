@@ -1,47 +1,173 @@
-<h1>投稿ページ</h1>
-<%= form_with(model: @post, local: true) do |form| %>
+<div class="container mt-4">
+  <h1 class="text-center">投稿ページ</h1>
 
-  <% if @post.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@post.errors.count, "error") %> 入力をお願いします</h2>
-      <ul>
-        <% @post.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+  <%= form_with(model: @post, local: true) do |form| %>
+    <% if @post.errors.any? %>
+      <div id="error_explanation" class="alert alert-danger">
+        <h2><%= pluralize(@post.errors.count, "error") %> 入力をお願いします</h2>
+        <ul>
+          <% @post.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <h3><%= form.label :main_image, "見出し写真" %></h3>
+        <%= form.file_field :main_image, class: 'form-control-file' %>
+      </div>
+
+      <div class="form-group col-md-6">
+        <h5><%= form.label :itinerary, "旅先" %></h5>
+        <%= form.select :itinerary, options_for_select(itinerary), { prompt: "選択してください" }, id: 'itinerary_select', class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <h5><%= form.label :caption, "旅先説明" %></h5>
+      <%= form.text_area :caption, class: 'form-control', rows: 6 %>
+    </div>
+
+    <div class="form-group">
+      <h3>旅先レポート</h3>
+      <div id="images">
+        <%= form.fields_for :images do |image_form| %>
+          <%= render 'public/posts/image_fields', f: image_form %>
         <% end %>
-      </ul>
+      </div>
+      <%= link_to 'レポート追加', '#', class: 'btn btn-outline-secondary mt-2 add_fields', data: { id: 'new_image', fields: form.fields_for(:images, Image.new, child_index: 'new_image') { |p| render('image_fields', f: p) }.gsub("\n", "") } %>
+    </div>
+
+    <div class="form-group">
+      <h5><%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %></h5>
+      <%= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'form-control' %>
+    </div>
+    
+    <div class="form-group">
+     <h5><label for="location">場所を検索:</label></h5>
+      <div class="input-group">
+        <input type="text" id="location" class="form-control">
+        <div class="input-group-append">
+          <button type="button" onclick="searchLocation()" class="btn btn-primary">検索</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="map" style="height: 500px;" class="mb-3"></div>
+
+    <%= form.fields_for :map, @post.map || @post.build_map do |map| %>
+      <%= map.hidden_field :latitude, id: 'post_map_latitude' %>
+      <%= map.hidden_field :longitude, id: 'post_map_longitude' %>
+    <% end %>
+
+    <div class="text-center mt-4">
+      <%= button_tag(type: 'submit', name: 'submit_post', class: 'btn btn-primary mr-2') do %>
+        <i class="fas fa-paper-plane"></i> 投稿
+      <% end %>
+      <%= button_tag(type: 'submit', name: 'save_as_draft', class: 'btn btn-secondary') do %>
+        <i class="fas fa-save"></i> 下書きを保存
+      <% end %>
     </div>
   <% end %>
+</div>
 
-  <%= form.label :itinerary,"旅先" %>
-  <br>
-  <%= form.select :itinerary, options_for_select(itinerary) %>
-  <br>
-  
-  <%= form.label :caption,"旅先説明" %>
-  <br>
-  <%= form.text_area :caption %>
-  
-  <h3><%= form.label :main_image,"見出し写真" %></h3>
-  <br>
-  <%= form.file_field :main_image %>
-  
-  <h3>旅先レポート</h3>
-  <div id="images">
-    <%= form.fields_for :images do |image_form| %>
-      <%= render 'public/posts/image_fields', f: image_form %>
-    <% end %>
-  </div>
-  
-  <%= link_to 'レポート追加', '#', class: 'add_fields', data: { id: 'new_image', fields: form.fields_for(:images, Image.new, child_index: 'new_image') { |p| render('image_fields', f: p) }.gsub("\n", "") } %>
-  <br>
-  
-  <%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %>
-  <br>
-    <%= form.text_field :tag_list, value: @post.tag_list.present? ? @post.tag_list.join(", ") : "", placeholder: "タグをカンマで区切って入力" %>
-  <br>
-  
-  <%= form.submit "投稿", name: "submit_post" %>
-  <%= form.submit "下書きを保存", name: "save_as_draft" %>
-<% end %>
 
+<script>
+var map;
+var markers = [];
+
+function initMap() {
+  var initialPosition = { lat: 35.6895, lng: 139.6917 }; // 初期位置（東京）
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: initialPosition,
+    zoom: 8
+  });
+
+  // マップをクリックしたときのイベントリスナーを設定
+  map.addListener('click', function(event) {
+    addMarker(event.latLng); // クリックした位置にマーカーを追加
+  });
+
+  // 旅先カテゴリの選択肢が変更された時のイベントリスナー
+  document.getElementById('itinerary_select').addEventListener('change', function() {
+    var selectedPrefecture = this.value;
+    geocodeLocation(selectedPrefecture);
+  });
+}
+
+function geocodeLocation(locationName) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: locationName + ', Japan' }, function(results, status) {
+    if (status === 'OK' && results[0]) {
+      var location = results[0].geometry.location;
+      map.setCenter(location);
+      addMarker(location);
+    } else {
+      alert('位置情報を取得できませんでした: ' + status);
+    }
+  });
+}
+
+function addMarker(location) {
+  var marker = new google.maps.Marker({
+    position: location,
+    map: map,
+    draggable: true
+  });
+
+  markers.push(marker);
+
+  // マーカーのドラッグ終了時のイベントリスナー
+  marker.addListener('dragend', function() {
+    updateMarkersInput();
+  });
+
+  // マーカーをクリックしたときのイベントリスナー
+  marker.addListener('click', function() {
+    deleteMarker(marker);
+  });
+
+  updateMarkersInput();
+}
+
+function deleteMarker(marker) {
+  marker.setMap(null); // マップからマーカーを削除
+  markers = markers.filter(function(m) {
+    return m !== marker;
+  });
+  updateMarkersInput(); // 隠しフィールドを更新
+}
+
+function updateMarkersInput() {
+  var latitudes = markers.map(function(m) {
+    return m.getPosition().lat();
+  }).join(',');
+  var longitudes = markers.map(function(m) {
+    return m.getPosition().lng();
+  }).join(',');
+  
+ // 隠しフィールドを更新する
+  document.getElementById('post_map_latitude').value = latitudes;
+  document.getElementById('post_map_longitude').value = longitudes;
+}
+
+// 検索ボタンが押されたときの処理
+function searchLocation() {
+  var address = document.getElementById('location').value;
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ 'address': address }, function(results, status) {
+    if (status === 'OK' && results[0]) {
+      var location = results[0].geometry.location;
+      map.setCenter(location);
+      addMarker(location);
+    } else {
+      alert('位置情報を取得できませんでした: ' + status);
+    }
+  });
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap"async defer></script>
 <%= javascript_pack_tag 'application' %>

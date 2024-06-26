@@ -1,0 +1,9 @@
+<%= form_with(model: Report.new, url: reports_path, class: 'report-form', id: 'reportForm') do |form| %>
+  <%= form.hidden_field :reportable_id, value: reportable.id %>
+  <%= form.hidden_field :reportable_type, value: reportable.class.to_s %>
+  <div class="form-group">
+    <%= form.label :reason, "通報" %>
+    <%= form.text_area :reason, placeholder: "ここに理由を書いてください", class: 'form-control', rows: 3, id: 'reasonField', required: true %>
+  </div>
+  <%= form.submit "通報する", class: 'btn btn-primary' %>
+<% end %>

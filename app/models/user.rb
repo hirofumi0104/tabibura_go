@@ -2,12 +2,14 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         authentication_keys: [:name]
          
   has_many :posts, dependent: :destroy
   has_many :favorites, dependent: :destroy
   has_many :favorite_posts, through: :favorites, source: :post
   has_many :notifications, dependent: :destroy
+  has_many :reports, dependent: :destroy 
   has_one_attached :profile_image
   attr_accessor :withdrawal_confirmation
   
@@ -34,6 +36,14 @@ class User < ApplicationRecord
   # 指定したユーザーをフォローしているかどうかを判定
   def following?(user)
     followings.include?(user)
+  end
+
+  def active_for_authentication?
+    super && is_active
+  end
+
+  def inactive_message
+    is_active ? super : :inactive
   end
   
   def guest?

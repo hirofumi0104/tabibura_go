@@ -1,0 +1,30 @@
+// aboutページのレイアウト
+
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.about-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #000000;
+  margin-top: 20px; /* 上部の余白を追加 */
+}
+
+.about-text {
+  font-size: 1.1rem;
+  line-height: 1.8; /* 行間を広く設定 */
+  text-align: justify;
+  margin-bottom: 20px; /* 段落間の余白を追加 */
+}
+
+.about-highlight {
+  color: #28a745;
+}
+

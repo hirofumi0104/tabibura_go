@@ -13,3 +13,25 @@
  *= require_tree .
  *= require_self
  */
+
+@import "about";
+@import "top";
+
+html {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+header {
+  width: 100%;
+  background: #ccdd33;
+}
+footer {
+  position: sticky;
+  top: 100vh;
+  width: 100%;
+  background: #44aa33;
+}

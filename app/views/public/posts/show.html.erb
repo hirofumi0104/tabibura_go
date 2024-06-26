@@ -1,43 +1,153 @@
-<h2>投稿詳細</h2>
-<p><%= link_to @post.user.name, user_path(@post.user.id) %></p>
-<div class="row">
-  <%= render "layouts/followbtn", user: @post.user, options: { class: "" } %>
-</div>
-<p><%= image_tag @post.main_image, size: "200x200" %></p>
-<p><%= @post.itinerary %></p>
-<p><%= @post.caption %></p>
-<p><strong>タグ:</strong>
-  <% @post.tags.each do |tag| %>
-    <%= link_to "##{tag.name}", tag_path(tag.name) %>
-  <% end %>
-</p>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h2>投稿詳細</h2>
 
-<ul>
-  <% @post.images.each do |image| %>
-      <%= image_tag image.image, height: 300, width: 300 if image.image.attached? %>
-      <p><%= image.description %></p>
-  <% end %>
-</ul>
+      <p><%= image_tag @post.main_image, style: " object-fit: cover; width: 100%; max-height: 390px;", class: "mb-3 rounded" if @post.main_image.attached? %></p>
 
-<%= render partial: 'layouts/nice', locals: { post: @post } %><br>
- 
-<!-- コメントフォーム -->
-<%= render partial: 'public/comments/comments_form', locals: { post: @post } %>
+      
+      <h4><strong>旅先:</strong> <%= @post.itinerary %></h4>
+      <p><strong>説明:</strong> <%= @post.caption %></p>
 
-<h3>コメント一覧</h3>
-<% if @post.comments.any? %>
-  <% @post.comments.each do |comment| %>
-    <div>
-      <strong><%= comment.user.name %>:</strong>
-      <%= comment.content %>
-      <% if comment.user == current_user %>
-        <%= link_to '削除', post_comment_path(@post, comment), method: :delete %>
-      <% end %>
+      <hr> <!-- 区切り線 -->
+      <div class="row">
+        <% @post.images.each do |image| %>
+          <div class="col-md-12 mb-3">
+            <div class="card shadow-sm">
+              <%= image_tag image.image, style: " object-fit: cover; width: 100%; max-height: 390px;", class: "card-img-top rounded" if image.image.attached? %>
+              <div class="card-body">
+                <p class="card-text"><%= image.description %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div id="map" style="height: 500px;" class="mb-3"></div>
+      
+      <div class="card mt-4 shadow-sm">
+        <div class="card-body">
+          <h3>コメント一覧</h3>
+          <% if @post.comments.any? %>
+            <% @post.comments.each do |comment| %>
+              <div class="media mb-5">
+                <div class="d-flex align-items-center mr-3">
+                  <% if comment.user && comment.user.profile_image.attached? %>
+                    <%= image_tag comment.user.profile_image, style: "width: 50px; height: 50px;", class: "card-img-top rounded-circle" %>
+                  <% else %>
+                    <%= image_tag "User.png", class: "rounded-circle", style: "width: 50px; height: 50px;", alt: "デフォルトアイコン" %>
+                  <% end %>
+                  <span class="ml-3"><%= comment.user.name %></span>
+                </div>
+              </div>
+              <p class="ml-5  mt-3"><%= comment.content %></p>
+              <% if @post.comments.any? %>
+                <div class="d-flex justify-content-end mt-4">
+                  <% if current_user || current_admin %>
+                    <%= link_to 'コメント削除', post_comment_path(@post, @post.comments.first), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'text-danger' %>
+                  <% end %>
+                </div>
+              <% end %>
+              <% unless current_admin %>
+                <div class="mt-4">
+                  <%= render partial: 'layouts/report', locals: { reportable: @post } %>
+                </div>
+              <% end %>
+              <hr> <!-- 区切り線 -->
+            <% end %>
+          <% else %>
+            <p>まだコメントがありません。</p>
+          <% end %>
+    
+
+
+          <!-- コメントフォーム -->
+          <% unless current_admin %>
+            <%= render partial: 'public/comments/comments_form', locals: { post: @post } %>
+          <% end %>
+        </div>
+      </div>
     </div>
+
+    <!-- 右側: サイドバー -->
+    <div class="col-md-4">
+      <div class="sticky-top">
+        <!-- 投稿者情報、いいねボタン、フォローボタン -->
+        <div class="card mb-4 shadow-sm">
+          <% if @post.user.profile_image.attached? %>
+            <%= image_tag @post.user.profile_image, style: "width: 200px; height: 200px;", class: "card-img-top rounded-circle my-4  ml-5" %>
+          <% else %>
+            <%= image_tag "User.png", class: "ml-5 my-4  rounded-circle", style: "width: 200px; height: 200px;", alt: "デフォルトアイコン" %>
+          <% end %>
+          <div class="card-body">
+            <h4 class="card-title ml-5">投稿者: <%= link_to @post.user.name, user_path(@post.user.id) %></h4>
+            <div class="d-flex align-items-center">
+              <div class="ml-3">
+                <%= render partial: 'layouts/nice', locals: { post: @post } %>
+              </div>
+              <div class="ml-3">
+                <%= render "layouts/followbtn", user: @post.user, options: { class: "text-center" } %>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5>タグ</h5>
+            <% @post.tags.each do |tag| %>
+              <%= link_to "##{tag.name}", tag_path(tag.name), class: "badge badge-info mr-1" %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- 投稿通報 -->
+        <% unless current_admin %>
+          <div class="card mt-4 shadow-sm">
+            <div class="card-body">
+              <h2>投稿を通報</h2>
+              <%= render partial: 'layouts/report', locals: { reportable: @post } %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- 戻るボタン -->
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <%= link_to '戻る', params[:referrer] || user_path(@post.user), class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// Google Maps APIを使用して地図を表示する関数
+function initMap() {
+  var mapElement = document.getElementById('map');
+  var initialPosition = { lat: 35.6895, lng: 139.6917 }; // 東京の初期位置
+
+  var centerPosition;
+  <% if @post.map.present? && @post.map.latitude.present? && @post.map.longitude.present? %>
+    centerPosition = { lat: <%= @post.map.latitude %>, lng: <%= @post.map.longitude %> };
+  <% else %>
+    centerPosition = initialPosition;
   <% end %>
-<% else %>
-  <p>まだコメントがありません。</p>
-<% end %>
 
+  var map = new google.maps.Map(mapElement, {
+    center: centerPosition,
+    zoom: 10
+  });
+  
+  // マーカーを追加
+  var marker = new google.maps.Marker({
+    position: centerPosition,
+    map: map,
+    draggable: false
+  });
+}
 
-<%= link_to 'Back', params[:referrer] || user_path(@post.user) %>
+</script>
+<%= debug @post %>
+<%= debug @post.map %>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap"async defer></script>

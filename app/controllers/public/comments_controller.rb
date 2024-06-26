@@ -7,15 +7,14 @@ class Public::CommentsController < ApplicationController
 
     if @comment.save
       redirect_to post_path(@post), notice: "コメントしました"
-    else
-      redirect_to post_path(@post), alert: "コメントに失敗しました"
     end
   end
 
   def destroy
     @comment = Comment.find(params[:id])
+    @post = @comment.post
     @comment.destroy
-    redirect_to post_path(@post), notice: "コメントを削除しました"
+    redirect_to post_path(@post), notice: 'コメントを削除しました。'
   end
 
   private

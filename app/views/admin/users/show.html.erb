@@ -1,0 +1,49 @@
+<h1>ユーザーのマイページ</h1>
+
+<div>
+  <% if @user.profile_image.attached? %>
+    <%= image_tag rails_blob_path(@user.profile_image, only_path: true), class: "profile-image", size: "100x100" %>
+  <% else %>
+    <p>プロフィール画像がありません</p>
+  <% end %>
+  <%= @user. name %>
+  <%= @user.biography %>
+</div>
+
+<h2>ユーザーの投稿</h2>
+
+<%= form_with(url: user_path(@user), method: :get, local: true) do %>
+  <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
+  <%= submit_tag '検索' %>
+<% end %>
+
+<% if @posts.any? %>
+<% @posts.each do |post| %>
+  <div>
+    <p><%= image_tag post.main_image, size: "200x200" %></p>
+    <h4><%= post.itinerary %></h4>
+    <p><%= post.caption %></p>
+    
+   
+      <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
+          <%= f.radio_button :status, 'published' %>
+          <%= f.label :status_published, '公開する' %>
+          
+          <%= f.radio_button :status, 'unpublished' %>
+          <%= f.label :status_unpublished, '非公開にする' %>
+          
+          <%= f.submit '更新' %>
+      <% end %>
+    
+      <%= link_to "詳細を見る", post_path(post.id) %>
+      
+      <!--レポートでアクションを記述しています。-->
+      <%= form_for post, url:  admin_delete_reported_post_path(post.id), method: :delete, data: { confirm: '本当に削除しますか？' } do |f| %>
+       <%= f.submit '投稿を削除する', class: 'btn btn-danger btn-sm' %>
+      <% end %>
+     
+  </div>
+<% end %>
+<% else %>
+  <p>投稿はありません。</p>
+<% end %>

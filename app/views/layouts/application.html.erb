@@ -11,6 +11,8 @@
     <script src="https://kit.fontawesome.com/c875564d79.js" crossorigin="anonymous"></script>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload', as: 'style', crossorigin: 'anonymous', 'integrity': 'SHA-512-/u3+NrjrsKos5nxJcZfPMAyDjEwobdEz0IfT6qkVasf0tbuzfO4AkVoRMAwQWlD9PjBQ1cJ+ZvFz5yx0g8i92w==' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', as: 'script', crossorigin: 'anonymous', 'integrity': 'SHA-512-U3+NrjrsKos5nxJcZfPMAyDjEwobdEz0IfT6qkVasf0tbuzfO4AkVoRMAwQWlD9PjBQ1cJ+ZvFz5yx0g8i92w==' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    
 </head>
 
   <body>
@@ -25,5 +27,7 @@
     <% end %>
     
     <%= yield %>
+    
+    <%= render 'layouts/footer' %>
   </body>
 </html>

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Public::SessionsController < Devise::SessionsController
+  before_action :configure_sign_in_params, only: [:create]
   
   def guest_login
     guest = User.find_or_create_by(email: 'guest@example.com') do |user|
@@ -11,7 +12,12 @@ class Public::SessionsController < Devise::SessionsController
     sign_in guest
     redirect_to root_path, notice: 'ゲストユーザーとしてログインしました。'
   end
+  
+  private
 
+  def configure_sign_in_params
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:name])
+  end
   
   # before_action :configure_sign_in_params, only: [:create]
   

@@ -1,75 +1,164 @@
-<h1>マイページ</h1>
+<div class="container mt-4">
+  <h1>マイページ</h1>
 
-<div>
-  <% if @user.profile_image.attached? %>
-    <%= image_tag rails_blob_path(@user.profile_image, only_path: true), class: "profile-image", size: "100x100" %>
-  <% else %>
-    <p>プロフィール画像がありません</p>
-  <% end %>
-  <%= @user. name %>
-  <%= @user.biography %>
-</div>
-<h5>follows</h5>
-  <p><%= link_to @user.followings.count, user_followings_path(@user) %></p>
-<h5>followers</h5>
-  <p><%= link_to @user.followers.count, user_followers_path(@user) %></p>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <% if @user.profile_image.attached? %>
+            <%= image_tag rails_blob_path(@user.profile_image, only_path: true), class: "profile-image rounded-circle", size: "100x100" %>
+          <% else %>
+            <%= image_tag "User.png", class: "profile-image rounded-circle", size: "100x100", alt: "プロフィール画像がありません" %>
+          <% end %>
+          <h4 class="mt-3"><%= @user.name %></h4>
+          <p><%= @user.biography %></p>
 
-<div class="row">
-  <% if current_user != @user %>
-    <td><%= render "layouts/followbtn", user: @user, options: { class: ""} %></td>
-  <% end %>
-</div>
+          <% unless current_user.guest? %>
+            <div class="mt-4">
+              <h5>フォロー</h5>
+              <p><%= link_to @user.followings.count, user_followings_path(@user) %></p>
+              <h5>フォロワー</h5>
+              <p><%= link_to @user.followers.count, user_followers_path(@user) %></p>
+            </div>
+          <% end %>
 
-<% if current_user == @user %>
-  <%= link_to "会員情報編集", edit_information_user_path %>
-  <%= link_to "下書き一覧", draft_posts_path %>
-  <%= link_to "いいねした投稿一覧", nice_posts_path %>
-<% end %>
+          <% unless current_user.nil? || current_user.guest? %>
+            <div class="mt-4">
+              <%= render "layouts/followbtn", user: @user, options: { class: "" } %>
+            </div>
+          <% end %>
 
-<h2>通知</h2>
-<% if @notifications.any? %>
-  <ul>
-    <% @notifications.each do |notification| %>
-      <li class="<%= 'unread' unless notification.read %>">
-        <%= link_to "投稿「#{notification.post.caption}」に新しいコメントが付きました", mark_as_read_and_destroy_notification_path(notification), method: :patch %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>通知はありません。</p>
-<% end %>
+          <% if current_user == @user %>
+            <div class="mt-4">
+              <%= link_to "会員情報編集", edit_information_user_path, class: "btn btn-primary btn-block" %>
+              <% unless current_user.guest? %>
+                <%= link_to "下書き一覧", draft_posts_path, class: "btn btn-info btn-block mt-2" %>
+              <% end %>
+              <%= link_to "いいねした投稿一覧", nice_posts_path, class: "btn btn-success btn-block mt-2" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
 
-<h2>ユーザーの投稿</h2>
-
-<%= form_with(url: user_path(@user), method: :get, local: true) do %>
-  <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
-  <%= submit_tag '検索' %>
-<% end %>
-
-<% if @posts.any? %>
-<% @posts.each do |post| %>
-  <div>
-    <p><%= image_tag post.main_image, size: "200x200" %></p>
-    <h4><%= post.itinerary %></h4>
-    <p><%= post.caption %></p>
-    
-    <% if current_user == post.user %>
-      <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
-        <%= f.radio_button :status, 'published' %>
-        <%= f.label :status_published, '公開する' %>
-        
-        <%= f.radio_button :status, 'unpublished' %>
-        <%= f.label :status_unpublished, '非公開にする' %>
-        
-        <%= f.submit '更新' %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <%= form_with(url: user_path(@user), method: :get, local: true, class: "mb-3") do %>
+            <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ', class: "form-control mb-2" %>
+            <%= submit_tag '検索', class: "btn btn-primary btn-block" %>
+          <% end %>
+        </div>
+      </div>
+      
+      <% if current_user == @user %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <% if @notifications.any? %>
+              <h4>通知</h4>
+              <ul class="list-unstyled">
+                <% @notifications.each do |notification| %>
+                  <li class="<%= 'unread' unless notification.read %>">
+                    <% if notification.post_id.present? && notification.post.status == 'unpublished' %>
+                      <%= link_to "投稿「#{notification.post.caption}」が適切ではないと判断され非公開にされました", mark_as_read_and_destroy_notification_path(notification), method: :patch %>
+                    <% elsif notification.comment_id.present? %>
+                      <%= link_to "投稿「#{notification.comment.post.caption}」に新しいコメントが追加されました", mark_as_read_and_destroy_notification_path(notification), method: :patch %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p>通知はありません。</p>
+            <% end %>
+          </div>
+        </div>
       <% end %>
-      <%= link_to '編集', edit_post_path(post), class: 'btn btn-primary' %>
-      <%= link_to '削除', post, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
-    <% end %>
-    <%= render partial: 'layouts/nice', locals: { post: post } %><br>
-    <%= link_to "詳細を見る", post_path(post.id) %>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="row">
+        <% @posts.each do |post| %>
+          <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+            <div class="card h-100">
+              <% if post.main_image.attached? %>
+                <%= image_tag post.main_image, class: "card-img-top img-fluid", style: "object-fit: cover; height: 250px;" %>
+              <% else %>
+                <%= image_tag "default_image.jpg", class: "card-img-top img-fluid", style: "object-fit: cover; height: 250px;" %>
+              <% end %>
+              <div class="card-body">
+                <% if current_admin %>
+                  <h5 class="card-title"><%= link_to post.user.name, admin_user_path(post.user) %></h5>
+                <% else %>
+                  <h5 class="card-title"><%= link_to post.user.name, user_path(post.user) %></h5>
+                <% end %>
+                <p class="card-text"><%= post.itinerary %></p>
+                <p class="card-text"><%= truncate(post.caption, length: 20) %></p>
+                <hr> <!-- 区切り線 -->
+                
+                <div class="d-flex align-items-center mb-3">
+                  <div class="form-check form-check-inline">
+                    <%= radio_button_tag "post_status_#{post.id}", "published", post.published?, class: "form-check-input" %>
+                    <%= label_tag "post_status_#{post.id}", "公開", class: "form-check-label mr-3" %>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <%= radio_button_tag "post_status_#{post.id}", "unpublished", !post.published?, class: "form-check-input" %>
+                    <%= label_tag "post_status_#{post.id}", "非公開", class: "form-check-label mr-3" %>
+                  </div>
+                  <%= button_to "更新", update_status_post_path(post), method: :patch, params: { post: { status: post.published? ? 'unpublished' : 'published' } }, remote: true, class: "btn btn-outline-success btn-sm ml-2" %>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex">
+                    <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm mr-2" %>
+                    <% if current_user == post.user %>
+                      <%= link_to '編集', edit_post_path(post, from_draft: true), class: "btn btn-sm btn-secondary ml-5" %>
+                      <%= link_to '削除', post, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-sm btn-danger ml-2' %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <% if @total_posts && @posts_per_page && @total_posts > @posts_per_page %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <% total_pages = (@total_posts.to_f / @posts_per_page).ceil %>
+      
+            <% if @page > 1 %>
+              <li class="page-item">
+                <%= link_to '前へ', user_path(@user, request.query_parameters.merge(page: @page - 1)), class: "page-link" %>
+              </li>
+            <% else %>
+              <li class="page-item disabled">
+                <span class="page-link">前へ</span>
+              </li>
+            <% end %>
+      
+            <% (1..total_pages).each do |page| %>
+              <% if page == @page %>
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link"><%= page %></span>
+                </li>
+              <% else %>
+                <li class="page-item">
+                  <%= link_to page, user_path(@user, request.query_parameters.merge(page: page)), class: "page-link" %>
+                </li>
+              <% end %>
+            <% end %>
+      
+            <% if @page < total_pages %>
+              <li class="page-item">
+                <%= link_to '次へ', user_path(@user, request.query_parameters.merge(page: @page + 1)), class: "page-link" %>
+              </li>
+            <% else %>
+              <li class="page-item disabled">
+                <span class="page-link">次へ</span>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      <% end %>
+    </div>
   </div>
-<% end %>
-<% else %>
-  <p>投稿はありません。</p>
-<% end %>
+</div>

@@ -1,0 +1,58 @@
+<h1>ユーザー一覧</h1>
+
+<%= form_tag(admin_users_path, method: :get, class: "mb-3") do %>
+  <div class="input-group">
+    <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "ユーザー名で検索する" %>
+    <button type="submit" class="btn btn-primary">検索</button>
+  </div>
+<% end %>
+
+<div class="mb-3">
+  <%= link_to 'すべてのユーザー', admin_users_path, class: 'btn btn-secondary' %>
+  <%= link_to 'ログイン可能なユーザー', admin_users_path(status: 'active'), class: 'btn btn-success' %>
+  <%= link_to 'ログイン不可なユーザー', admin_users_path(status: 'inactive'), class: 'btn btn-danger' %>
+</div>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>ステータス</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @users.any? %>
+      <% @users.each do |user| %>
+        <% unless user.guest? %>
+          <tr>
+            <td><%= user.id %></td>
+            <td><%= link_to user.name, admin_user_path(user) %></td>
+            <td><%= user.email %></td>
+            <td>
+              <% if user.is_active %>
+                <span class="badge bg-success">ログイン可能</span>
+              <% else %>
+                <span class="badge bg-danger">ログイン不可</span>
+              <% end %>
+            </td>
+            <td>
+              <% if user.is_active %>
+                <%= link_to 'ログイン不可に', deactivate_admin_user_path(user), method: :patch, class: 'btn btn-warning btn-sm', data: { confirm: 'このユーザーを無効にしますか？' } %>
+              <% else %>
+                <%= link_to 'ログイン可能に', activate_admin_user_path(user), method: :patch, class: 'btn btn-success btn-sm', data: { confirm: 'このユーザーを有効にしますか？' } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+       <% end %>
+    <% else %>
+      <tr>
+        <td colspan="5">ユーザーがいません。</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

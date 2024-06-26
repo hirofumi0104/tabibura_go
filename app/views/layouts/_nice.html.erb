@@ -1,13 +1,15 @@
-<% unless current_user == post.user %>
-  <% if current_user.favorites.exists?(post: post) %>
-    <%= link_to post_favorites_path(post, current_user.favorites.find_by(post: post)), method: :delete, class: 'btn' do %>
-      <i class="fas fa-heart" style="color: red;"></i>
-      <%= post.favorites.count %>
+<% if current_user && current_user != post.user && !current_admin %>
+  <div class="btn-group" role="group">
+    <% if current_user.favorites.exists?(post: post) %>
+      <%= link_to post_favorites_path(post, current_user.favorites.find_by(post: post)), method: :delete, class: 'btn btn-outline-danger' do %>
+        <i class="fas fa-heart" style="color: red;"></i>
+        <span class="ml-1"><%= post.favorites.count %></span>
+      <% end %>
+    <% else %>
+      <%= link_to post_favorites_path(post_id: post.id), method: :post, class: 'btn btn-outline-secondary' do %>
+        <i class="far fa-heart"></i>
+        <span class="ml-1"><%= post.favorites.count %></span>
+      <% end %>
     <% end %>
-  <% else %>
-    <%= link_to post_favorites_path(post_id: post.id), method: :post, class: 'btn' do %>
-       <i class="far fa-heart"></i> 
-       <%= post.favorites.count %>
-    <% end %>
-  <% end %>
+  </div>
 <% end %>

@@ -1,2 +1,66 @@
-<h1>Admin::Homes#top</h1>
-<p>Find me in app/views/admin/homes/top.html.erb</p>
+<h2>通報された投稿一覧</h2>
+<% if @reported_posts.any? %>
+  <% @reported_posts.each do |post| %>
+    <div>
+      <strong>投稿者:</strong> <%= link_to post.user.name, admin_users_path(search: post.user.name) %>
+      <%= link_to post.caption, post_path(post) %>
+      </div>
+        <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
+          <%= f.radio_button :status, 'published' %>
+          <%= f.label :status_published, '公開する' %>
+          
+          <%= f.radio_button :status, 'unpublished' %>
+          <%= f.label :status_unpublished, '非公開にする' %>
+          
+          <%= f.submit '更新' %>
+        <% end %>
+      </div>
+      <div>
+        <strong>通報件数:</strong> <%= post.reports.count %>
+      </div>
+      <%= form_for post, url:  admin_delete_reported_post_path(post.id), method: :delete, data: { confirm: '本当に削除しますか？' } do |f| %>
+      <%= f.submit '投稿を削除する', class: 'btn btn-danger btn-sm' %>
+      <% end %>
+      
+      <%= form_for post, url: cancel_report_report_path(post), method: :patch do |f| %>
+        <%= f.hidden_field :reported, value: false %>
+        <%= f.submit '通報を取り消す', class: 'btn btn-warning btn-sm' %>
+      <% end %>
+      
+      <hr>
+    <% end %>
+<% else %>
+  <p>まだ通報された投稿がありません。</p>
+<% end %>
+
+
+
+<h2>通報されたコメント一覧</h2>
+<% if @reported_comments.any? %>
+  <% @reported_comments.each do |comment| %>
+    <div>
+      <strong>コメント投稿者:</strong> <%= link_to comment.user.name, admin_users_path(search: comment.user.name) %>
+      <strong>通報されたコメント:</strong>
+      <%= link_to comment.content, post_path(comment.post) %>
+    </div>
+    <div>
+      <strong>通報内容:</strong>
+      <% if comment.reports.any? %>
+        <%= comment.reports.first.reason %>
+      <% else %>
+        <p>通報内容がありません。</p>
+      <% end %>
+    </div>
+    <div>
+      <strong>通報件数:</strong> <%= comment.reports.count %>
+    </div>
+    <%= link_to '削除', post_comment_path(comment.post, comment), method: :delete, data: { confirm: '本当にこのコメントを削除しますか？' }, class: 'btn btn-danger' %>
+    <%= form_for comment, url: cancel_comment_report_path(comment.id), method: :patch do |f| %>
+      <%= f.submit '通報を取り消す', class: 'btn btn-warning btn-sm' %>
+    <% end %>
+    <hr>
+  <% end %>
+<% else %>
+  <p>まだ通報されたコメントがありません。</p>
+<% end %>
+

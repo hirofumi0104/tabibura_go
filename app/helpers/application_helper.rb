@@ -10,4 +10,10 @@ module ApplicationHelper
       "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
     ]
   end
+  
+  # 管理者のログイン画面かどうかを判断するヘルパーメソッド
+  def admin_login_page?
+    controller_name == 'sessions' && action_name == 'new' && devise_controller? && resource_name == :admin
+  end
+  
 end
