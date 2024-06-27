@@ -7,7 +7,7 @@
       <div class="col-md-3 mb-4">
         <div class="card">
           <% if post.main_image.attached? %>
-             <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover;" "height: 200px; width: px;" %>
+            <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover; height: 200px; width: 100%;" %>
           <% end %>
           <div class="card-body">
             <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
@@ -17,6 +17,9 @@
           </div>
         </div>
       </div>
+    <% end %>
+    <% if @posts.empty? %>
+      <p>新着投稿はありません。</p>
     <% end %>
   </div>
   
@@ -26,7 +29,7 @@
       <div class="col-md-3 mb-4">
         <div class="card">
           <% if post.main_image.attached? %>
-            <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover;" "height: 200px; width: px;" %>
+            <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover; height: 200px; width: 100%;" %>
           <% end %>
           <div class="card-body">
             <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
@@ -37,19 +40,20 @@
         </div>
       </div>
     <% end %>
+    <% if @recommended_posts.empty? %>
+      <p>注目投稿はありません。</p>
+    <% end %>
   </div>
 
-
   <div class="mt-4 text-center">
-   <%= link_to posts_path, class: "btn btn-secondary mr-2" do %>
-     <i class="fas fa-list mr-1"></i>投稿一覧ページへ
-   <% end %>
+    <%= link_to posts_path, class: "btn btn-secondary mr-2" do %>
+      <i class="fas fa-list mr-1"></i>投稿一覧ページへ
+    <% end %>
    
-   <% if user_signed_in? %>
-     <%= link_to new_post_path, class: "btn btn-success" do %>
-       <i class="fas fa-plus mr-1"></i>投稿ページへ
-     <% end %>
-   <% end %>
- </div>
-
+    <% if user_signed_in? %>
+      <%= link_to new_post_path, class: "btn btn-success" do %>
+        <i class="fas fa-plus mr-1"></i>投稿ページへ
+      <% end %>
+    <% end %>
+  </div>
 </div>
