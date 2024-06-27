@@ -8,11 +8,11 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import { addFields, removeFields } from "./nested-forms"; // nested-forms.js から関数をインポート
-import "./background_switcher";// background_switcher.js をインポート
 
 import "jquery";
 import "popper.js";
 import "bootstrap";
+import "../stylesheets/application"; 
 
 Rails.start()
 Turbolinks.start()
