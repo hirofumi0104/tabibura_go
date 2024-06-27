@@ -3,7 +3,7 @@ class Public::HomesController < ApplicationController
     # 最新の投稿を4件取得、@postsに
     @posts =Post.order('id DESC').limit(4)
     # ランダムな投稿を4件取得、@recommended_postsに
-    @recommended_posts = Post.order(Arel.sql('RANDOM()')).limit(4)
+    @recommended_posts = Post.order(Arel.sql('RAND()')).limit(4)
   end
 
   def about

@@ -7,7 +7,7 @@ class Post < ApplicationRecord
    has_many :favorites, dependent: :destroy
    has_many :images, dependent: :destroy
    has_many :taggings, dependent: :destroy
-   has_many :tags, through: :taggings
+   has_many :tags, through: :taggings, dependent: :destroy
    # （画像と地図）
    accepts_nested_attributes_for :images, allow_destroy: true
    accepts_nested_attributes_for :map, allow_destroy: true
