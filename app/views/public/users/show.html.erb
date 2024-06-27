@@ -52,21 +52,27 @@
       <% if current_user == @user %>
         <div class="card mb-4">
           <div class="card-body">
+            <h4 class="card-title">通知</h4>
             <% if @notifications.any? %>
-              <h4>通知</h4>
-              <ul class="list-unstyled">
+              <ul class="list-group">
                 <% @notifications.each do |notification| %>
-                  <li class="<%= 'unread' unless notification.read %>">
+                  <li class="list-group-item <%= 'unread' unless notification.read %>">
                     <% if notification.post_id.present? && notification.post.status == 'unpublished' %>
-                      <%= link_to "投稿「#{notification.post.caption}」が適切ではないと判断され非公開にされました", mark_as_read_and_destroy_notification_path(notification), method: :patch %>
+                      <%= link_to mark_as_read_and_destroy_notification_path(notification), method: :patch, class: "text-decoration-none" do %>
+                        <span class="badge badge-warning">非公開</span>
+                        投稿「<strong><%= notification.post.caption %></strong>」が適切ではないと判断され非公開にされました
+                      <% end %>
                     <% elsif notification.comment_id.present? %>
-                      <%= link_to "投稿「#{notification.comment.post.caption}」に新しいコメントが追加されました", mark_as_read_and_destroy_notification_path(notification), method: :patch %>
+                      <%= link_to mark_as_read_and_destroy_notification_path(notification), method: :patch, class: "text-decoration-none" do %>
+                        <span class="badge badge-info">コメント</span>
+                        投稿「<strong><%= notification.comment.post.caption %></strong>」に新しいコメントが追加されました
+                      <% end %>
                     <% end %>
                   </li>
                 <% end %>
               </ul>
             <% else %>
-              <p>通知はありません。</p>
+              <p class="card-text">通知はありません。</p>
             <% end %>
           </div>
         </div>
@@ -92,7 +98,7 @@
                 <p class="card-text"><%= post.itinerary %></p>
                 <p class="card-text"><%= truncate(post.caption, length: 20) %></p>
                 <hr> <!-- 区切り線 -->
-                
+                <% if current_user == @user %>
                 <div class="d-flex align-items-center mb-3">
                   <div class="form-check form-check-inline">
                     <%= radio_button_tag "post_status_#{post.id}", "published", post.published?, class: "form-check-input" %>
@@ -104,7 +110,7 @@
                   </div>
                   <%= button_to "更新", update_status_post_path(post), method: :patch, params: { post: { status: post.published? ? 'unpublished' : 'published' } }, remote: true, class: "btn btn-outline-success btn-sm ml-2" %>
                 </div>
-                
+                <% end %>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="d-flex">
                     <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm mr-2" %>

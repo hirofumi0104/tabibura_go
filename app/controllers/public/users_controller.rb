@@ -3,7 +3,7 @@ class Public::UsersController < ApplicationController
    before_action :authenticate_user!
    before_action :ensure_not_guest, only: [:edit, :update, :destroy]
 
-   
+  # ユーザーのプロフィール 
   def show
     @notifications = current_user.notifications.order(created_at: :desc)
     
@@ -12,8 +12,8 @@ class Public::UsersController < ApplicationController
     else
       @posts = @user.posts.published.includes(images: { image_attachment: :blob })
     end
-    
-    @posts = @posts.page(params[:page]).per(10) # ページネーションの追加
+    # ページネーション
+    @posts = @posts.page(params[:page]).per(10) 
     @total_posts = @posts.total_count
     @posts_per_page = 10
     @page = params[:page].to_i || 1
@@ -43,6 +43,7 @@ class Public::UsersController < ApplicationController
     @user = User.find(params[:id])
   end
   
+   # ゲストユーザーがアクセスできないようにする
   def ensure_not_guest
     if current_user.guest?
       redirect_to root_path, alert: 'ゲストユーザーはこの機能を使用できません。会員登録をしてください。'

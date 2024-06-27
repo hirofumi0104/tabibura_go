@@ -50,7 +50,7 @@
               <% end %>
               <% unless current_admin %>
                 <div class="mt-4">
-                  <%= render partial: 'layouts/report', locals: { reportable: @post } %>
+                  <%= render partial: 'layouts/report', locals: { reportable: comment } %>
                 </div>
               <% end %>
               <hr> <!-- 区切り線 -->
@@ -69,34 +69,48 @@
       </div>
     </div>
 
-    <!-- 右側: サイドバー -->
-    <div class="col-md-4">
-      <div class="sticky-top">
-        <!-- 投稿者情報、いいねボタン、フォローボタン -->
-        <div class="card mb-4 shadow-sm">
-          <% if @post.user.profile_image.attached? %>
-            <%= image_tag @post.user.profile_image, style: "width: 200px; height: 200px;", class: "card-img-top rounded-circle my-4  ml-5" %>
-          <% else %>
-            <%= image_tag "User.png", class: "ml-5 my-4  rounded-circle", style: "width: 200px; height: 200px;", alt: "デフォルトアイコン" %>
-          <% end %>
-          <div class="card-body">
-            <h4 class="card-title ml-5">投稿者: <%= link_to @post.user.name, user_path(@post.user.id) %></h4>
-            <div class="d-flex align-items-center">
-              <div class="ml-3">
-                <%= render partial: 'layouts/nice', locals: { post: @post } %>
-              </div>
-              <div class="ml-3">
-                <%= render "layouts/followbtn", user: @post.user, options: { class: "text-center" } %>
-              </div>
-            </div>
+   <!-- 右側: サイドバー -->
+<div class="col-md-4">
+  <div class="sticky-top">
+    <!-- 投稿者情報、いいねボタン、フォローボタン -->
+    <div class="card mb-4 shadow-sm">
+      <% if @post.user.profile_image.attached? %>
+        <%= image_tag @post.user.profile_image, style: "width: 200px; height: 200px;", class: "card-img-top rounded-circle my-4 ml-5" %>
+      <% else %>
+        <%= image_tag "User.png", class: "ml-5 my-4 rounded-circle", style: "width: 200px; height: 200px;", alt: "デフォルトアイコン" %>
+      <% end %>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-auto">
+            <h5 class="ml-5">投稿者:</h5>
           </div>
-          <div class="card-body">
-            <h5>タグ</h5>
-            <% @post.tags.each do |tag| %>
-              <%= link_to "##{tag.name}", tag_path(tag.name), class: "badge badge-info mr-1" %>
+          <div class="col">
+            <% if current_admin %>
+              <h5><%= link_to @post.user.name, admin_user_path(@post.user) %></h5>
+            <% else %>
+              <h5><%= link_to @post.user.name, user_path(@post.user.id) %></h5>
             <% end %>
           </div>
         </div>
+        <div class="d-flex align-items-center justify-content-between">
+          <%= render "layouts/followbtn", user: @post.user, options: { class:  "btn btn-sm btn-outline-info" } %>
+          <%= render partial: 'layouts/nice', locals: { post: @post }, options: { class: "btn btn-sm btn-outline-info" } %>
+        </div>
+      </div>
+      <% unless current_admin %>
+        <div class="card-body">
+          <h5>タグ</h5>
+          <% if @post.tags.any? %>
+            <% @post.tags.each do |tag| %>
+              <%= link_to "##{tag.name}", tag_path(tag.name), class: "badge badge-info mr-1" %>
+            <% end %>
+          <% else %>
+            <p>タグはありません</p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
 
         <!-- 投稿通報 -->
         <% unless current_admin %>
@@ -112,11 +126,13 @@
   </div>
 
   <!-- 戻るボタン -->
+  <% unless current_admin %>
   <div class="row mt-4">
     <div class="col-md-8">
       <%= link_to '戻る', params[:referrer] || user_path(@post.user), class: 'btn btn-secondary' %>
     </div>
   </div>
+  <% end %>
 </div>
 
 
@@ -147,7 +163,7 @@ function initMap() {
 }
 
 </script>
-<%= debug @post %>
-<%= debug @post.map %>
+<!--<%= debug @post %>-->
+<!--<%= debug @post.map %>-->
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap"async defer></script>

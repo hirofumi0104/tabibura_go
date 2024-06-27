@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h1>ようこそ旅ブラ_goへ</h1>
+  <h1>ようこそ旅ぶら_GOへ</h1>
 
   <h3 class="mt-4">新着投稿</h3>
   <div class="row">
@@ -7,7 +7,7 @@
       <div class="col-md-3 mb-4">
         <div class="card">
           <% if post.main_image.attached? %>
-             <%= image_tag post.main_image, class: "card-img-top", style: "height: 200px; width: px;" %>
+             <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover;" "height: 200px; width: px;" %>
           <% end %>
           <div class="card-body">
             <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
@@ -26,7 +26,7 @@
       <div class="col-md-3 mb-4">
         <div class="card">
           <% if post.main_image.attached? %>
-            <%= image_tag post.main_image, class: "card-img-top", style: "height: 200px; width: px;" %>
+            <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover;" "height: 200px; width: px;" %>
           <% end %>
           <div class="card-body">
             <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>

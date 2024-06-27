@@ -1,6 +1,7 @@
 class Public::CommentsController < ApplicationController
   before_action :set_post
-
+  
+  # コメントを作成する
   def create
     @comment = @post.comments.new(comment_params)
     @comment.user = current_user
@@ -9,7 +10,8 @@ class Public::CommentsController < ApplicationController
       redirect_to post_path(@post), notice: "コメントしました"
     end
   end
-
+  
+  # コメントを削除する
   def destroy
     @comment = Comment.find(params[:id])
     @post = @comment.post

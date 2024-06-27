@@ -1,8 +1,11 @@
 class ReportsController < ApplicationController
   # 通報機能のコントローラー
+  
   before_action :authenticate_user!, only: [:create]
+  
   before_action :authenticate_admin!, only: [:delete_reported_post]
   
+   # 通報を作成する
   def create
     @report = current_user.reports.build(report_params)
 
@@ -14,12 +17,14 @@ class ReportsController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
   
+  # 通報された投稿を削除する
   def delete_reported_post
     post = Post.find(params[:id])
     post.destroy
     redirect_to request.referer, notice: '投稿を削除しました。'
   end
   
+  # 投稿への通報を取り消す
   def cancel_report
     post = Post.find(params[:id])
     reports = post.reports
@@ -32,6 +37,7 @@ class ReportsController < ApplicationController
     redirect_to admin_top_path
   end
   
+  # コメントへの通報を取り消す
   def cancel_comment_report
     comment = Comment.find(params[:id])
     reports = comment.reports

@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :reports, dependent: :destroy 
   has_one_attached :profile_image
+  # 退会確認用
   attr_accessor :withdrawal_confirmation
   
   # フォロー機能
@@ -37,19 +38,28 @@ class User < ApplicationRecord
   def following?(user)
     followings.include?(user)
   end
-
+  
+  # ユーザーがアクティブかどうかを判定する
   def active_for_authentication?
     super && is_active
   end
-
+  
+  # ユーザーが非アクティブな場合
   def inactive_message
     is_active ? super : :inactive
   end
   
+   # 管理者ユーザーかどうかを判定
+  def admin?
+     email == 'admin@example.com' 
+  end
+  
+   # ゲストユーザーかどうかを判定する
   def guest?
     email == 'guest@example.com'
   end
   
+   # ゲストユーザーを作成
   def self.guest
     find_or_create_by!(email: 'guest@example.com') do |user|
       user.password = SecureRandom.urlsafe_base64

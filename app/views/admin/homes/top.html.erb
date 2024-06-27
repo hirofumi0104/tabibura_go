@@ -1,66 +1,138 @@
-<h2>通報された投稿一覧</h2>
-<% if @reported_posts.any? %>
-  <% @reported_posts.each do |post| %>
-    <div>
-      <strong>投稿者:</strong> <%= link_to post.user.name, admin_users_path(search: post.user.name) %>
-      <%= link_to post.caption, post_path(post) %>
-      </div>
-        <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
-          <%= f.radio_button :status, 'published' %>
-          <%= f.label :status_published, '公開する' %>
-          
-          <%= f.radio_button :status, 'unpublished' %>
-          <%= f.label :status_unpublished, '非公開にする' %>
-          
-          <%= f.submit '更新' %>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>通報された投稿一覧</h2>
+
+      <% if @reported_posts.any? %>
+        <% @reported_posts.each do |post| %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="mb-5">
+                <strong>投稿者:</strong> <%= link_to post.user.name, admin_users_path(search: post.user.name), class: "text-decoration-none" %><br>
+                <%= link_to post.caption, post_path(post), class: "text-decoration-none" %><br>
+              </div>
+
+              <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :status, 'published', id: "published_#{post.id}" %>
+                  <%= f.label "published_#{post.id}", '公開する', class: "form-check-label" %>
+                </div>
+                
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :status, 'unpublished', id: "unpublished_#{post.id}" %>
+                  <%= f.label "unpublished_#{post.id}", '非公開にする', class: "form-check-label" %>
+                </div>
+                
+                <%= f.submit '更新', class: 'btn btn-outline-primary btn-sm' %>
+              <% end %>
+
+              <div class="mt-3">
+                <strong>通報件数:</strong> <%= post.reports.count %>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <%= form_for post, url: admin_delete_reported_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' } do |f| %>
+                  <%= f.submit '投稿を削除する', class: 'btn btn-danger btn-sm mt-2' %>
+                <% end %>
+                
+                <%= form_for post, url: cancel_report_report_path(post), method: :patch do |f| %>
+                  <%= f.hidden_field :reported, value: false %>
+                  <%= f.submit '通報を取り消す', class: 'btn btn-warning btn-sm mt-2' %>
+                <% end %>
+              </div>
+            </div>
+          </div>
         <% end %>
-      </div>
-      <div>
-        <strong>通報件数:</strong> <%= post.reports.count %>
-      </div>
-      <%= form_for post, url:  admin_delete_reported_post_path(post.id), method: :delete, data: { confirm: '本当に削除しますか？' } do |f| %>
-      <%= f.submit '投稿を削除する', class: 'btn btn-danger btn-sm' %>
-      <% end %>
-      
-      <%= form_for post, url: cancel_report_report_path(post), method: :patch do |f| %>
-        <%= f.hidden_field :reported, value: false %>
-        <%= f.submit '通報を取り消す', class: 'btn btn-warning btn-sm' %>
-      <% end %>
-      
-      <hr>
-    <% end %>
-<% else %>
-  <p>まだ通報された投稿がありません。</p>
-<% end %>
-
-
-
-<h2>通報されたコメント一覧</h2>
-<% if @reported_comments.any? %>
-  <% @reported_comments.each do |comment| %>
-    <div>
-      <strong>コメント投稿者:</strong> <%= link_to comment.user.name, admin_users_path(search: comment.user.name) %>
-      <strong>通報されたコメント:</strong>
-      <%= link_to comment.content, post_path(comment.post) %>
-    </div>
-    <div>
-      <strong>通報内容:</strong>
-      <% if comment.reports.any? %>
-        <%= comment.reports.first.reason %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <% if @reported_posts_count > @reported_posts_per_page %>
+              <% if params[:page].to_i > 1 %>
+                <li class="page-item">
+                  <%= link_to '前へ', admin_top_path(page: params[:page].to_i - 1), class: 'page-link' %>
+                </li>
+              <% end %>
+              
+              <% total_pages = (@reported_posts_count.to_f / @reported_posts_per_page.to_f).ceil %>
+              <% (1..total_pages).each do |page| %>
+                <li class="page-item <%= 'active' if page == params[:page].to_i %>">
+                  <%= link_to page, admin_top_path(page: page), class: 'page-link' %>
+                </li>
+              <% end %>
+              
+              <% if params[:page].to_i < total_pages %>
+                <li class="page-item">
+                  <%= link_to '次へ', admin_top_path(page: params[:page].to_i + 1), class: 'page-link' %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </nav>
       <% else %>
-        <p>通報内容がありません。</p>
+        <p>まだ通報された投稿がありません。</p>
       <% end %>
     </div>
-    <div>
-      <strong>通報件数:</strong> <%= comment.reports.count %>
-    </div>
-    <%= link_to '削除', post_comment_path(comment.post, comment), method: :delete, data: { confirm: '本当にこのコメントを削除しますか？' }, class: 'btn btn-danger' %>
-    <%= form_for comment, url: cancel_comment_report_path(comment.id), method: :patch do |f| %>
-      <%= f.submit '通報を取り消す', class: 'btn btn-warning btn-sm' %>
-    <% end %>
-    <hr>
-  <% end %>
-<% else %>
-  <p>まだ通報されたコメントがありません。</p>
-<% end %>
 
+    <div class="col-md-6">
+      <h2>通報されたコメント一覧</h2>
+
+      <% if @reported_comments.any? %>
+        <% @reported_comments.each do |comment| %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="mb-2">
+                <strong>コメント投稿者:</strong> <%= link_to comment.user.name, admin_users_path(search: comment.user.name), class: "text-decoration-none" %><br>
+                <strong>通報されたコメント:</strong><br>
+                <%= link_to truncate(comment.content, length: 50), post_path(comment.post), class: "text-decoration-none" %><br>
+              </div>
+
+              <div>
+                <strong>通報内容:</strong><br>
+                <% if comment.reports.any? %>
+                  <%= comment.reports.first.reason %>
+                <% else %>
+                  <p>通報内容がありません。</p>
+                <% end %>
+              </div>
+
+              <div class="mt-3">
+                <strong>通報件数:</strong> <%= comment.reports.count %>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <%= link_to 'コメント削除', post_comment_path(comment.post, comment), method: :delete, data: { confirm: '本当にこのコメントを削除しますか？' }, class: 'btn btn-danger btn-sm mt-2' %>
+                
+                <%= form_for comment, url: cancel_comment_report_path(comment.id), method: :patch do |f| %>
+                  <%= f.submit '通報を取り消す', class: 'btn btn-warning btn-sm mt-2' %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <% if @reported_comments_count > @reported_comments_per_page %>
+              <% if params[:page].to_i > 1 %>
+                <li class="page-item">
+                  <%= link_to '前へ', admin_top_path(page: params[:page].to_i - 1), class: 'page-link' %>
+                </li>
+              <% end %>
+              
+              <% total_pages = (@reported_comments_count.to_f / @reported_comments_per_page.to_f).ceil %>
+              <% (1..total_pages).each do |page| %>
+                <li class="page-item <%= 'active' if page == params[:page].to_i %>">
+                  <%= link_to page, admin_top_path(page: page), class: 'page-link' %>
+                </li>
+              <% end %>
+              
+              <% if params[:page].to_i < total_pages %>
+                <li class="page-item">
+                  <%= link_to '次へ', admin_top_path(page: params[:page].to_i + 1), class: 'page-link' %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </nav>
+      <% else %>
+        <p>まだ通報されたコメントがありません。</p>
+      <% end %>
+    </div>
+  </div>
+</div>

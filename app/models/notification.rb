@@ -3,7 +3,7 @@ class Notification < ApplicationRecord
   belongs_to :post
   belongs_to :comment
   belongs_to :admin, optional: true
-  
+  belongs_to :notifiable, polymorphic: true
   after_initialize :set_default_values
 
   private

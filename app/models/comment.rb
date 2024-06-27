@@ -6,7 +6,7 @@ class Comment < ApplicationRecord
   after_create :create_notification
   
   private
-
+  # 通知を作成するメソッド
   def create_notification
     Notification.create(
       user: self.post.user,

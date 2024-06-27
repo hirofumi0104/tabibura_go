@@ -1,11 +1,15 @@
 <header>
   <% unless admin_signed_in? || admin_login_page? %>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #5ce1e6;">
       <div class="container d-flex flex-column align-items-center">
         <!-- 第一セクション（ロゴとゲストログイン） -->
         <div class="navbar-header d-flex justify-content-between align-items-center w-100">
           <div class="d-flex align-items-center">
-            <a class="navbar-brand" href="/"><span><h2>旅ブラ_GO</h2></span></a>
+            <a class="navbar-brand" href="/">
+              <span>
+                <%= image_tag "rogo.png", alt: "旅ぶら_GO", style: "height: 100px; width: auto;" %>
+              </span>
+            </a>
           </div>
           <div class="d-flex align-items-center">
             <% unless user_signed_in? %>
@@ -86,7 +90,7 @@
   <% if admin_signed_in? %>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container d-flex flex-column align-items-center">
-        <a class="navbar-brand" href="/admin"><span>管理者ダッシュボード</span></a>
+       <%= link_to "管理者ダッシュボード", admin_top_path, class: "navbar-brand" %>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbarNavDropdown" aria-controls="adminNavbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

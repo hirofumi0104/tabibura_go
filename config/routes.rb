@@ -1,13 +1,15 @@
 Rails.application.routes.draw do
-
+  # コメントの作成と削除
   get 'comments/create'
   get 'comments/destroy'
+  # 通報作成
   resources :reports, only: [:create] do
   member do
       patch 'cancel_report', to: 'reports#cancel_report'
     end
   end
   
+  # 管理者側
   devise_for :admin, skip: [:registrations, :passwords] , controllers: {
   sessions: "admin/sessions"
 }
@@ -17,16 +19,19 @@ Rails.application.routes.draw do
       resources :users, only: [:show, :index] do
         member do
           get 'posts'
+          # ユーザーステータス機能
           patch :activate
           patch :deactivate
         end
       end
       resources :reports, only: [:top] 
   end
-  
+   # 通報された投稿を削除するためのルート（管理者用）
   delete 'admin/reports/:id/delete_reported_post', to: 'reports#delete_reported_post', as: 'admin_delete_reported_post'
+  # コメントの通報をキャンセルするためのルート
   patch 'reports/:id/cancel_comment_report', to: 'reports#cancel_comment_report', as: 'cancel_comment_report'
   
+  # ユーザー側
   devise_for :users, controllers: {
   registrations: "public/registrations",
   sessions: 'public/sessions'
@@ -40,7 +45,6 @@ Rails.application.routes.draw do
   scope module: :public do
       root 'homes#top'
       get 'homes/about'
-      # userページ
       resources :users, only: [:show, :index, :edit, :update] do
       # フォロー機能
        resource :relationships, only: [:create, :destroy]
@@ -56,10 +60,14 @@ Rails.application.routes.draw do
         end
       # 投稿機能
       resources :posts, only: [:new, :create, :update, :destroy, :show, :index, :edit] do  
+      # フォロー機能
        resource :favorites, only: [:create, :destroy]
+      # コメント機能
         resources :comments, only: [:create, :destroy]
         collection do
+          # 下書きルーティング
           get 'draft'
+          # いいね機能
           get 'nice'
         end
          member do
@@ -74,7 +82,7 @@ Rails.application.routes.draw do
       end
     end
 
-      
+      # タグのルーティング
       get 'tags/:tag', to: 'posts#tagged', as: 'tag'
     end
   end
