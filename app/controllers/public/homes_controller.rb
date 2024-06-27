@@ -1,9 +1,13 @@
 class Public::HomesController < ApplicationController
   def top
     # 最新の投稿を4件取得、@postsに
-    @posts =Post.order('id DESC').limit(4)
+    @posts =Post.published.order('id DESC').limit(4)
     # ランダムな投稿を4件取得、@recommended_postsに
-    @recommended_posts = Post.order(Arel.sql('RAND()')).limit(4)
+    if Rails.env.production?  # 本番環境の場合
+      @recommended_posts = Post.published.order("RAND()").limit(4)
+    else
+      @recommended_posts = Post.published.order("RANDOM()").limit(4)
+    end
   end
 
   def about
