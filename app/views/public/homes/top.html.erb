@@ -1,55 +1,57 @@
 <div class="container mt-4">
   <h1>ようこそ旅ぶら_GOへ</h1>
 
-  <h3 class="mt-4">新着投稿</h3>
-  <div class="row">
-    <% @posts.each do |post| %>
-      <div class="col-md-3 mb-4">
-        <div class="card">
-          <% if post.main_image.attached? %>
-            <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover; height: 200px; width: 100%;" %>
-          <% end %>
-          <div class="card-body">
-            <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
-            <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.itinerary %></p>
-            <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.caption %></p>
-            <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm" %>
+  <% if @posts.present? %>
+    <h3 class="mt-4">新着投稿</h3>
+    <div class="row">
+      <% @posts.each do |post| %>
+        <div class="col-md-3 mb-4">
+          <div class="card">
+            <% if post.main_image.attached? %>
+              <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover; height: 200px; width: 100%;" %>
+            <% end %>
+            <div class="card-body">
+              <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
+              <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.itinerary %></p>
+              <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.caption %></p>
+              <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm" %>
+            </div>
           </div>
         </div>
-      </div>
-    <% end %>
-    <% if @posts.empty? %>
-      <p>新着投稿はありません。</p>
-    <% end %>
-  </div>
-  
-  <h3 class="mt-4">注目投稿</h3>
-  <div class="row">
-    <% @recommended_posts.each do |post| %>
-      <div class="col-md-3 mb-4">
-        <div class="card">
-          <% if post.main_image.attached? %>
-            <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover; height: 200px; width: 100%;" %>
-          <% end %>
-          <div class="card-body">
-            <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
-            <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.itinerary %></p>
-            <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.caption %></p>
-            <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  <% else %>
+    <p>新着投稿はありません。</p>
+  <% end %>
+
+  <% if @recommended_posts.present? %>
+    <h3 class="mt-4">注目投稿</h3>
+    <div class="row">
+      <% @recommended_posts.each do |post| %>
+        <div class="col-md-3 mb-4">
+          <div class="card">
+            <% if post.main_image.attached? %>
+              <%= image_tag post.main_image, class: "card-img-top", style: "object-fit: cover; height: 200px; width: 100%;" %>
+            <% end %>
+            <div class="card-body">
+              <h5 class="card-title"><%= link_to post.user.name, user_path(post.user.id) %></h5>
+              <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.itinerary %></p>
+              <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;"><%= post.caption %></p>
+              <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm" %>
+            </div>
           </div>
         </div>
-      </div>
-    <% end %>
-    <% if @recommended_posts.empty? %>
-      <p>注目投稿はありません。</p>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>注目投稿はありません。</p>
+  <% end %>
 
   <div class="mt-4 text-center">
     <%= link_to posts_path, class: "btn btn-secondary mr-2" do %>
       <i class="fas fa-list mr-1"></i>投稿一覧ページへ
     <% end %>
-   
+    
     <% if user_signed_in? %>
       <%= link_to new_post_path, class: "btn btn-success" do %>
         <i class="fas fa-plus mr-1"></i>投稿ページへ
