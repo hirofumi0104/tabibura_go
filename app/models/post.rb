@@ -20,11 +20,11 @@ class Post < ApplicationRecord
    validate :at_least_one_image
    
    # 公開と非公開のステータスの定義
-  # enum status: { unpublished: 0, published: 1 }
+   enum status: { unpublished: 0, published: 1 }
     # 公開の投稿を取得するため
-  # scope :published, -> { where(status: :published) }
-  # # 未公開の投稿を取得するため
-  # scope :unpublished, -> { where(status: :unpublished) }
+   scope :published, -> { where(status: :published) }
+   # 未公開の投稿を取得するため
+   scope :unpublished, -> { where(status: :unpublished) }
    
     # タグリストを取得する
    def tag_list
