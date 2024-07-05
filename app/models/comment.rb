@@ -11,7 +11,7 @@ class Comment < ApplicationRecord
     Notification.create(
       user: self.post.user,
       post: self.post,
-      comment: self,
+      comment_id: self.id,
       read: false
     )
   end
