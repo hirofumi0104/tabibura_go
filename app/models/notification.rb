@@ -1,14 +1,13 @@
 class Notification < ApplicationRecord
   belongs_to :user
-  belongs_to :post
-  belongs_to :comment
+  belongs_to :post, optional: true
+  belongs_to :comment, optional: true
   belongs_to :admin, optional: true
-  belongs_to :notifiable, polymorphic: true
-  after_initialize :set_default_values
+  after_initialize :set_default_read
 
   private
 
-  def set_default_values
+  def set_default_read
     self.read ||= false
   end
 end

@@ -57,12 +57,12 @@
               <ul class="list-group">
                 <% @notifications.each do |notification| %>
                   <li class="list-group-item <%= 'unread' unless notification.read %>">
-                    <% if notification.post_id.present? && notification.post.status == 'unpublished' %>
+                    <% if notification.post.present? && notification.post.status == 'unpublished' && notification.comment.nil? %>
                       <%= link_to mark_as_read_and_destroy_notification_path(notification), method: :patch, class: "text-decoration-none" do %>
                         <span class="badge badge-warning">非公開</span>
                         投稿「<strong><%= notification.post.caption %></strong>」が適切ではないと判断され非公開にされました
                       <% end %>
-                    <% elsif notification.comment_id.present? %>
+                    <% elsif notification.comment.present? %>
                       <%= link_to mark_as_read_and_destroy_notification_path(notification), method: :patch, class: "text-decoration-none" do %>
                         <span class="badge badge-info">コメント</span>
                         投稿「<strong><%= notification.comment.post.caption %></strong>」に新しいコメントが追加されました

@@ -1,5 +1,5 @@
 class Public::PostsController < ApplicationController
-  before_action :set_post, only: [:edit, :update, :show, :destroy]
+  before_action :set_post, only: [:edit, :update, :show, :destroy,]
   before_action :authenticate_user!, unless: :admin_signed_in?
   # ゲストユーザーが特定のアクションを実行できないように制限する
   before_action :ensure_not_guest, only: [:new, :create, :edit, :update, :destroy]
@@ -129,11 +129,12 @@ class Public::PostsController < ApplicationController
         flash[:notice] = '投稿を公開しました。'
       else
         flash[:notice] = '投稿を非公開にしました。'
-      
-        # 非公開にした投稿に関連するユーザーに通知を作成
-        if @post.user.present?
-          @post.user.notifications.create(
-            post_id: @post.id,
+        # 管理者がログインしている場合、通知を作成する
+        if admin_signed_in?
+          Notification.create(
+            user: @post.user,
+            admin: current_admin, # ログインしている管理者
+            post: @post
           )
         end
       end

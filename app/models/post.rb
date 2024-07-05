@@ -11,7 +11,6 @@ class Post < ApplicationRecord
    # （画像と地図）
    accepts_nested_attributes_for :images, allow_destroy: true
    accepts_nested_attributes_for :map, allow_destroy: true
-   after_update :send_notification_if_unpublished, if: -> { saved_change_to_status? && status == 'unpublished' }
    attribute :reported, :boolean
    
    validates :itinerary, presence: { message: "旅先を選択してください。" }
@@ -43,19 +42,9 @@ class Post < ApplicationRecord
    
    private
 
-   def at_least_one_image
-    if images.empty?
-      errors.add(:images, "少なくとも一つの旅先レポート写真を追加してください。")
+    def at_least_one_image
+      if images.empty?
+        errors.add(:images, "少なくとも一つの旅先レポート写真を追加してください。")
+      end
     end
-   end
-   # ステータスが「未公開」に変更された場合に通知を送信する
-   def send_notification_if_unpublished
-    if saved_change_to_status? && status_was == 'published' && status == 'unpublished'
-      Notification.create(
-        user: user,
-        post: self,
-        read: false
-      )
-    end
-   end
 end

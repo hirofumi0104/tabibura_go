@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # コメントの作成と削除
   get 'comments/create'
-  get 'comments/destroy'
+  delete 'comments/destroy'
   # 通報作成
   resources :reports, only: [:create] do
   member do
