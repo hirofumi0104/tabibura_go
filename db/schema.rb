@@ -96,7 +96,6 @@ ActiveRecord::Schema.define(version: 2024_07_05_072931) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "admin_id"
     t.index ["admin_id"], name: "index_notifications_on_admin_id"
-    t.index ["comment_id"], name: "index_notifications_on_comment_id"
     t.index ["post_id"], name: "index_notifications_on_post_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -166,7 +165,6 @@ ActiveRecord::Schema.define(version: 2024_07_05_072931) do
   add_foreign_key "comments", "users"
   add_foreign_key "images", "posts"
   add_foreign_key "maps", "posts"
-  add_foreign_key "notifications", "comments"
   add_foreign_key "notifications", "posts"
   add_foreign_key "notifications", "users"
   add_foreign_key "reports", "users"
