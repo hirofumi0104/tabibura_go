@@ -47,4 +47,5 @@ class Post < ApplicationRecord
         errors.add(:images, "少なくとも一つの旅先レポート写真を追加してください。")
       end
     end
+    
 end

@@ -18,6 +18,7 @@ class Public::PostsController < ApplicationController
 
   def index
     @users = User.all.includes(:profile_image_attachment) 
+    @posts = Post.all
     # ページネーション
     @page = (params[:page] || 1).to_i
     @posts_per_page = 10
@@ -82,14 +83,19 @@ class Public::PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     @post.user_id = current_user.id
+    tags = Vision.get_image_data(post_params[:main_image])
     
     if params[:save_as_draft].present? || params[:submit_post].nil?
       @post.status = 'unpublished'
     else
       @post.status = 'published'
     end
-    
+
     if @post.save
+      
+      tags.each do |tag|
+        @post.tags.create(name: tag)
+      end
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿の下書きに保存しました。'
       else
@@ -103,7 +109,7 @@ class Public::PostsController < ApplicationController
   # 投稿を更新
   def update
     @post = Post.find(params[:id])
-  
+    tags = Vision.get_image_data(post_params[:main_image])
     if params[:save_as_draft].present?
       @post.status = 'unpublished'
     else
@@ -111,6 +117,9 @@ class Public::PostsController < ApplicationController
     end
   
     if @post.update(post_params)
+      tags.each do |tag|
+        @post.tags.create(name: tag)
+      end
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿を下書きとして保存しました。'
       else

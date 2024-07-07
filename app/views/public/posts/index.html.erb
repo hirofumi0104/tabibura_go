@@ -59,6 +59,10 @@
                 <% if post.main_image.attached? %>
                   <%= image_tag post.main_image, class: "card-img-top img-fluid", style: "object-fit: cover; height: 250px;" %>
                 <% end %>
+                
+                <% post.tags.each do |tag| %>
+                  <p><%= tag.name %></p>
+                <% end %>
                 <div class="card-body">
                   <div class="media-body">
                     <% if current_admin %>

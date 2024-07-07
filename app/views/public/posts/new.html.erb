@@ -40,10 +40,10 @@
       <%= link_to 'レポート追加', '#', class: 'btn btn-outline-secondary mt-2 add_fields', data: { id: 'new_image', fields: form.fields_for(:images, Image.new, child_index: 'new_image') { |p| render('image_fields', f: p) }.gsub("\n", "") } %>
     </div>
 
-    <div class="form-group">
-      <h5><%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %></h5>
-      <%= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'form-control' %>
-    </div>
+    <!--<div class="form-group">-->
+    <!--  <h5><%#= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %></h5>-->
+    <!--  <%#= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'form-control' %>-->
+    <!--</div>-->
     
     <div class="form-group">
      <h5><label for="location">場所を検索:</label></h5>
