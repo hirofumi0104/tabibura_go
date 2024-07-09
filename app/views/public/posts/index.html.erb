@@ -61,7 +61,7 @@
                 <% end %>
                 
                 <% post.tags.each do |tag| %>
-                  <p><%= tag.name %></p>
+                  <p><%= tag.name.split('-').first %></p>
                 <% end %>
                 <div class="card-body">
                   <div class="media-body">

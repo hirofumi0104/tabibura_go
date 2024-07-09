@@ -90,12 +90,13 @@ ActiveRecord::Schema.define(version: 2024_07_05_072931) do
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "post_id", null: false
-    t.integer "comment_id"
-    t.boolean "read", default: false, null: false
+    t.integer "comment_id", null: false
+    t.boolean "read", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "admin_id"
     t.index ["admin_id"], name: "index_notifications_on_admin_id"
+    t.index ["comment_id"], name: "index_notifications_on_comment_id"
     t.index ["post_id"], name: "index_notifications_on_post_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -152,9 +153,9 @@ ActiveRecord::Schema.define(version: 2024_07_05_072931) do
     t.datetime "remember_created_at"
     t.text "biography"
     t.string "profile_image"
-    t.boolean "is_active", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_active"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -165,6 +166,7 @@ ActiveRecord::Schema.define(version: 2024_07_05_072931) do
   add_foreign_key "comments", "users"
   add_foreign_key "images", "posts"
   add_foreign_key "maps", "posts"
+  add_foreign_key "notifications", "comments"
   add_foreign_key "notifications", "posts"
   add_foreign_key "notifications", "users"
   add_foreign_key "reports", "users"

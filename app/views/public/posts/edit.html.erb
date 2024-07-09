@@ -45,10 +45,20 @@
     </div>
 
     <div class="form-group">
-      <%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %>
-      <%= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'form-control' %>
+      <h5><%= form.label :tag_list, "タグ (例: #旅行, #食べ物)" %></h5>
+      <div>
+        <label>
+          <input type="radio" name="tagging_option" value="manual" checked>
+          自分ででタグ付け
+        </label>
+        <label>
+          <input type="radio" name="tagging_option" value="cloud_vision">
+          AIでタグ付け(精度は低め)
+        </label>
+      </div>
+      <%= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'form-control', id: 'manual_tag_input' %>
     </div>
-    
+   
     <div class="form-group">
       <h5><label for="location">場所を検索:</label></h5>
       <div class="input-group">

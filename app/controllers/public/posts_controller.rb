@@ -83,7 +83,14 @@ class Public::PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     @post.user_id = current_user.id
-    tags = Vision.get_image_data(post_params[:main_image])
+    
+    if params[:tagging_option] == 'cloud_vision' && post_params[:main_image].present?
+      tags = Vision.get_image_data(post_params[:main_image])
+    elsif params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
+      tags = params[:post][:tag_list].split(",").map(&:strip)
+    else
+      tags = []
+    end
     
     if params[:save_as_draft].present? || params[:submit_post].nil?
       @post.status = 'unpublished'
@@ -92,10 +99,8 @@ class Public::PostsController < ApplicationController
     end
 
     if @post.save
-      
-      tags.each do |tag|
-        @post.tags.create(name: tag)
-      end
+       tag_objects = tags.map { |tag| { name: tag } }
+       @post.tags.create(tag_objects)
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿の下書きに保存しました。'
       else
@@ -109,7 +114,22 @@ class Public::PostsController < ApplicationController
   # 投稿を更新
   def update
     @post = Post.find(params[:id])
-    tags = Vision.get_image_data(post_params[:main_image])
+    
+    if params[:tagging_option] == 'cloud_vision' && post_params[:main_image].present?
+      begin
+        # Cloud Vision APIを使用してタグを取得
+        tags = Vision.get_image_data(post_params[:main_image])
+        Rails.logger.info "Cloud Vision tags: #{tags.inspect}"
+      rescue => e
+        Rails.logger.error "Cloud Vision API error: #{e.message}"
+        tags = []
+      end
+    elsif params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
+      tags = params[:post][:tag_list].split(",").map(&:strip)
+    else
+      tags = []
+    end
+    
     if params[:save_as_draft].present?
       @post.status = 'unpublished'
     else
@@ -117,9 +137,10 @@ class Public::PostsController < ApplicationController
     end
   
     if @post.update(post_params)
-      tags.each do |tag|
-        @post.tags.create(name: tag)
-      end
+       @post.tags.destroy_all
+       tag_objects = tags.map { |tag| { name: tag } }
+       @post.tags.create(tag_objects)
+      
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿を下書きとして保存しました。'
       else

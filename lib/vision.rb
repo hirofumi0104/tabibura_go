@@ -33,11 +33,14 @@ module Vision
       request['Content-Type'] = 'application/json'
       response = https.request(request, params)
       response_body = JSON.parse(response.body)
+
       # APIレスポンス出力
       if (error = response_body['responses'][0]['error']).present?
         raise error['message']
       else
-        response_body['responses'][0]['labelAnnotations'].pluck('description').take(3)
+        # 一意のタグを取得するために時間スタンプを追加するなどの方法を使用する
+        timestamp = Time.now.to_i
+        response_body['responses'][0]['labelAnnotations'].pluck('description').map { |tag| "#{tag}-#{timestamp}" }.take(3)
       end
     end
   end
