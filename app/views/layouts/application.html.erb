@@ -10,10 +10,9 @@
     <meta name="turbo-visit-control" content="reload">
     <script src="https://kit.fontawesome.com/c875564d79.js" crossorigin="anonymous"></script>
     
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  
-    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <script type="module" src="/assets/application.js"></script>
+
     <script>
       async function initMap() {
         // サーバーからAPIキーを取得
@@ -37,7 +36,9 @@
 
       window.onload = initMap;
     </script>
-    
+    <script type="module" src="/assets/builds/application.js"></script>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+
   </head>
 
   <body>

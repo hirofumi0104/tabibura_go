@@ -180,4 +180,9 @@ function searchLocation() {
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap"async defer></script>
-<%= javascript_pack_tag 'application' %>
+<%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
+
+
+
+
+

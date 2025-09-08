@@ -17,6 +17,10 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "esbuild": "^0.25.9",
     "webpack-dev-server": "^3"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets"
   }
 }

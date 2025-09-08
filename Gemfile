@@ -11,8 +11,8 @@ gem 'sqlite3', '~> 1.4'
 gem 'puma', '~> 6.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 5.0'
+# Transpile app-like JavaScript. Read more: https://github.com/rails/jsbundling-rails
+gem 'jsbundling-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -26,7 +26,12 @@ gem 'jbuilder', '~> 2.7'
 # gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.4.4', require: false
+gem 'bootstrap', '~> 5.3.3' 
+gem "dartsass-rails"
+
+gem 'bootsnap', require: true
+# Use Foreman to run Procfile-based applications
+gem "foreman"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

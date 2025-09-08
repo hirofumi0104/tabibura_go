@@ -24,7 +24,11 @@ Rails.application.routes.draw do
           patch :deactivate
         end
       end
-      resources :reports, only: [:top] 
+      resources :reports do
+        collection do
+          get :top
+        end
+      end
   end
    # 通報された投稿を削除するためのルート（管理者用）
   delete 'admin/reports/:id/delete_reported_post', to: 'reports#delete_reported_post', as: 'admin_delete_reported_post'
