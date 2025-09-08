@@ -58,16 +58,31 @@
 **テーブル定義書**  
 https://docs.google.com/spreadsheets/d/1-xOwbQjlQo-FOYJwWWJXvB25SO8FF5iRJQSg96-oUzA/edit?gid=0#gid=0
 
-**ER図**
+**ER図**  
 https://app.diagrams.net/#G1rquHnsRO31xYHVY63lrYJ77nPCpWeZB0
 
+**画面遷移図**  
+https://app.diagrams.net/#G1s81yFWAE1KNaEUMxtWtCg5OEhRrwqJTN#%7B%22pageId%22%3A%22N60J9SDhbAiHX3nZkmKx%22%7D
+
 ## 開発環境
-- OS：Linux(CentOS)
-- 言語：HTML,CSS,JavaScript,Ruby,SQL
-- フレームワーク：Ruby on Rails
-- JSライブラリ：jQuery
-- IDE：Cloud9
-​
+
+### 現在の環境
+| 項目           | 内容                          |
+|----------------|-------------------------------|
+| OS             | Linux (CentOS), macOS         |
+| 言語           | HTML, CSS, JavaScript, Ruby, SQL |
+| フレームワーク | Ruby on Rails                 |
+| JSライブラリ   | jQuery                        |
+| IDE            | VS Code                       |
+
+### 過去の環境
+| 項目           | 内容                          |
+|----------------|-------------------------------|
+| OS             | Linux (CentOS)                |
+| 言語           | HTML, CSS, JavaScript, Ruby, SQL |
+| フレームワーク | Ruby on Rails                 |
+| JSライブラリ   | jQuery                        |
+| IDE            | Cloud9                        |
 ## 使用素材
 <!-- - 外部サービスの画像素材・音声素材を使用した場合は、必ずサービス名とURLを明記してください。 -->
 <!-- - アプリケーションの実装に使用したgem/bootstrapのリファレンスなどの記載は不要です。 -->
