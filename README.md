@@ -55,7 +55,12 @@
 <!-- 【補足説明】 -->
 <!-- - テーマ提出時点では不要です。 -->
 <!-- - 当項目には「後ほど作成予定」と記載しましょう。 -->
-後ほど作成予定
+**テーブル定義書**  
+https://docs.google.com/spreadsheets/d/1-xOwbQjlQo-FOYJwWWJXvB25SO8FF5iRJQSg96-oUzA/edit?gid=0#gid=0
+
+**ER図**
+https://app.diagrams.net/#G1rquHnsRO31xYHVY63lrYJ77nPCpWeZB0
+
 ## 開発環境
 - OS：Linux(CentOS)
 - 言語：HTML,CSS,JavaScript,Ruby,SQL
