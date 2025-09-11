@@ -1,0 +1,19 @@
+// Entry point for your Sass build
+
+//  Public 用
+@import "./public/homes";
+@import "./public/users";
+@import "./public/notifications";
+@import "./public/posts";
+
+//  Admin 用
+@import "./admin/homes";
+@import "./admin/users";
+
+//  その他（後でコメント追加する）
+@import "./comments";
+@import "./favorites";
+@import "./relationships";
+@import "./reports";
+@import "./sessions";
+
