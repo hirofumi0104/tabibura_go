@@ -36,10 +36,7 @@ Rails.application.routes.draw do
   patch 'reports/:id/cancel_comment_report', to: 'reports#cancel_comment_report', as: 'cancel_comment_report'
   
   # ユーザー側
-  devise_for :users, controllers: {
-  registrations: "public/registrations",
-  sessions: 'public/sessions'
-}
+  devise_for :users
 
  # ゲストログイン用
   devise_scope :user do
@@ -49,7 +46,7 @@ Rails.application.routes.draw do
   scope module: :public do
       root 'homes#top'
       get 'homes/about'
-      resources :users, only: [:show, :index, :edit, :update] do
+      resources :users, path: 'members', only: [:show, :index, :update] do
       # フォロー機能
        resource :relationships, only: [:create, :destroy]
       	get "followings" => "relationships#followings", as: "followings"
