@@ -2,8 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         authentication_keys: [:name]
+         :recoverable, :rememberable, :validatable
          
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -12,6 +11,7 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :reports, dependent: :destroy 
   has_one_attached :profile_image
+  
   # 退会確認用
   attr_accessor :withdrawal_confirmation
   
@@ -53,19 +53,6 @@ class User < ApplicationRecord
    # 管理者ユーザーかどうかを判定
   def admin?
      email == 'admin@example.com' 
-  end
-  
-   # ゲストユーザーかどうかを判定する
-  def guest?
-    email == 'guest@example.com'
-  end
-  
-   # ゲストユーザーを作成
-  def self.guest
-    find_or_create_by!(email: 'guest@example.com') do |user|
-      user.password = SecureRandom.urlsafe_base64
-      user.name = "Guest User"
-    end
   end
   
 end

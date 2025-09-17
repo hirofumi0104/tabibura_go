@@ -24,25 +24,23 @@
             </div>
           <% end %>
           <div class="user-list" style="max-height: 400px; overflow-y: auto;">
-            <% @users.each do |user| %>
-              <% unless user.guest? %>
-                <div class="media mb-3">
-                  <% if user.profile_image.attached? %>
-                    <%= image_tag user.profile_image, class: "mr-3 rounded-circle", style: "width: 50px; height: 50px;", alt: user.name %>
-                  <% else %>
-                    <%= image_tag "User.png", class: "mr-3 rounded-circle", style: "width: 50px; height: 50px;", alt: "デフォルトアイコン" %>
-                  <% end %>
-                  <div class="media-body">
-                    <div class="d-flex align-items-center">
-                      <% if current_admin %>
-                        <p class="mt-3"><%= link_to user.name, admin_user_path(user) %></p>
-                      <% else %>
-                        <p class="mt-3"><%= link_to user.name, user_path(user) %></p>
-                      <% end %>
-                    </div>
+            <% @users.each do |user| %>              
+              <div class="media mb-3">
+                <% if user.profile_image.attached? %>
+                  <%= image_tag user.profile_image, class: "mr-3 rounded-circle", style: "width: 50px; height: 50px;", alt: user.name %>
+                <% else %>
+                  <%= image_tag "User.png", class: "mr-3 rounded-circle", style: "width: 50px; height: 50px;", alt: "デフォルトアイコン" %>
+                <% end %>
+                <div class="media-body">
+                  <div class="d-flex align-items-center">
+                    <% if current_admin %>
+                      <p class="mt-3"><%= link_to user.name, admin_user_path(user) %></p>
+                    <% else %>
+                      <p class="mt-3"><%= link_to user.name, user_path(user) %></p>
+                    <% end %>
                   </div>
                 </div>
-              <% end %>
+              </div>      
             <% end %>
           </div>
         </div>

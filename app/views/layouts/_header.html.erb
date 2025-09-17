@@ -1,5 +1,5 @@
 <header>
-  <% unless admin_signed_in? || admin_login_page? %>
+  <% unless (user_signed_in? && current_user.admin?) || admin_login_page? %>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #5ce1e6;">
       <div class="container d-flex flex-column align-items-center">
         <!-- 第一セクション（ロゴとゲストログイン） -->
@@ -8,13 +8,6 @@
             <a class="navbar-brand" href="/">
               <%= image_tag "rogo.png", alt: "旅ぶら_GO", style: "height: 100px; width: auto;" %>
             </a>
-          </div>
-          <div class="d-flex align-items-center">
-            <% unless user_signed_in? %>
-              <%= link_to guest_login_path, method: :post, class: 'btn btn-secondary nav-link mr-3' do %>
-                <i class="fas fa-user"></i> ゲストログイン
-              <% end %>
-            <% end %>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -65,7 +58,7 @@
                 <% end %>
               </li>
               <li class="nav-item">
-                <%= link_to homes_about_path, class: 'nav-link text-light' do %>
+                <%= link_to public_homes_about_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-link"></i> About
                 <% end %>
               </li>
@@ -88,7 +81,7 @@
 </header>
 
 <header>
-  <% if admin_signed_in? %>
+  <% if user_signed_in? && current_user.admin? %>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container d-flex flex-column align-items-center">
        <div>

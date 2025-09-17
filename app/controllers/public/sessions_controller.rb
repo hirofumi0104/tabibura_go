@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Public::SessionsController < Devise::SessionsController
+
+  # 確認ように一時おいておく。
+
   before_action :configure_sign_in_params, only: [:create]
   
   def guest_login

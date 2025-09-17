@@ -1,4 +1,19 @@
 Rails.application.routes.draw do
+  
+  # ユーザー認証のルート
+  devise_for :users, controllers: {
+    sessions: 'certification_commons/sessions',
+    registrations: 'certification_commons/registrations',
+    passwords: 'certification_commons/passwords',
+    confirmations: 'certification_commons/confirmations',
+    unlocks: 'certification_commons/unlocks',
+  }
+
+  devise_scope :user do
+    get 'admin', to: 'certification_commons/sessions#new', as: 'admin_login'
+    get 'public', to: 'certification_commons/sessions#new', as: 'public_login'
+  end
+
   # コメントの作成と削除
   get 'comments/create'
   delete 'comments/destroy'
@@ -8,45 +23,13 @@ Rails.application.routes.draw do
       patch 'cancel_report', to: 'reports#cancel_report'
     end
   end
-  
-  # 管理者側
-  devise_for :admin, skip: [:registrations, :passwords] , controllers: {
-  sessions: "admin/sessions"
-}
 
-  namespace :admin do
-      get 'top' => 'homes#top', as: 'top'
-      resources :users, only: [:show, :index] do
-        member do
-          get 'posts'
-          # ユーザーステータス機能
-          patch :activate
-          patch :deactivate
-        end
-      end
-      resources :reports do
-        collection do
-          get :top
-        end
-      end
-  end
-   # 通報された投稿を削除するためのルート（管理者用）
-  delete 'admin/reports/:id/delete_reported_post', to: 'reports#delete_reported_post', as: 'admin_delete_reported_post'
-  # コメントの通報をキャンセルするためのルート
-  patch 'reports/:id/cancel_comment_report', to: 'reports#cancel_comment_report', as: 'cancel_comment_report'
-  
-  # ユーザー側
-  devise_for :users
+  # ユーザー用ルーティング
+  root to: 'public/homes#top'
 
- # ゲストログイン用
-  devise_scope :user do
-    post 'guest_login', to: 'public/sessions#guest_login'
-  end
-
-  scope module: :public do
-      root 'homes#top'
+  namespace :public do
       get 'homes/about'
-      resources :users, path: 'members', only: [:show, :index, :update] do
+      resources :users, path: 'members', only: [:show, :index, :new, :update] do
       # フォロー機能
        resource :relationships, only: [:create, :destroy]
       	get "followings" => "relationships#followings", as: "followings"
@@ -86,7 +69,28 @@ Rails.application.routes.draw do
       # タグのルーティング
       get 'tags/:tag', to: 'posts#tagged', as: 'tag'
     end
+
+  # 管理者用ルーティング
+  namespace :admin do
+      root to: 'homes#top'
+      resources :users, only: [:show, :index] do
+        member do
+          get 'posts'
+          # ユーザーステータス機能
+          patch :activate
+          patch :deactivate
+        end
+      end
+      resources :reports do
+        collection do
+          get :top
+        end
+      end
   end
+   # 通報された投稿を削除するためのルート（管理者用）
+  delete 'admin/reports/:id/delete_reported_post', to: 'reports#delete_reported_post', as: 'admin_delete_reported_post'
+  # コメントの通報をキャンセルするためのルート
+  patch 'reports/:id/cancel_comment_report', to: 'reports#cancel_comment_report', as: 'cancel_comment_report'
+  
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-
-
+end
