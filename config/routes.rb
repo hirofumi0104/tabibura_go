@@ -12,7 +12,14 @@ Rails.application.routes.draw do
   devise_scope :user do
     get 'admin', to: 'certification_commons/sessions#new', as: 'admin_login'
     get 'public', to: 'certification_commons/sessions#new', as: 'public_login'
+    get 'admin/registration', to: 'certification_commons/registrations#new', as: 'new_admin_registration'
+    get 'public/registration', to: 'certification_commons/registrations#new', as: 'new_public_registration'
   end
+  
+
+
+
+
 
   # コメントの作成と削除
   get 'comments/create'

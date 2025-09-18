@@ -13,28 +13,23 @@
           <h4 class="mt-3"><%= @user.name %></h4>
           <p><%= @user.biography %></p>
 
-          <% unless current_user.guest? %>
+          
             <div class="mt-4">
               <h5>フォロー</h5>
-              <p><%= link_to @user.followings.count, user_followings_path(@user) %></p>
+              <p><%= link_to @user.followings.count, public_user_followings_path(@user) %></p>
               <h5>フォロワー</h5>
-              <p><%= link_to @user.followers.count, user_followers_path(@user) %></p>
+              <p><%= link_to @user.followers.count, public_user_followers_path(@user) %></p>
             </div>
-          <% end %>
 
-          <% unless current_user.nil? || current_user.guest? %>
             <div class="mt-4">
               <%= render "layouts/followbtn", user: @user, options: { class: "" } %>
             </div>
-          <% end %>
 
           <% if current_user == @user %>
             <div class="mt-4">
-              <%= link_to "会員情報編集", edit_information_user_path, class: "btn btn-primary btn-block" %>
-              <% unless current_user.guest? %>
-                <%= link_to "下書き一覧", draft_posts_path, class: "btn btn-info btn-block mt-2" %>
-              <% end %>
-              <%= link_to "いいねした投稿一覧", nice_posts_path, class: "btn btn-success btn-block mt-2" %>
+              <%= link_to "会員情報編集", edit_information_public_user_path, class: "btn btn-primary btn-block" %>             
+              <%= link_to "下書き一覧", draft_public_posts_path, class: "btn btn-info btn-block mt-2" %>
+              <%= link_to "いいねした投稿一覧", nice_public_posts_path, class: "btn btn-success btn-block mt-2" %>
             </div>
           <% end %>
         </div>
@@ -42,7 +37,7 @@
 
       <div class="card mb-4">
         <div class="card-body">
-          <%= form_with(url: user_path(@user), method: :get, local: true, class: "mb-3") do %>
+          <%= form_with(url: public_user_path(@user), method: :get, local: true, class: "mb-3") do %>
             <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ', class: "form-control mb-2" %>
             <%= submit_tag '検索', class: "btn btn-primary btn-block" %>
           <% end %>

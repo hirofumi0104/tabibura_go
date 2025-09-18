@@ -4,6 +4,7 @@ class CertificationCommons::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
+  # deviceのログイン画面を役割で分けました。
   def new
     # フォームの作成
     self.resource = resource_class.new
@@ -38,16 +39,16 @@ class CertificationCommons::SessionsController < Devise::SessionsController
   # end
 
   private
-  
+  # ログイン後のリダイレクト先を役割で分けました。
   def after_sign_in_path_for(resource)
-    resource.admin? ? admin_top_path : public_top_path
+    resource.admin? ? admin_top_path : show_mypage_public_user_path(current_user)
   end
-
+  # ログアウト後のリダイレクト先を役割で分けました。
   def after_sign_out_path_for(resource_or_scope)
-    if resource_or_scope == :user && resource.admin?
+    if  previous_url = request.referer.start_with?('/admin')
       new_admin_session_path
     else
-      new_public_session_path
+      root_path
     end
   end
 

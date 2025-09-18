@@ -2,11 +2,11 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <% if controller_name != 'sessions' %>
-        <%= link_to "Log in", new_session_path(resource_name), class: "btn btn btn-outline-primary btn-block mb-3" %>
+        <%= link_to "Log in", public_login_path, class: "btn btn btn-outline-primary btn-block mb-3" %>
       <% end %>
 
       <% if devise_mapping.registerable? && controller_name != 'registrations' %>
-        <%= link_to "Sign up", new_registration_path(resource_name), class: "btn btn-outline-success btn-block" %>
+        <%= link_to "Sign up", new_public_registration_path, class: "btn btn-outline-success btn-block" %>
       <% end %>
     </div>
   </div>

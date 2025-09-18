@@ -1,6 +1,6 @@
 class Public::PostsController < ApplicationController
   before_action :set_post, only: [:edit, :update, :show, :destroy,]
-  before_action :authenticate_user!, unless: :admin_signed_in?
+  before_action :authenticate_user!, except: [:index, :show, :tagged]
   # ゲストユーザーが特定のアクションを実行できないように制限する
   before_action :ensure_not_guest, only: [:new, :create, :edit, :update, :destroy]
 

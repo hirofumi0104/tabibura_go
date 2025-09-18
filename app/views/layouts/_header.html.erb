@@ -1,8 +1,7 @@
 <header>
-  <% unless (user_signed_in? && current_user.admin?) || admin_login_page? %>
+  <% if request.path.start_with?('/public') || (controller_path == 'public/homes' && action_name == 'top') %>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #5ce1e6;">
       <div class="container d-flex flex-column align-items-center">
-        <!-- 第一セクション（ロゴとゲストログイン） -->
         <div class="d-flex justify-content-between align-items-center w-100">
           <div class="d-flex align-items-center">
             <a class="navbar-brand" href="/">
@@ -14,33 +13,33 @@
           </button>
         </div>
         
-        <!-- 第二セクション（その他のナビゲーション） -->
-        <div class="collapse navbar-collapse w-100" id="navbarNavDropdown">
-          <ul class="navbar-nav ml-auto">
+        <!--（その他のナビゲーション） -->
+        <div>
+          <ul>
             <% if user_signed_in? %>
-              <li class="nav-item">
-                <%= link_to show_mypage_user_path(current_user), class: 'nav-link text-light' do %>
+              <li>
+                <%= link_to show_mypage_public_user_path(current_user), class: 'nav-link text-light' do %>
                   <i class="fas fa-laugh-beam"></i> マイページ
                 <% end %>
               </li>
-              <li class="nav-item">
-                <%= link_to new_post_path, class: 'nav-link text-light' do %>
+              <li>
+                <%= link_to new_public_post_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-edit"></i> 投稿
                 <% end %>
               </li>
-              <li class="nav-item">
-                <%= link_to posts_path, class: 'nav-link text-light' do %>
+              <li>
+                <%= link_to public_posts_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-book"></i> 投稿一覧
                 <% end %>
               </li>
-              <li class="nav-item">
+              <li>
                 <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link text-light' do %>
                   <i class="fas fa-sign-out-alt"></i> ログアウト
                 <% end %>
               </li>
-              <li class="nav-item">
-                <%= form_with(url: posts_path, method: :get, local: true, class: 'form-inline my-2 my-lg-0') do |form| %>
-                  <div class="input-group">
+              <li>
+                <%= form_with(url: public_posts_path, method: :get, local: true, class: 'form-inline my-2 my-lg-0') do |form| %>
+                  <div>
                     <%= form.text_field :q, value: params[:q], class: 'form-control', placeholder: 'キーワード検索' %>
                     <%= form.text_field :tag, value: params[:tag], class: 'form-control ml-sm-2', placeholder: '#なしタグ検索' %>
                     <div class="input-group-append">
@@ -52,23 +51,23 @@
                 <% end %>
               </li>
             <% else %>
-              <li class="nav-item">
+              <li>
                 <%= link_to root_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-home"></i> Top
                 <% end %>
               </li>
-              <li class="nav-item">
+              <li>
                 <%= link_to public_homes_about_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-link"></i> About
                 <% end %>
               </li>
-              <li class="nav-item">
-                <%= link_to new_user_registration_path, class: 'nav-link text-light' do %>
+              <li>
+                <%= link_to new_public_registration_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-user-plus"></i> 新規登録
                 <% end %>
               </li>
-              <li class="nav-item">
-                <%= link_to new_user_session_path, class: 'nav-link text-light' do %>
+              <li>
+                <%= link_to public_login_path, class: 'nav-link text-light' do %>
                   <i class="fas fa-user-check"></i> ログイン
                 <% end %>
               </li>
@@ -77,38 +76,36 @@
         </div>
       </div>
     </nav>
-  <% end %>
 </header>
 
 <header>
-  <% if user_signed_in? && current_user.admin? %>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <% elsif request.path.start_with?('/admin')  && user_signed_in? && current_user.admin? %>
       <div class="container d-flex flex-column align-items-center">
        <div>
-       <%= link_to "管理者ダッシュボード", admin_top_path, class: "navbar-brand" %>
+       <%= link_to "管理者ダッシュボード", admin_root_path, class: "navbar-brand" %>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbarNavDropdown" aria-controls="adminNavbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         </div>
         <div class="collapse navbar-collapse" id="adminNavbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item" style="margin-right: 10px;">
-              <%= link_to admin_top_path, class: 'nav-link text-light' do %>
+          <ul>
+            <li>
+              <%= link_to admin_root_path, class: 'nav-link text-light' do %>
                 <i class="fas fa-home"></i> ホーム
               <% end %>
             </li>
-            <li class="nav-item" style="margin-right: 10px;">
+            <li style="margin-right: 10px;">
               <%= link_to admin_users_path, class: 'nav-link text-light' do %>
                 <i class="fas fa-users"></i> ユーザー一覧
               <% end %>
             </li>
-            <li class="nav-item" style="margin-right: 10px;">
-              <%= link_to posts_path, class: 'nav-link text-light' do %>
+            <li style="margin-right: 10px;">
+              <%= link_to public_posts_path, class: 'nav-link text-light' do %>
                 <i class="fas fa-edit"></i> 投稿一覧
               <% end %>
             </li>
-            <li class="nav-item">
-              <%= link_to destroy_admin_session_path, method: :delete, class: 'nav-link text-light' do %>
+            <li>
+              <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link text-light' do %>
                 <i class="fas fa-sign-out-alt"></i> ログアウト
               <% end %>
             </li>

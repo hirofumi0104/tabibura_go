@@ -18,6 +18,7 @@
   "version": "0.1.0",
   "devDependencies": {
     "esbuild": "^0.25.9",
+    "sass": "^1.92.1",
     "webpack-dev-server": "^3"
   },
   "scripts": {

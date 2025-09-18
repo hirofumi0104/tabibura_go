@@ -1,13 +1,23 @@
 # frozen_string_literal: true
 
-class Users::RegistrationsController < Devise::RegistrationsController
+class CertificationCommons::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  # def new
-  #   super
-  # end
+  def new
+    self.resource = resource_class.new
+    if request.fullpath.starts_with?('/admin/registration')
+      # admin 用のビューを使用
+      render 'admin/registrations/new'
+    elsif request.fullpath.starts_with?('/public/registration')
+      # public 用のビューを使用
+      render 'public/registrations/new'
+    else
+      # 不正アクセス時は root にリダイレクト
+      redirect_to root_path, alert: '不正なアクセスです。'
+    end
+  end
 
   # POST /resource
   # def create
