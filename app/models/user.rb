@@ -2,8 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         authentication_keys: [:name]
+         :recoverable, :rememberable, :validatable
          
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -53,7 +52,25 @@ class User < ApplicationRecord
   
    # 管理者ユーザーかどうかを判定
   def admin?
-     email == 'admin@example.com' 
+    role == 1
   end
   
+  # 管理者と一般ユーザーのログイン方法を変えるための設定
+  attr_accessor :login
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    login = conditions.delete(:login) # フォームで送る login フィールドを取得
+    
+    if login
+      if login.include?('@') # メール形式なら管理者ログイン想定
+        where(email: login).first
+      else
+        where(name: login).first # 一般ユーザーは名前でログイン
+      end
+    else
+      super
+    end
+  end
+
 end

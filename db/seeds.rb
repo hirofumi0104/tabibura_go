@@ -8,6 +8,7 @@
 
 # 管理者アカウント
 User.find_or_create_by!(email: 'admin@example.com') do |admin|
+  admin.name = 'Admin'   
   admin.password = 'hiro0104'
   admin.password_confirmation = 'hiro0104'
   admin.role = 1 # 管理者の役割を設定
