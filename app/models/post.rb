@@ -1,5 +1,13 @@
 class Post < ApplicationRecord
-   belongs_to :user
+   
+  # 公開と非公開のステータスの定義
+   enum :status, { unpublished: 0, published: 1 }
+    # 公開の投稿を取得するため
+   scope :published, -> { where(status: :published) }
+   # 未公開の投稿を取得するため
+   scope :unpublished, -> { where(status: :unpublished) }
+  
+  belongs_to :user
    has_one_attached :main_image
    has_one :map, dependent: :destroy
    has_many :comments, dependent: :destroy
@@ -18,12 +26,7 @@ class Post < ApplicationRecord
    validates :main_image, presence: { message: "見出し写真をアップロードしてください。" }
    validate :at_least_one_image
    
-   # 公開と非公開のステータスの定義
-   enum :status, { unpublished: 0, published: 1 }
-    # 公開の投稿を取得するため
-   scope :published, -> { where(status: :published) }
-   # 未公開の投稿を取得するため
-   scope :unpublished, -> { where(status: :unpublished) }
+   
    
     # タグリストを取得する
    def tag_list

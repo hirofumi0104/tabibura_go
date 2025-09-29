@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <h1 class="text-center">投稿ページ</h1>
 
-  <%= form_with(model: @post, local: true) do |form| %>
+  <%= form_with(model: [:public, @post], local: true) do |form| %>
     <% if @post.errors.any? %>
       <div id="error_explanation" class="alert alert-danger">
         <h2><%= pluralize(@post.errors.count, "error") %> 入力をお願いします</h2>

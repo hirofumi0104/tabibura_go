@@ -52,7 +52,7 @@ end
   private
   # ログイン後のリダイレクト先を役割で分けました。
   def after_sign_in_path_for(resource)
-    resource.admin? ? admin_top_path : show_mypage_public_user_path(current_user)
+    resource.admin? ? admin_homes_top_path : show_mypage_public_user_path(current_user)
   end
   # ログアウト後のリダイレクト先を役割で分けました。
   def after_sign_out_path_for(resource_or_scope)

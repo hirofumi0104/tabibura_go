@@ -9,37 +9,12 @@
     <!-- TurboLinksを無効化 -->
     <meta name="turbo-visit-control" content="reload">
     <script src="https://kit.fontawesome.com/c875564d79.js" crossorigin="anonymous"></script>
-    
+
+    <script type="module" src="/assets/application.js"></script>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-
-    <script>
-      async function initMap() {
-        // サーバーからAPIキーを取得
-        const response = await fetch('/maps-api-key');
-        const apiKey = await response.text();
-
-        // 取得したAPIキーを使用してスクリプトを動的にロード
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=loadMap`;
-        script.async = true;
-        script.defer = true;
-        document.head.appendChild(script);
-      }
-
-      function loadMap() {
-        const map = new google.maps.Map(document.getElementById('map'), {
-          center: { lat: -34.397, lng: 150.644 },
-          zoom: 8
-        });
-      }
-
-      window.onload = initMap;
-    </script>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
-
   </head>
 
-  <body>
+  <body style="margin: 0;">
     <%= render 'layouts/header' %>
      
     <% if notice.present? %>

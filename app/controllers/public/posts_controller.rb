@@ -1,8 +1,6 @@
 class Public::PostsController < ApplicationController
   before_action :set_post, only: [:edit, :update, :show, :destroy,]
   before_action :authenticate_user!, except: [:index, :show, :tagged]
-  # ゲストユーザーが特定のアクションを実行できないように制限する
-  before_action :ensure_not_guest, only: [:new, :create, :edit, :update, :destroy]
 
    # 新規投稿
   def new
@@ -104,7 +102,7 @@ class Public::PostsController < ApplicationController
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿の下書きに保存しました。'
       else
-        redirect_to posts_path, notice: '投稿しました。', replace: true
+        redirect_to public_posts_path, notice: '投稿しました。', replace: true
       end
     else
       render :new
@@ -160,18 +158,18 @@ class Public::PostsController < ApplicationController
       else
         flash[:notice] = '投稿を非公開にしました。'
         # 管理者がログインしている場合、通知を作成する
-        if admin_signed_in?
+        if current_user.admin?
           Notification.create(
             user: @post.user,
-            admin: current_admin, # ログインしている管理者
+            admin: current_user.admin, # ログインしている管理者
             post: @post
           )
         end
       end
-      if admin_signed_in?  # 管理者がログインしているかどうかを確認する条件
+      if current_user.admin?  # 管理者がログインしているかどうかを確認する条件
         redirect_to request.referer
       else
-        redirect_to draft_posts_path
+        redirect_to draft_public_posts_path
       end
     else
       render :draft
@@ -196,13 +194,6 @@ class Public::PostsController < ApplicationController
   
   def set_post
     @post = Post.find(params[:id])
-  end
-  
-  # ゲストユーザーがアクセスできないよう
-  def ensure_not_guest
-    if current_user.guest?
-      redirect_to root_path, alert: 'ゲストユーザーはこの機能を使用できません。会員登録をしてください。'
-    end
   end
   
   def post_params

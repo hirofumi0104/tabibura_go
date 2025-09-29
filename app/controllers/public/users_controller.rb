@@ -1,7 +1,6 @@
 class Public::UsersController < ApplicationController
    before_action :set_user, only: [:show, :edit, :update, :unsubscribe]
    before_action :authenticate_user!
-   before_action :ensure_not_guest, only: [:edit, :update, :destroy]
 
   # ユーザーのプロフィール 
   def show
@@ -43,12 +42,6 @@ class Public::UsersController < ApplicationController
     @user = User.find(params[:id])
   end
   
-   # ゲストユーザーがアクセスできないようにする
-  def ensure_not_guest
-    if current_user.guest?
-      redirect_to root_path, alert: 'ゲストユーザーはこの機能を使用できません。会員登録をしてください。'
-    end
-  end
   
   def user_params
     params.require(:user).permit(:name, :email, :biography, :profile_image, :withdrawal_confirmation)

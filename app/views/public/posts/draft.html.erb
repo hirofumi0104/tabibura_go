@@ -6,7 +6,7 @@
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">カテゴリ検索</h5>
-          <%= form_with(url: draft_posts_path, method: :get, local: true, class: "mb-3") do %>
+          <%= form_with(url: draft_public_posts_path, method: :get, local: true, class: "mb-3") do %>
             <%= select_tag :itinerary, options_for_select(itinerary.map { |category| [category, category] }, params[:itinerary]), include_blank: 'すべてのカテゴリ', class: "form-control mb-2" %>
             <%= submit_tag '検索', class: "btn btn-primary btn-block" %>
           <% end %>
@@ -20,7 +20,7 @@
           <% @posts.each do |post| %>
             <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
               <div class="card h-100">
-                <%= link_to post_path(post.id) do %>
+                <%= link_to public_post_path(post.id) do %>
                   <%= image_tag post.main_image, class: "card-img-top img-fluid", style: "object-fit: cover; height: 250px;" %>
                 <% end %>
                 <div class="card-body">
@@ -28,7 +28,7 @@
                   <p class="card-text"><%= truncate(post.caption, length: 20) %></p>
                   <hr> <!-- 区切り線 -->
                   <div class="d-flex align-items-center mb-3">
-                    <%= form_for post, url: update_status_post_path(post), method: :patch, class: "form-inline mr-2" do |f| %>
+                    <%= form_for post, url: update_status_public_post_path(post), method: :patch, class: "form-inline mr-2" do |f| %>
                       <div class="form-check form-check-inline">
                         <%= f.radio_button :status, 'published', class: "form-check-input", id: "status_published_#{post.id}" %>
                         <%= f.label "status_published_#{post.id}", '公開', class: "form-check-label mr-3" %>
@@ -43,9 +43,9 @@
                   
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex">
-                      <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-sm btn-primary mr-5" %>
-                      <%= link_to '編集', edit_post_path(post, from_draft: true), class: "btn btn-sm btn-secondary mr-2" %>
-                      <%= link_to '削除', post, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-sm btn-danger' %>
+                      <%= link_to "詳細を見る", public_post_path(post.id), class: "btn btn-sm btn-primary mr-5" %>
+                      <%= link_to '編集', edit_public_post_path(post, from_draft: true), class: "btn btn-sm btn-secondary mr-2" %>
+                      <%= link_to '削除', public_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-sm btn-danger' %>
                     </div>
                   </div>
                 </div>

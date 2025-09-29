@@ -1,0 +1,61 @@
+// ヘッダー全体のスタイル
+#header-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; 
+}
+
+// ナビゲーションリンクのスタイル 
+#header-nav a {
+  position: relative;
+  display: inline-block;
+  padding: 4px 6px;
+  text-decoration: none; 
+  color: #333;
+  font-size: 16px;
+}
+
+/* 疑似要素で下線を作成 */
+#header-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;            
+  width: 100%;
+  height: 2px;
+  background-color: #6fa24a; 
+  transform: scaleX(0);     
+  transform-origin: right center;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* ホバー時に下線が伸びる */
+#header-nav a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+
+
+// 写真スライドのスタイル
+#header-slider {
+  width:100%; /* スライダーの幅 */
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-track {
+  display: flex;
+  width:  max-content; /* スライダー固定幅に合わせる */
+  border-top: 4px solid #333; /* 上のボーダー */
+  border-bottom: 4px solid #333; /* 下のボーダー */
+}
+  
+#header-slider .slide-track img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+

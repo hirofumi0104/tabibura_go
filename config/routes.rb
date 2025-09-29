@@ -79,7 +79,7 @@ Rails.application.routes.draw do
 
   # 管理者用ルーティング
   namespace :admin do
-      root to: 'homes#top'
+      get 'homes/top'
       resources :users, only: [:show, :index] do
         member do
           get 'posts'

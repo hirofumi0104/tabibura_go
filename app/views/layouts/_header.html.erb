@@ -1,117 +1,95 @@
-<header>
-  <% if request.path.start_with?('/public') || (controller_path == 'public/homes' && action_name == 'top') %>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #5ce1e6;">
-      <div class="container d-flex flex-column align-items-center">
-        <div class="d-flex justify-content-between align-items-center w-100">
-          <div class="d-flex align-items-center">
-            <a class="navbar-brand" href="/">
-              <%= image_tag "rogo.png", alt: "旅ぶら_GO", style: "height: 100px; width: auto;" %>
-            </a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-        
-        <!--（その他のナビゲーション） -->
-        <div>
-          <ul>
-            <% if user_signed_in? %>
-              <li>
-                <%= link_to show_mypage_public_user_path(current_user), class: 'nav-link text-light' do %>
-                  <i class="fas fa-laugh-beam"></i> マイページ
-                <% end %>
-              </li>
-              <li>
-                <%= link_to new_public_post_path, class: 'nav-link text-light' do %>
-                  <i class="fas fa-edit"></i> 投稿
-                <% end %>
-              </li>
-              <li>
-                <%= link_to public_posts_path, class: 'nav-link text-light' do %>
-                  <i class="fas fa-book"></i> 投稿一覧
-                <% end %>
-              </li>
-              <li>
-                <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link text-light' do %>
-                  <i class="fas fa-sign-out-alt"></i> ログアウト
-                <% end %>
-              </li>
-              <li>
-                <%= form_with(url: public_posts_path, method: :get, local: true, class: 'form-inline my-2 my-lg-0') do |form| %>
-                  <div>
-                    <%= form.text_field :q, value: params[:q], class: 'form-control', placeholder: 'キーワード検索' %>
-                    <%= form.text_field :tag, value: params[:tag], class: 'form-control ml-sm-2', placeholder: '#なしタグ検索' %>
-                    <div class="input-group-append">
-                      <%= form.button type: 'submit', class: 'btn btn-outline-light', title: '検索' do %>
-                        <i class="fas fa-search"></i>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
-              </li>
-            <% else %>
-              <li>
-                <%= link_to root_path, class: 'nav-link text-light' do %>
-                  <i class="fas fa-home"></i> Top
-                <% end %>
-              </li>
-              <li>
-                <%= link_to public_homes_about_path, class: 'nav-link text-light' do %>
-                  <i class="fas fa-link"></i> About
-                <% end %>
-              </li>
-              <li>
-                <%= link_to new_public_registration_path, class: 'nav-link text-light' do %>
-                  <i class="fas fa-user-plus"></i> 新規登録
-                <% end %>
-              </li>
-              <li>
-                <%= link_to public_login_path, class: 'nav-link text-light' do %>
-                  <i class="fas fa-user-check"></i> ログイン
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </nav>
-</header>
+<header style="width: 100%; height: auto;">
+  <% if request.path.start_with?('/public') || (controller_path == 'public/homes' && action_name == 'top') %>   
+    <nav id="header-nav">
+      <a href="/">
+        <%= image_tag "rogo.png", alt: "旅ぶら_GO", style: "height: 100px; width: auto;" %>
+      </a>
 
-<header>
-  <% elsif request.path.start_with?('/admin')  && user_signed_in? && current_user.admin? %>
-      <div class="container d-flex flex-column align-items-center">
-       <div>
-       <%= link_to "管理者ダッシュボード", admin_root_path, class: "navbar-brand" %>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbarNavDropdown" aria-controls="adminNavbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="adminNavbarNavDropdown">
-          <ul>
-            <li>
-              <%= link_to admin_root_path, class: 'nav-link text-light' do %>
-                <i class="fas fa-home"></i> ホーム
-              <% end %>
-            </li>
-            <li style="margin-right: 10px;">
-              <%= link_to admin_users_path, class: 'nav-link text-light' do %>
-                <i class="fas fa-users"></i> ユーザー一覧
-              <% end %>
-            </li>
-            <li style="margin-right: 10px;">
-              <%= link_to public_posts_path, class: 'nav-link text-light' do %>
-                <i class="fas fa-edit"></i> 投稿一覧
-              <% end %>
-            </li>
-            <li>
-              <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link text-light' do %>
-                <i class="fas fa-sign-out-alt"></i> ログアウト
-              <% end %>
-            </li>
-          </ul>
-        </div>
-      </div>
+     
+      <% if user_signed_in? %>
+        <span>
+          <%= link_to show_mypage_public_user_path(current_user) do %>
+            <i class="fas fa-laugh-beam"></i> マイページ
+          <% end %>
+        </span>
+        <span>
+          <%= link_to new_public_post_path do %>
+            <i class="fas fa-edit"></i> 投稿
+          <% end %>
+        </span>
+        <span>
+          <%= link_to public_posts_path do %>
+            <i class="fas fa-book"></i> 投稿一覧
+          <% end %>
+        </span>
+        <span>
+          <%= link_to destroy_user_session_path, method: :delete do %>
+            <i class="fas fa-sign-out-alt"></i> ログアウト
+          <% end %>
+        </span>
+        <span>
+          <%= form_with(url: public_posts_path, method: :get, local: true) do |form| %>
+            <%= form.text_field :q, value: params[:q], placeholder: 'キーワード検索' %>
+            <%= form.text_field :tag, value: params[:tag], placeholder: '#なしタグ検索' %>
+            <%= form.button type: 'submit', title: '検索' do %>
+              <i class="fas fa-search"></i>
+            <% end %>
+          <% end %>
+        </span>
+      <% else %> 
+        <span>
+          <%= link_to root_path do %>
+            <i class="fas fa-home"></i> Top
+          <% end %>
+        </span>
+        <span>
+          <%= link_to public_homes_about_path do %>
+            <i class="fas fa-link"></i> About
+          <% end %>
+        </span>
+        <span>
+          <%= link_to new_public_registration_path do %>
+            <i class="fas fa-user-plus"></i> 新規登録
+          <% end %>
+        </span>
+        <span>
+          <%= link_to public_login_path do %>
+            <i class="fas fa-user-check"></i> ログイン
+          <% end %>
+        </span>
+      <% end %>
+    </nav>
+    <span id="header-slider"></span>
+  <% elsif request.path.start_with?('/admin') && user_signed_in? && current_user.admin? %>
+    <nav>
+      <%= link_to "管理者ダッシュボード", admin_root_path %>
+
+      <ul>
+        <li>
+          <%= link_to admin_root_path do %>
+            <i class="fas fa-home"></i> ホーム
+          <% end %>
+        </li>
+        <li>
+          <%= link_to admin_users_path do %>
+            <i class="fas fa-users"></i> ユーザー一覧
+          <% end %>
+        </li>
+        <li>
+          <%= link_to public_posts_path do %>
+            <i class="fas fa-edit"></i> 投稿一覧
+          <% end %>
+        </li>
+        <li>
+          <%= link_to destroy_user_session_path, method: :delete do %>
+            <i class="fas fa-sign-out-alt"></i> ログアウト
+          <% end %>
+        </li>
+      </ul>
     </nav>
   <% end %>
 </header>
+
+<script>
+  window.headerImages = <%= raw @header_images.to_json %>;
+</script>

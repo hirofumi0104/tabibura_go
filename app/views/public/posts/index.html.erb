@@ -63,24 +63,24 @@
                 <% end %>
                 <div class="card-body">
                   <div class="media-body">
-                    <% if current_admin %>
+                    <% if current_user.admin? %>
                       <h5 class="mt-0"><%= link_to post.user.name, admin_user_path(post.user) %></h5>
                     <% else %>
-                      <h5 class="mt-0"><%= link_to post.user.name, user_path(post.user) %></h5>
+                      <h5 class="mt-0"><%= link_to post.user.name, public_user_path(post.user) %></h5>
                     <% end %>
                     <p><%= post.itinerary %></p>
                     <p><%= truncate(post.caption, length: 20) %></p>
                     <hr> <!-- 区切り線 -->
                     <!-- フォローボタン -->
                     <div class="d-flex align-items-center justify-content-between">
-                      <% unless current_user.nil? || current_user.guest? %>
+                      <% unless current_user.nil? %>
                         <%= render "layouts/followbtn", user: post.user, options: { class: "btn btn-sm btn-outline-info" } %>
                       <% end %>
                       
                       <%= render partial: 'layouts/nice', locals: { post: post } %>
                     </div>
-                    
-                    <%= link_to "詳細を見る", post_path(post.id), class: "btn btn-primary btn-sm mt-2" %>
+
+                    <%= link_to "詳細を見る", public_post_path(post.id), class: "btn btn-primary btn-sm mt-2" %>
                   </div>
                 </div>
               </div>

@@ -1,8 +1,5 @@
 class Public::HomesController < ApplicationController
   def top
-    # ゲストユーザー認識のためのフラグを設定
-    session[:guest_user_flg] = true
-
     # 最新の投稿を4件取得
     @posts = Post.published.order('id DESC').limit(4)
     # ランダムな投稿を4件取得
