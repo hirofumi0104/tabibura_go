@@ -60,7 +60,11 @@
       <% end %>
     </nav>
     <span id="header-slider"></span>
-  <% elsif request.path.start_with?('/admin') && user_signed_in? && current_user.admin? %>
+  <% elsif request.path.start_with?('/admin')%>
+    <div style="background-color: #f8f9fa; padding: 10px; text-align: center;">
+      <strong>管理者ログイン</strong>
+    </div>
+    <% if user_signed_in? && current_user.admin? %>
     <nav>
       <%= link_to "管理者ダッシュボード", admin_root_path %>
 
@@ -87,6 +91,7 @@
         </li>
       </ul>
     </nav>
+    <% end %>
   <% end %>
 </header>
 

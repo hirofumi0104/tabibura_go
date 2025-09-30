@@ -1,0 +1,75 @@
+// Place all the styles related to the sessions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.auth-card {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+.card-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 95%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 4px rgba(76,175,80,0.4);
+}
+
+
+.form-check {
+  margin-right: 5px;
+}
+
+.form-group input[type="submit"] {
+  width: 100%;
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-group input[type="submit"]:hover {
+  background: rgb(49, 170, 226);
+}
+
+.links a {
+  display: block;                /* 横幅いっぱいに */
+  width: 100%;                   /* 親要素の幅を使う */
+  max-width: 100%;              /* 伸びすぎ防止 */
+  text-align: center;            /* 文字を中央に */
+  padding: 4px 1px;
+  color: #007bff;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 50%, rgb(49, 170, 226) 50%);
+  background-position: 0 0;
+  background-size: 200% auto;
+  transition: .3s;
+  text-decoration: none;
+  &:hover {
+    background-position: -100% 0;
+    color: #d9fdf8;
+  }
+}
+

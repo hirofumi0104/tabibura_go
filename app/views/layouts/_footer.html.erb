@@ -1,12 +1,10 @@
-<%unless (user_signed_in? && current_user.admin?) || admin_login_page? %>
-  <footer class="bg-info text-white text-center py-3">
-    <p class="mb-0">© 2024 旅ぶら_GO. All rights reserved.</p>
+<% if !request.path.start_with?('/admin') && (request.path.start_with?('/public') || request.path.start_with?('/')) %>
+  <footer class="footer footer-user">
+    <p>© 2025 旅ぶら_GO. All rights reserved.</p>
   </footer>
 <% end %>
 
-<footerr class="bg-info text-white text-center py-3">
-  <% if  user_signed_in? && current_user.admin? %>
-    <footer class="bg-dark text-white text-center py-3">
-    </nav>
-  <% end %>
-</footer>
+<% if request.path.start_with?('/admin')%>
+  <footer class="footer footer-admin">
+  </footer>
+<% end %>

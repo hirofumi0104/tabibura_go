@@ -1,55 +1,52 @@
-<div>
-  <h1>ようこそ旅ぶら_GOへ</h1>
-
+<div class="posts-container">
+  <div>
+    <h1>ようこそ旅ぶら_GOへ</h1>
+    <div>
+      <%= link_to "投稿一覧ページへ", public_posts_path, class: "top-link" %>
+      <% if user_signed_in? %>
+        <%= link_to "投稿ページへ", new_public_post_path, class: "top-link" %>
+      <% end %>
+    </div>
+  </div>
   <% if @posts.present? %>
     <h3>新着投稿</h3>
-    <% @posts.each do |post| %>
-      <div>
-        <% if post.main_image.attached? %>
-          <%= image_tag post.main_image %>
-        <% end %>
-        <div>
-          <p><%= link_to post.user.name, public_user_path(post.user.id) %></p>
-          <p><%= post.itinerary %></p>
-          <p><%= post.caption %></p>
-          <%= link_to "詳細を見る", public_post_path(post.id) %>  
-          <br>
-          ーーーーーーーーーーーーーーーーーーーーーー
+    <div class="card-wrapper">
+      <% @posts.each do |post| %>
+        <div class="post-card">
+          <% if post.main_image.attached? %>
+            <%= image_tag post.main_image, class: "card-image" %>
+          <% end %>
+          <div class="card-content">
+            <p class="user-name"><%= link_to post.user.name, public_user_path(post.user.id) %></p>
+            <p class="itinerary"><%= post.itinerary %></p>
+            <p class="caption"><%= post.caption %></p>
+            <%= link_to "詳細を見る", public_post_path(post.id), class: "detail-link" %>
+          </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   <% else %>
     <p>新着投稿はありません。</p>
   <% end %>
 
   <% if @recommended_posts.present? %>
     <h3>注目投稿</h3>
-    <% @recommended_posts.each do |post| %>
-      <div>
-        <% if post.main_image.attached? %>
-          <%= image_tag post.main_image %>
-        <% end %>
-        <div>
-          <p><%= link_to post.user.name, public_user_path(post.user.id) %></p>
-          <p><%= post.itinerary %></p>
-          <p><%= post.caption %></p>
-          <%= link_to "詳細を見る", public_post_path(post.id) %>
+    <div class="card-wrapper">
+      <% @recommended_posts.each do |post| %>
+        <div class="post-card">
+          <% if post.main_image.attached? %>
+            <%= image_tag post.main_image, class: "card-image" %>
+          <% end %>
+          <div class="card-content">
+            <p class="user-name"><%= link_to post.user.name, public_user_path(post.user.id) %></p>
+            <p class="itinerary"><%= post.itinerary %></p>
+            <p class="caption"><%= post.caption %></p>
+            <%= link_to "詳細を見る", public_post_path(post.id), class: "detail-link" %>
+          </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   <% else %>
     <p>注目投稿はありません。</p>
   <% end %>
-
-  <div>
-    <%= link_to public_posts_path do %>
-      投稿一覧ページへ
-    <% end %>
-
-    <% if user_signed_in? %>
-      <%= link_to new_public_post_path do %>
-        投稿ページへ
-      <% end %>
-    <% end %>
-  </div>
 </div>

@@ -3,8 +3,9 @@
 // 管理者のスタイルシート
 
 // 一般ユーザーのスタイルシート
-    
+@use "public/top";
 // 共通のスタイルシート
 @use "layouts/header";
 @use "layouts/footer";
 @use "layouts/about";
+@use "layouts/auth";

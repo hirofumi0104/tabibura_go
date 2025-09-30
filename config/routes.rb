@@ -10,10 +10,14 @@ Rails.application.routes.draw do
   }
 
   devise_scope :user do
+    # ログイン用
     get 'admin', to: 'certification_commons/sessions#new', as: 'admin_login'
     get 'public', to: 'certification_commons/sessions#new', as: 'public_login'
+    # 新規登録用
     get 'admin/registration', to: 'certification_commons/registrations#new', as: 'new_admin_registration'
     get 'public/registration', to: 'certification_commons/registrations#new', as: 'new_public_registration'
+    post "admin/registration", to: "certification_commons/registrations#create"
+    post "public/registration", to: "certification_commons/registrations#create"
   end
   
 

@@ -1,0 +1,17 @@
+/* 共通フッター */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  color: #fff;
+  margin-top: auto; 
+}
+
+/* ユーザー用フッター */
+.footer-user {
+  background-color: #17a2b8; 
+}
+
+/* 管理者用フッター */
+.footer-admin {
+  background-color: #333;
+}

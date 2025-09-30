@@ -15,8 +15,9 @@ class CertificationCommons::SessionsController < Devise::SessionsController
       # public 用のビューを使用
       render 'public/sessions/new'
     else
-      # 不正アクセス時は root にリダイレクト
-      redirect_to root_path, alert: '不正なアクセスです。'
+      # 不正アクセス時はもと居た場所にリダイレクトまたはrootにリダイレクト
+      flash[:alert] = I18n.t("devise.failure.unauthenticated")
+      redirect_back(fallback_location: root_path)
     end
   end
 

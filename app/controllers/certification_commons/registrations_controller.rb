@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CertificationCommons::RegistrationsController < Devise::RegistrationsController
-  # before_action :configure_sign_up_params, only: [:create]
+  before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
@@ -14,16 +14,27 @@ class CertificationCommons::RegistrationsController < Devise::RegistrationsContr
       # public 用のビューを使用
       render 'public/registrations/new'
     else
-      # 不正アクセス時は root にリダイレクト
-      redirect_to root_path, alert: '不正なアクセスです。'
+      # 不正アクセス時はもと居た場所にリダイレクトまたはrootにリダイレクト
+      redirect_back(fallback_location: root_path, alert: "不正なアクセスです")
     end
   end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    self.resource = resource_class.new(sign_up_params)
 
+    if resource.save
+      sign_up(resource_name, resource)
+      redirect_to after_sign_up_path_for(resource)
+    else
+      user_type = params[:user_type] || 'public'
+      if user_type == 'admin'
+        render 'admin/registrations/new', status: :unprocessable_content
+      else
+        render 'public/registrations/new', status: :unprocessable_content
+      end
+    end
+  end
   # GET /resource/edit
   # def edit
   #   super
@@ -69,4 +80,16 @@ class CertificationCommons::RegistrationsController < Devise::RegistrationsContr
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+
+  protected
+  
+  def configure_sign_up_params
+     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :password, :password_confirmation])
+  end
+
+  # サインアップ成功後
+  def after_sign_up_path_for(resource)
+    resource.admin? ? admin_homes_top_path : show_mypage_public_user_path(current_user)
+  end
+
 end

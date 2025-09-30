@@ -62,7 +62,7 @@
 
 
           <!-- コメントフォーム -->
-          <% unless current_user.admin? %>
+          <% if current_user && !current_user.admin? %>
             <%= render partial: 'public/comments/comments_form', locals: { post: @post } %>
           <% end %>
         </div>
@@ -85,7 +85,7 @@
             <h5 class="ml-5">投稿者:</h5>
           </div>
           <div class="col">
-            <% if current_user.admin? %>
+            <% if current_user && current_user.admin? %>
               <h5><%= link_to @post.user.name, admin_user_path(@post.user) %></h5>
             <% else %>
               <h5><%= link_to @post.user.name, public_user_path(@post.user.id) %></h5>
@@ -97,7 +97,7 @@
           <%= render partial: 'layouts/nice', locals: { post: @post }, options: { class: "btn btn-sm btn-outline-info" } %>
         </div>
       </div>
-      <% unless current_user.admin? %>
+      <% if current_user && !current_user.admin? %>
         <div class="card-body">
           <h5>タグ</h5>
           <% if @post.tags.any? %>
@@ -114,7 +114,7 @@
 
 
         <!-- 投稿通報 -->
-        <% unless current_user.admin? %>
+        <% if current_user && !current_user.admin? %>
           <div class="card mt-4 shadow-sm">
             <div class="card-body">
               <h2>投稿を通報</h2>
@@ -127,7 +127,7 @@
   </div>
 
   <!-- 戻るボタン -->
-  <% unless current_user.admin? %>
+  <% if current_user && !current_user.admin? %>
   <div class="row mt-4">
     <div class="col-md-8">
       <%= link_to '戻る', params[:referrer] || public_user_path(@post.user), class: 'btn btn-secondary' %>
