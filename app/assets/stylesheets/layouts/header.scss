@@ -16,6 +16,11 @@
   font-size: 16px;
 }
 
+/* ロゴリンク用に下線なし */
+#header-nav a.logo-link::after {
+  display: none;
+}
+
 /* 疑似要素で下線を作成 */
 #header-nav a::after {
   content: "";
@@ -38,24 +43,7 @@
 
 
 
-// 写真スライドのスタイル
-#header-slider {
-  width:100%; /* スライダーの幅 */
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-}
+// 写真スライドのスタイルはJSで入れています。
 
-.slide-track {
-  display: flex;
-  width:  max-content; /* スライダー固定幅に合わせる */
-  border-top: 4px solid #333; /* 上のボーダー */
-  border-bottom: 4px solid #333; /* 下のボーダー */
-}
-  
-#header-slider .slide-track img {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-}
+
 

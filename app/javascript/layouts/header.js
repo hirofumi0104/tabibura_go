@@ -1,7 +1,15 @@
+// ヘッダーのスライドショー
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("header-slider");
+  slider.style.maxWidth = "100%";
+  slider.style.borderTop = "4px solid #333";
+  slider.style.borderBottom = "4px solid #333";
+  slider.style.overflow = "hidden";
+  
   const slideTrack = document.createElement("div");
   slideTrack.className = "slide-track";
+  slideTrack.style.display = "flex";
+  slideTrack.style.widyh = "auto";
   slider.appendChild(slideTrack);
 
   const images = [...window.headerImages];

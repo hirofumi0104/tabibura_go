@@ -39,7 +39,7 @@ class User < ApplicationRecord
   def following?(user)
     followings.include?(user)
   end
-  
+
   # ユーザーがアクティブかどうかを判定する
   def active_for_authentication?
     super && is_active
@@ -55,6 +55,13 @@ class User < ApplicationRecord
     role == 1
   end
   
+  # ページネーションで使用
+  scope :is_active, -> { where(is_active: true) }
+
+  # 投稿画面の検索条件 Postコントローラー(index)
+  scope :excluding_admin, -> { where.not(role: 1) }
+  scope :search_name, ->(q) { where('name LIKE ?', "%#{q}%") if q.present? }
+
   # 管理者と一般ユーザーのログイン方法を変えるための設定
   attr_accessor :login
 

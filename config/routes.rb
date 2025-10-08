@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   
+  # 共通の最初の画面
+  root to: 'public/homes#top'
+
   # ユーザー認証のルート
   devise_for :users, controllers: {
     sessions: 'certification_commons/sessions',
@@ -35,8 +38,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # ユーザー用ルーティング
-  root to: 'public/homes#top'
+  
 
   namespace :public do
       get 'homes/about'

@@ -1,4 +1,7 @@
 class Public::PostsController < ApplicationController
+  # ページ作成のモジュール
+  include Pagination
+
   before_action :set_post, only: [:edit, :update, :show, :destroy,]
   before_action :authenticate_user!, except: [:index, :show, :tagged]
 
@@ -15,33 +18,31 @@ class Public::PostsController < ApplicationController
   end
 
   def index
-    @users = User.all.includes(:profile_image_attachment) 
+    @users = User.where.not(role: 1).includes(:profile_image_attachment) 
     @posts = Post.all
-    # ページネーション
-    @page = (params[:page] || 1).to_i
-    @posts_per_page = 10
-   
-    if params[:q].present?
-      @posts = Post.published.where('caption LIKE ? OR itinerary LIKE ?', "%#{params[:q]}%", "%#{params[:q]}%").includes(images: { image_attachment: :blob })
-    elsif params[:tag].present?
-      @posts = Post.published.joins(:tags).where(tags: { name: params[:tag].delete('#') }).includes(images: { image_attachment: :blob })
-    # 公開中の投稿一覧を表示する
-    elsif params[:itinerary].present?
-      @posts = Post.published.where(itinerary: params[:itinerary]).includes(images: { image_attachment: :blob })
-    else
-      @posts = Post.published.includes(images: { image_attachment: :blob })
-    end
-    
-    # ページネーション
-    @total_posts = @posts.size
-    @posts = @posts.offset((@page - 1) * @posts_per_page).limit(@posts_per_page)
-    
-    # ユーザー検索のため
-    if params[:user_q].present?
-      @users = User.where('name LIKE ?', "%#{params[:user_q]}%").includes(:profile_image_attachment)
-    else
-      @users = User.includes(:profile_image_attachment)
-    end
+
+    # 投稿の検索条件(条件はPostモデル)
+    @posts = Post.published
+               .search(params[:q])
+               .with_tag(params[:tag])
+               .by_itinerary(params[:itinerary])
+               .includes(images: { image_attachment: :blob })
+               .page(params[:page]).per(10)
+
+    # ユーザー検索(条件はUserモデル)
+    @users = User.excluding_admin
+              .search_name(params[:user_q])
+              .includes(:profile_image_attachment)
+              
+    # 投稿ページネーション
+    post_page = params[:post_page]&.to_i || 1
+    @post_pagination = paginate(@posts.published.all, page: post_page, per_page: 10)
+    @posts = @post_pagination[:collection]
+  
+    # ユーザーサイドバーページネーション
+    user_page = params[:user_page]&.to_i || 1
+    @user_pagination = paginate(@users.is_active.all, page: user_page, per_page: 8)
+    @users = @user_pagination[:collection]
   end
   
   # 下書き一覧

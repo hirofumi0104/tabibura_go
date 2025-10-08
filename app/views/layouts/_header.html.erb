@@ -1,7 +1,7 @@
 <header style="width: 100%; height: auto;">
   <% if request.path.start_with?('/public') || (controller_path == 'public/homes' && action_name == 'top') %>   
     <nav id="header-nav">
-      <a href="/">
+      <a href="/" class="logo-link">
         <%= image_tag "rogo.png", alt: "旅ぶら_GO", style: "height: 100px; width: auto;" %>
       </a>
 
@@ -59,7 +59,6 @@
         </span>
       <% end %>
     </nav>
-    <span id="header-slider"></span>
   <% elsif request.path.start_with?('/admin')%>
     <div style="background-color: #f8f9fa; padding: 10px; text-align: center;">
       <strong>管理者ログイン</strong>
@@ -93,6 +92,7 @@
     </nav>
     <% end %>
   <% end %>
+  <div id="header-slider"></div>
 </header>
 
 <script>

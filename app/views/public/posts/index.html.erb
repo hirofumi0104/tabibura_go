@@ -1,135 +1,192 @@
-<div class="container mt-4">
-  <h1>投稿一覧ページ</h1>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">カテゴリ検索</h5>
-          <%= form_with(url: public_posts_path, method: :get, local: true) do %>
-            <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ', class: 'form-control mb-2' %>
-            <%= submit_tag '検索', class: 'btn btn-primary btn-block' %>
-          <% end %>
-        </div>
+<div class="container">
+  <section>
+    <!-- サイドバー -->
+    <aside class="sidebar">
+      <div id="title-1">
+        <h1>旅びと</h1>
       </div>
-      
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">ユーザー検索</h5>
-          <%= form_with url: public_posts_path, method: :get, local: true, class: "mb-3" do %>
-            <div class="input-group">
-              <%= text_field_tag :user_q, params[:user_q], class: "form-control", placeholder: "ユーザーを検索" %>
-              <div class="input-group-append">
-                <%= submit_tag '検索', class: "btn btn-primary" %>
-              </div>
-            </div>
+      <div class="sidebar-item-box">
+        <!-- 都道府県検索 -->
+        <section class="search-box">
+          <h2>都道府県で探す</h2>
+          <%= form_with(url: public_posts_path, method: :get, local: true) do %>
+            <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべて', style: "width: 62%;" %>
+            <%= submit_tag '検索' %>
           <% end %>
-          <div class="user-list" style="max-height: 400px; overflow-y: auto;">
+        </section>
+
+        <!-- ユーザー検索 -->
+        <section class="search-box">
+          <h2>旅びと検索</h2>
+          <%= form_with url: public_posts_path, method: :get, local: true do %>
+            <%= text_field_tag :user_q, params[:user_q], placeholder: "旅びと検索", class: "form-input" %>
+            <%= submit_tag '検索' %>
+          <% end %>
+
+          <div class="user-list">
             <% @users.each do |user| %>              
-              <div class="media mb-3">
-                <% if user.profile_image.attached? %>
-                  <%= image_tag user.profile_image, class: "mr-3 rounded-circle", style: "width: 50px; height: 50px;", alt: user.name %>
-                <% else %>
-                  <%= image_tag "User.png", class: "mr-3 rounded-circle", style: "width: 50px; height: 50px;", alt: "デフォルトアイコン" %>
-                <% end %>
-                <div class="media-body">
-                  <div class="d-flex align-items-center">
-                    <% if current_user&.admin? %>
-                      <p class="mt-3"><%= link_to user.name, admin_user_path(user) %></p>
-                    <% else %>
-                      <p class="mt-3"><%= link_to user.name, public_user_path(user) %></p>
-                    <% end %>
-                  </div>
+              <div class="user-item">
+                <div>
+                  <%= image_tag(user.profile_image.attached? ? user.profile_image : "User.png",
+                    class: "user-icon", alt: user.name) %>
+                </div>
+                <div>
+                  <%= link_to user.name, (current_user&.admin? ? admin_user_path(user) : public_user_path(user)) %>
                 </div>
               </div>      
             <% end %>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
+      
+        <% if @user_pagination[:total_pages] > 1 %>
+          <nav class="user_pagination">
+            <!-- 前のページ -->
+            <% if @user_pagination[:current_page] > 1 %>
+              <span class="page-link">
+                <%= link_to "旅びと#{@user_pagination[:current_page] - 1}",
+                    public_posts_path(request.query_parameters.merge(user_page: @user_pagination[:current_page] - 1)) %>
+              </span>
+            <% end %>
 
+            <!-- 現在ページ -->
+            <span class="page-link active">
+              <%= image_tag "pagination/tabibito.png", alt: "現在ページ", class: "page-icon" %>
+            </span>
 
-    <div class="col-md-8">
-      <% if @posts.any? %>
-        <div class="row">
-          <% @posts.each do |post| %>
-            <div class="col-md-6 mb-4">
-              <div class="card h-100">
-                <% if post.main_image.attached? %>
-                  <%= image_tag post.main_image, class: "card-img-top img-fluid", style: "object-fit: cover; height: 250px;" %>
+            <!-- 次のページ -->
+            <% if @user_pagination[:current_page] < @user_pagination[:total_pages] %>
+              <span class="page-link">
+                <%= link_to "旅びと#{@user_pagination[:current_page] + 1}",
+                    public_posts_path(request.query_parameters.merge(user_page: @user_pagination[:current_page] + 1)) %>
+              </span>
+            <% end %>
+
+            <div class="page-controls">
+              <% prev_two = @user_pagination[:current_page] - 2 %>
+              <% if prev_two >= 1 %>
+                <span class="page-link jump-back">
+                  <%= link_to public_posts_path(request.query_parameters.merge(user_page: prev_two)) do %>
+                    <i class="fas fa-angle-double-left"></i>
+                  <% end %>
+                </span>
+              <% end %>
+
+              <% if @user_pagination[:prev_page] %>
+                <span class="page-link prev">
+                  <%= link_to public_posts_path(request.query_parameters.merge(user_page: @user_pagination[:prev_page])) do %>
+                    <i class="fas fa-angle-left"></i>
+                  <% end %>
+                </span>
+              <% end %>
+
+              <% if @user_pagination[:next_page] %>
+                <span class="page-link next">
+                  <%= link_to public_posts_path(request.query_parameters.merge(user_page: @user_pagination[:next_page])) do %>
+                    <i class="fas fa-angle-right"></i>
+                  <% end %>
+                </span>
+              <% end %>
+
+              <% next_two = @user_pagination[:current_page] + 2 %>
+              <span class="page-link jump-next <%= 'disabled' if next_two > @user_pagination[:total_pages] %>">
+                <% if next_two <= @user_pagination[:total_pages] %>
+                  <%= link_to public_posts_path(request.query_parameters.merge(user_page: next_two)) do %>
+                    <i class="fas fa-angle-double-right"></i>
+                  <% end %>
+                <% else %>
+                  <%= link_to public_posts_path(request.query_parameters.merge(user_page: 1)) do %>
+                    はじめへ
+                  <% end %>
                 <% end %>
-                
-                <% post.tags.each do |tag| %>
-                  <p><%= tag.name.split('-').first %></p>
-                <% end %>
-                <div class="card-body">
-                  <div class="media-body">
-                    <% if current_user && current_user.admin? %>
-                      <h5 class="mt-0"><%= link_to post.user.name, admin_user_path(post.user) %></h5>
-                    <% else %>
-                      <h5 class="mt-0"><%= link_to post.user.name, public_user_path(post.user) %></h5>
-                    <% end %>
-                    <p><%= post.itinerary %></p>
-                    <p><%= truncate(post.caption, length: 20) %></p>
-                    <hr> <!-- 区切り線 -->
-                    <!-- フォローボタン -->
-                    <div class="d-flex align-items-center justify-content-between">
-                      <% unless current_user.nil? %>
-                        <%= render "layouts/followbtn", user: post.user, options: { class: "btn btn-sm btn-outline-info" } %>
-                      <% end %>
-                      
-                      <%= render partial: 'layouts/nice', locals: { post: post } %>
-                    </div>
-
-                    <%= link_to "詳細を見る", public_post_path(post.id), class: "btn btn-primary btn-sm mt-2" %>
-                  </div>
-                </div>
-              </div>
+              </span>
             </div>
+          </nav>
+        <% end %>
+      </div>
+    </aside>
+
+    <!-- 投稿一覧 -->
+    <main class="post-list">
+      <div id="title-2">
+        <h1>みんなの旅ログ</h1>  
+      </div>
+      <% if @posts.any? %>
+        <div class="posts">
+          <% @posts.each do |post| %>
+            <article class="post-card">
+              <% if post.main_image.attached? %>
+                <%= image_tag post.main_image, class: "post-image" %>
+              <% end %>
+
+              <div class="post-content">
+                <h4>
+                  旅びと : <%= link_to post.user.name, (current_user&.admin? ? admin_user_path(post.user) : public_user_path(post.user)) %>
+                </h4>
+                <p id="itinerary">旅先 : <%= post.itinerary %></p>
+               
+                <p id="caption"><%= truncate(post.caption, length: 20) %></p>
+
+                <hr>
+                
+                <span class="action-content">
+                  <div class="post-actions">
+                    <%= render partial: 'layouts/nice', locals: { post: post } %>
+                    <div id="action-button">
+                      <% if current_user %>
+                        <%= render "layouts/followbtn", user: post.user, options: { class: "follow-btn" } %>
+                      <% end %>
+                      <%= link_to "詳細を見る", public_post_path(post.id), class: "detail-link" %>
+                    </div>
+                  </div>
+                  <p id="posted-date">投稿日 : <%= post.created_at.strftime("%Y年%m月%d日") %></p>
+                </span>  
+              </div>
+              <!--- タグ --->           
+              <div class="tags"> 
+                <span id="tag-text">
+                  <p>タグ:</p>
+                </span>
+                <% if post.tags.present? %>
+                  <% post.tags.each do |tag| %>
+                    <% tag_text = tag.name.split('-').first.truncate(8, omission: '...') %>
+                    <p><%= tag_text %></p>
+                  <% end %>
+                <% elsif %>
+                  <p>タグがありません</p>
+                <% end %>
+              </div>
+            </article>
           <% end %>
         </div>
       <% else %>
         <p>投稿はありません。</p>
       <% end %>
-    
-      <% if @total_posts && @posts_per_page && @total_posts > @posts_per_page %>
-        <nav aria-label="Page navigation">
-          <ul class="pagination justify-content-center">
-            <% total_pages = (@total_posts.to_f / @posts_per_page).ceil %>
+
       
-            <% if @page > 1 %>
-              <li class="page-item">
-                <%= link_to '前へ', posts_path(request.query_parameters.merge(page: @page - 1)), class: "page-link" %>
-              </li>
-            <% else %>
-              <li class="page-item disabled">
-                <span class="page-link">前へ</span>
-              </li>
-            <% end %>
-      
-            <% (1..total_pages).each do |page| %>
-              <% if page == @page %>
-                <li class="page-item active" aria-current="page">
-                  <span class="page-link"><%= page %></span>
-                </li>
-              <% else %>
-                <li class="page-item">
-                  <%= link_to page, posts_path(request.query_parameters.merge(page: page)), class: "page-link" %>
-                </li>
+      <!-- 投稿ページネーション -->
+      <% if @post_pagination[:total_pages] > 1 %>
+        <nav class="post_pagination">
+          <span>
+            <%= image_tag "pagination/ryokou.png", class: "page-icon" %>
+          </span>
+
+          <% (1..@post_pagination[:total_pages]).each do |page| %>
+            <span class="page-link <%= 'active' if page == @post_pagination[:current_page] %>">
+              <%= link_to_if page != @post_pagination[:current_page], page,
+                  public_posts_path(request.query_parameters.merge(post_page: page)) do %>
+                <%= page %>
               <% end %>
+            </span>
+          <% end %>
+
+          <span class="page-link <%= 'disabled' if @post_pagination[:next_page].nil? %>">
+            <%= link_to_if @post_pagination[:next_page], '次へ',
+                public_posts_path(request.query_parameters.merge(post_page: @post_pagination[:next_page], post: true)) do %>
+              次へ
             <% end %>
-      
-            <% if @page < total_pages %>
-              <li class="page-item">
-                <%= link_to '次へ', posts_path(request.query_parameters.merge(page: @page + 1)), class: "page-link" %>
-              </li>
-            <% else %>
-              <li class="page-item disabled">
-                <span class="page-link">次へ</span>
-              </li>
-            <% end %>
-          </ul>
+          </span>
         </nav>
       <% end %>
-    </div>
-  </div>
+    </main>
+  </section>
 </div>
