@@ -5,7 +5,7 @@
         <div class="card-body">
           <h1 class="text-center mb-4">プロフィール編集</h1>
 
-          <%= form_for([:public, @user], url: update_information_user_path(@user), html: { method: :patch, multipart: true }) do |f| %>
+          <%= form_for([:public, @user], url: update_information_public_user_path(@user), html: { method: :patch, multipart: true }) do |f| %>
             <% if @user.errors.any? %>
               <div id="error_explanation" class="alert alert-danger">
                 <h2><%= pluralize(@user.errors.count, "エラー") %>があります:</h2>
@@ -45,7 +45,7 @@
 
             <!-- 退会ボタン -->
             <div id="withdrawal-button" class="mb-3" style="display: none;">
-              <%= link_to "退会する", unsubscribe_user_path(@user), method: :delete, data: { confirm: "本当に退会しますか？" }, class: 'btn btn-danger' %>
+              <%= link_to "退会する", unsubscribe_public_user_path(@user), method: :delete, data: { confirm: "本当に退会しますか？" }, class: 'btn btn-danger' %>
             </div>
             
             <div class="text-center">

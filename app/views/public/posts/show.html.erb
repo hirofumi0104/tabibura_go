@@ -1,147 +1,162 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-8">
-      <h2>投稿詳細</h2>
+<div class="posts-show-container">
+  <h2 id="show-title"><%= @post.itinerary %>での旅ログ</h2>
+  <div class="contents">
 
-      <p><%= image_tag @post.main_image, style: " object-fit: cover; width: 100%; max-height: 390px;", class: "mb-3 rounded" if @post.main_image.attached? %></p>
-
-      
-      <h4><strong>旅先:</strong> <%= @post.itinerary %></h4>
-      <p><strong>説明:</strong> <%= @post.caption %></p>
-
-      <hr> <!-- 区切り線 -->
-      <div class="row">
-        <% @post.images.each do |image| %>
-          <div class="col-md-12 mb-3">
-            <div class="card shadow-sm">
-              <%= image_tag image.image, style: " object-fit: cover; width: 100%; max-height: 390px;", class: "card-img-top rounded" if image.image.attached? %>
-              <div class="card-body">
-                <p class="card-text"><%= image.description %></p>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      
-      <div id="map" style="height: 500px;" class="mb-3"></div>
-      
-      <div class="card mt-4 mb-4 shadow-sm">
-        <div class="card-body">
-          <h3>コメント一覧</h3>
-          <% if @post.comments.any? %>
-            <% @post.comments.each do |comment| %>
-              <div class="media mb-5">
-                <div class="d-flex align-items-center mr-3">
-                  <% if comment.user && comment.user.profile_image.attached? %>
-                    <%= image_tag comment.user.profile_image, style: "width: 50px; height: 50px;", class: "card-img-top rounded-circle" %>
-                  <% else %>
-                    <%= image_tag "User.png", class: "rounded-circle", style: "width: 50px; height: 50px;", alt: "デフォルトアイコン" %>
-                  <% end %>
-                  <span class="ml-3"><%= comment.user.name %></span>
-                </div>
-              </div>
-              <p class="ml-5  mt-3"><%= comment.content %></p>
-              <% if @post.comments.any? %>
-                <div class="d-flex justify-content-end mt-4">
-                  <% if current_user || current_admin %>
-                    <%= link_to 'コメント削除', post_comment_path(@post, @post.comments.first), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'text-danger' %>
-                  <% end %>
-                </div>
-              <% end %>
-              <% unless current_admin %>
-                <div class="mt-4">
-                  <%= render partial: 'layouts/report', locals: { reportable: comment } %>
-                </div>
-              <% end %>
-              <hr> <!-- 区切り線 -->
-            <% end %>
-          <% else %>
-            <p>まだコメントがありません。</p>
-          <% end %>
-    
-
-
-          <!-- コメントフォーム -->
-          <% if current_user && !current_user.admin? %>
-            <%= render partial: 'public/comments/comments_form', locals: { post: @post } %>
-          <% end %>
+    <div class="user-all-posts">
+      <h1 id="post-all-title">他の投稿</h1>
+      <% @posts.each do |post| %>
+        <div class="post-all-card">
+          <%= image_tag post.main_image, id: "post-all-img" %>
+          <%= link_to post.caption, public_post_path(post.id), id: "post-all-link" %>
         </div>
-      </div>
-    </div>
-
-   <!-- 右側: サイドバー -->
-<div class="col-md-4">
-  <div class="sticky-top">
-    <!-- 投稿者情報、いいねボタン、フォローボタン -->
-    <div class="card mb-4 shadow-sm">
-      <% if @post.user.profile_image.attached? %>
-        <%= image_tag @post.user.profile_image, style: "width: 200px; height: 200px;", class: "card-img-top rounded-circle my-4 ml-5" %>
-      <% else %>
-        <%= image_tag "User.png", class: "ml-5 my-4 rounded-circle", style: "width: 200px; height: 200px;", alt: "デフォルトアイコン" %>
       <% end %>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-auto">
-            <h5 class="ml-5">投稿者:</h5>
-          </div>
-          <div class="col">
-            <% if current_user && current_user.admin? %>
-              <h5><%= link_to @post.user.name, admin_user_path(@post.user) %></h5>
-            <% else %>
-              <h5><%= link_to @post.user.name, public_user_path(@post.user.id) %></h5>
-            <% end %>
-          </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-between">
-          <%= render "layouts/followbtn", user: @post.user, options: { class:  "btn btn-sm btn-outline-info" } %>
-          <%= render partial: 'layouts/nice', locals: { post: @post }, options: { class: "btn btn-sm btn-outline-info" } %>
-        </div>
-      </div>
       <% if current_user && !current_user.admin? %>
-        <div class="card-body">
-          <h5>タグ</h5>
-          <% if @post.tags.any? %>
-            <% @post.tags.each do |tag| %>
-              <% display_name = tag.name.split('-').first %>
-              <%= link_to "##{display_name}", posts_path(tag: display_name), class: "badge badge-info mr-1" %>
-            <% end %>
-          <% else %>
-            <p>タグはありません</p>
-          <% end %>
-        </div>
+        <%= link_to 'もっと見る', params[:referrer] || public_user_path(@post.user), id: "mypage-link" %>
       <% end %>
     </div>
 
+    <div class="post-show-contents">
+      <h1 id="post-title"><%= @post.caption %></h1>
+      <% if @post.main_image.attached? %>
+        <span><%= image_tag @post.main_image, id: "post-main-img" %></span>
+      <% end %>
 
-        <!-- 投稿通報 -->
-        <% if current_user && !current_user.admin? %>
-          <div class="card mt-4 shadow-sm">
-            <div class="card-body">
-              <h2>投稿を通報</h2>
-              <%= render partial: 'layouts/report', locals: { reportable: @post } %>
-            </div>
+      <hr>
+
+      <% @post.images.each do |image| %>
+        <% if image.image.attached? %>
+          <div id="post-sub-img">
+            <%= image_tag image.image, style: "object-fit: cover; width: 100%; max-height: 390px;" %>
+            <div id="post-sub-text"><%= image.description %></div>
           </div>
         <% end %>
+      <% end %>
+
+      <div id="map" style="height: 500px;"></div>
+
+      <% if current_user && !current_user.admin? %>
+        <h5>タグ</h5>
+        <% if @post.tags.any? %>
+          <% @post.tags.each do |tag| %>
+            <% display_name = tag.name.split('-').first %>
+            <%= link_to "##{display_name}", public_posts_path(tag: display_name) %>
+          <% end %>
+        <% else %>
+          <p>タグはありません</p>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div>
+      <h1 id="user-profile-title">プロフィール</h1>
+      <div class="user-contents">
+        <div class="post_user-card">
+          <div class="card-contents">
+            <span>
+              <% if @post.user.profile_image.attached? %>
+                <%= image_tag @post.user.profile_image, id: "profile_image" %>
+              <% else %>
+                <%= image_tag "User.png", id: "profile_image", alt: "デフォルトアイコン" %>
+              <% end %>
+            </span>
+            <div>
+              <% if current_user && current_user.admin? %>
+                旅びと:<%= link_to @post.user.name, admin_user_path(@post.user) %>
+              <% else %>
+                旅びと:<%= link_to @post.user.name, public_user_path(@post.user.id) %>
+              <% end %>
+            </div>
+            
+            <% if @post.user.biography.present?%>
+              <div id="biography"> 
+                <%= @post.user.biography %> 
+              </div>
+            <% end %>
+
+            <div id="follows-link">
+              <div>
+                <h5>フォロー</h5>
+                <p><%= link_to @post.user.followings.count, public_user_followings_path(@post.user) %></p>
+              </div>
+              <div>
+                <h5>フォロワー</h5>
+                <p><%= link_to @post.user.followers.count, public_user_followers_path(@post.user) %></p>
+              </div>
+            </div>
+          </div>
+          <% if !current_user %>
+            <div id="follow-button">
+              <%= render "layouts/followbtn", user: @post.user %>
+            </div>
+          <% end %>
+        </div>
+
+        <div id="nice-button">
+          投稿にいいね！<%= render partial: 'layouts/nice', locals: { post: @post } %>
+        </div>
+
+        <% if current_user && !current_user.admin? %>
+          <div>
+            <h2>投稿を通報</h2>
+            <%= render partial: 'layouts/report', locals: { reportable: @post } %>
+          </div>
+        <% end %>
+
+        <h3 id="comment-title">コメント覧</h3>
+        <% if @post.comments.any? %>
+          <% @post.comments.each do |comment| %>
+            <div class="comment-contents">
+              <div class="img-name">
+                <% if comment.user && comment.user.profile_image.attached? %>
+                  <%= image_tag comment.user.profile_image, id: "comment-profile-image" %>
+                <% else %>
+                  <%= image_tag "User.png", id: "comment-profile-image", alt: "デフォルトアイコン" %>
+                <% end %>
+                <div id="comment">
+                    <%= link_to comment.user.name, public_user_path(comment.user) %>
+                    <%= content_tag :span, comment.content, id: "comment-length" %>
+                </div>
+                <div class="comment-report-delete">
+                  <% if comment.user != current_user %>
+                    <!-- チェックボックス：トグルスイッチ -->
+                    <input type="checkbox" id="report-toggle-<%= comment.id %>" class="report-toggle" hidden>
+
+                    <!-- ボタン（ラベルでトグル） -->
+                    <label for="report-toggle-<%= comment.id %>" class="report-button">通報する</label>
+
+                    <!-- ポップアップ背景（モーダル） -->
+                    <div class="modal">
+                      <div class="modal-content">
+                        <label for="report-toggle-<%= comment.id %>" class="close-button">&times;</label>
+                        <%= render partial: 'layouts/report', locals: { reportable: comment } %>
+                      </div>
+                    </div>  
+                  <% elsif  comment.user == current_user || current_user.role == 1 %>
+                    <%= link_to '削除する', public_post_comment_path(@post, comment.id), method: :delete, data: { confirm: '本当に削除しますか？' }, class: "comment-delete-btn" %>
+                  <% end %>
+                </div>
+              </div>        
+              <hr>
+            </div>
+          <% end %>
+        <% else %>
+          <p>まだコメントがありません。</p>
+        <% end %>
+        
+        <% if current_user && !current_user.admin? %>
+          <%= render partial: 'public/comments/comments_form', locals: { post: @post } %>
+        <% end %>
+        
       </div>
     </div>
   </div>
-
-  <!-- 戻るボタン -->
-  <% if current_user && !current_user.admin? %>
-  <div class="row mt-4">
-    <div class="col-md-8">
-      <%= link_to '戻る', params[:referrer] || public_user_path(@post.user), class: 'btn btn-secondary' %>
-    </div>
-  </div>
-  <% end %>
 </div>
 
 
 <script>
-// Google Maps APIを使用して地図を表示する関数
 function initMap() {
   var mapElement = document.getElementById('map');
-  var initialPosition = { lat: 35.6895, lng: 139.6917 }; // 東京の初期位置
+  var initialPosition = { lat: 35.6895, lng: 139.6917 };
 
   var centerPosition;
   <% if @post.map.present? && @post.map.latitude.present? && @post.map.longitude.present? %>
@@ -154,17 +169,13 @@ function initMap() {
     center: centerPosition,
     zoom: 10
   });
-  
-  // マーカーを追加
-  var marker = new google.maps.Marker({
+
+  new google.maps.Marker({
     position: centerPosition,
     map: map,
     draggable: false
   });
 }
-
 </script>
-<!--<%= debug @post %>-->
-<!--<%= debug @post.map %>-->
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap"async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap" async defer></script>

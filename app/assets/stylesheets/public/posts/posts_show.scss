@@ -1,0 +1,313 @@
+.posts-show-container {
+  margin: 0 40px 40px 40px;
+
+  #show-title {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 2rem;
+    text-align: center;
+    background-color: rgb(233, 238, 163);
+    margin-block-end: 0;
+  }
+  .contents { 
+    display: flex;
+    gap: 20px;
+
+    // 左のサイドバー
+    .user-all-posts {
+      width: 30%;
+      text-align: center;
+      #post-all-title {
+        text-align: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        background: linear-gradient(transparent 85%, rgb(28, 163, 107) );
+      }
+      .post-all-card {
+        background-color: #fff;       
+        box-shadow: 0 2px 8px  rgba(3, 87, 241, 0.3); 
+        padding: 20px; 
+        margin: 10px;                            
+        transition: transform 0.2s ease, box-shadow 0.2s ease; 
+      
+        #post-all-img {
+          object-fit: cover;
+          max-width: 100%;
+          max-height: auto;
+          border-radius: 5px;
+        }
+
+        #post-all-link {
+          text-decoration: none; 
+          color: #0bb9fd;
+          position: relative;
+
+           &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, rgb(4, 47, 238), rgb(8, 233, 233));
+            transition: width 0.3s ease;
+          }
+
+          &:hover::after {
+            width: 100%;
+          }
+        }
+      }
+      #mypage-link {
+        display: inline-block;             
+        text-decoration: none;             
+        background-color: rgba(236, 20, 20, 0.5); 
+        color: #fff;
+        margin-top: 10px;                       
+        padding: 10px 20px;                
+        border-radius: 8px;                
+        font-weight: bold;                 
+        transition: all 0.3s ease;         
+        border: none;                      
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2); 
+        &:hover {
+          background-color: rgba(236, 20, 20, 0.8); 
+          transform: translateY(-2px);              
+          box-shadow: 0 5px 10px rgba(0,0,0,0.3);   
+        }
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+      }
+    }
+  
+    // メイン部分
+    .post-show-contents {
+      width: 100%;
+      #post-title {
+        background: linear-gradient(transparent 85%, rgb(95, 223, 255) );
+      }      
+
+      #post-main-img {
+        display: block;         
+        margin: 0 auto;     
+        background-color: #fff;       
+        box-shadow: 0 2px 8px  rgba(3, 87, 241, 0.3); 
+        padding: 10px;                             
+        transition: transform 0.2s ease, box-shadow 0.2s ease; 
+        object-fit: cover;
+        width: 100%;
+        max-width: 95%;
+        height: 25%;
+        border-radius: 5px;
+      }
+      
+      #post-sub-img {
+        margin: 20px auto;     
+        background-color: #fff;       
+        box-shadow: 0 2px 8px  rgba(3, 87, 241, 0.3); 
+        padding: 10px;                             
+        transition: transform 0.2s ease, box-shadow 0.2s ease; 
+        object-fit: cover;
+        width: 100%;
+        max-width: 95%;
+        height: auto;
+        border-radius: 5px;
+
+        #post-sub-text {
+          margin: 10px auto;     
+          background-color: #faf8f8;       
+          padding: 10px;                             
+          transition: transform 0.2s ease, box-shadow 0.2s ease; 
+          object-fit: cover;
+          width: 100%;
+          max-width: 98%;
+          height: auto;
+          border-radius: 5px;
+          box-shadow: inset 0 1px 4px rgba(0,0,0,0.2),
+                      inset 0 -2px 6px rgba(255,255,255,0.8);
+        }
+      }
+    }
+    
+    // 右のサイドバー
+    #user-profile-title {
+      text-align: center;
+      background: linear-gradient(transparent 85%, rgb(228, 199, 36) );
+    }
+
+    .user-contents {
+      display: flex;
+      flex-direction: column;   
+      width: 100%;
+      height: auto;  
+      padding: 10px;   
+      gap: 10px;    
+      box-shadow: 0 2px 8px;   
+
+      .post_user-card {
+        background-color: #fff;       
+        box-shadow: 0 2px 8px  rgba(3, 87, 241, 0.3);  
+        margin: 10px 0;     
+        text-align: center;                       
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .card-contents {
+          padding: 10px 0;
+        }
+
+        #profile_image {
+          width: 200px; 
+          height: 200px; 
+          border-radius: 50%;
+        }
+
+        #biography {
+          background-color: #fafafa;                      
+          border: 1px solid rgba(0, 0, 0, 0.1);           
+          border-radius: 10px;                           
+          padding: 16px 20px;                             
+          margin-top: 20px;                              
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);      
+          color: #333;                                   
+          font-size: 15px;                                
+          line-height: 1.8;                        
+          text-align: left;
+        }
+
+        #follows-link {
+          display: flex;
+          justify-content: space-around;
+          gap: 10px;
+          h5 {
+            margin-block-end: 0;
+          }
+        }
+        
+        
+        #follow-button {
+          background-color: rgb(24, 190, 196);
+          max-width: 100%;
+          padding: 5px;
+        }
+      }
+
+      #comment-title {
+        background-color: gray;
+        margin-block-end: 0;
+        text-align: center;
+      }
+
+      #nice-button {
+        display: flex;
+        color: #fffdfd;
+        background-color: rgb(250, 50, 117);
+        justify-content: center;
+        border-radius: 20px;
+      }
+
+      .comment-contents {
+        max-width: 100%;
+        .img-name {
+          display: flex; 
+          align-items: flex-start;
+          gap: 5px;   
+        }
+
+        #comment-profile-image {
+          width: 30px; 
+          height: 30px; 
+          border-radius: 50%;
+          object-fit: cover; 
+        }
+
+        #comment {
+          display: flex;
+          padding: 1px;
+          flex-direction: column; 
+          gap: 4px;
+          line-height: 1.2;
+          max-width: 100%;
+          #comment-length {
+            display: inline-block; 
+            max-width: 9em; 
+            font-size: 13px;
+            white-space: normal; 
+            overflow-wrap: break-word; 
+            word-wrap: break-word;
+          }
+        }
+        
+        .comment-report-delete {
+          margin-left: auto;
+          .comment-delete-btn {
+            display: inline-block;
+            background-color: #ff4d4d;  
+            color: #fff;                
+            padding: 3px 10px;         
+            border-radius: 8px;         
+            font-size: 10px;
+            text-decoration: none;     
+
+            &:hover {
+              background-color: #e60000;  /* ホバー時に濃い赤に */
+            }
+          }
+
+          .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); 
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+          }
+
+          // モーダルの中身 
+          .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 320px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-align: center;
+          }
+
+          // 閉じるボタン 
+          .close-button {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 20px;
+            color: #999;
+            cursor: pointer;
+          }
+
+          // トリガーされたら表示する
+          .report-toggle:checked ~ .modal {
+            display: flex;
+          }
+
+          // ボタンの見た目 
+          .report-button {
+            display: inline-block;
+            background-color: #ff5555;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            transition: 0.2s;
+          }
+
+          .report-button:hover {
+            background-color: #740101;
+          }
+        }
+      }
+    }
+  }
+}

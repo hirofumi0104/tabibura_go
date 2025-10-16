@@ -7,7 +7,7 @@ class Public::CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to post_path(@post), notice: "コメントしました"
+      redirect_to public_post_path(@post), notice: "コメントしました"
     end
   end
   
@@ -16,7 +16,7 @@ class Public::CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     @post = @comment.post
     @comment.destroy
-    redirect_to post_path(@post), notice: 'コメントを削除しました。'
+    redirect_to public_post_path(@post), notice: 'コメントを削除しました。'
   end
 
   private

@@ -1,5 +1,5 @@
 class Public::PostsController < ApplicationController
-  # ページ作成のモジュール
+  # ページネーション作成のモジュール
   include Pagination
 
   before_action :set_post, only: [:edit, :update, :show, :destroy,]
@@ -15,6 +15,7 @@ class Public::PostsController < ApplicationController
   # 投稿とGoogleマップを取得
   def show
     @post = Post.includes(:map,images: { image_attachment: :blob }).find(params[:id])
+    @posts = Post.where(user: @post.user).order("RANDOM()").limit(5)
   end
 
   def index

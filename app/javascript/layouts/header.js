@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const slideTrack = document.createElement("div");
   slideTrack.className = "slide-track";
   slideTrack.style.display = "flex";
-  slideTrack.style.widyh = "auto";
+  slideTrack.style.width = "auto";
   slider.appendChild(slideTrack);
 
   const images = [...window.headerImages];

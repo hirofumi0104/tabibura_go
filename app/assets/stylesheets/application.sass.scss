@@ -4,7 +4,9 @@
 
 // 一般ユーザーのスタイルシート
 @use "public/top";
-@use "public/posts";
+@use "public/posts/posts.scss";
+@use "public/posts/posts_new.scss";
+@use "public/posts/posts_show.scss";
 
 // 共通のスタイルシート
 @use "layouts/header";

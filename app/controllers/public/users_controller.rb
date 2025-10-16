@@ -23,7 +23,7 @@ class Public::UsersController < ApplicationController
   
   def update
     if @user.update(user_params)
-      redirect_to show_mypage_user_path, notice: 'プロフィールが更新されました。'
+      redirect_to show_mypage_public_user_path, notice: 'プロフィールが更新されました。'
     else
       render :edit
     end
