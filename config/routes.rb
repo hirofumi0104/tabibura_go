@@ -56,7 +56,7 @@ Rails.application.routes.draw do
           end
         end
       # 投稿機能
-      resources :posts, only: [:new, :create, :update, :destroy, :show, :index, :edit] do  
+      resources :posts, only: [:new, :create, :update, :destroy, :show, :index, :edit] do
       # フォロー機能
        resource :favorites, only: [:create, :destroy]
       # コメント機能

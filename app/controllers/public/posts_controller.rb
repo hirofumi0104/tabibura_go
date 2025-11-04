@@ -11,7 +11,7 @@ class Public::PostsController < ApplicationController
     @post.build_map
     @post.images.build
   end
-  
+
   # 投稿とGoogleマップを取得
   def show
     @post = Post.includes(:map,images: { image_attachment: :blob }).find(params[:id])
@@ -84,14 +84,21 @@ class Public::PostsController < ApplicationController
     @post = Post.new(post_params)
     @post.user_id = current_user.id
     
-    if params[:tagging_option] == 'cloud_vision' && post_params[:main_image].present?
-      tags = Vision.get_image_data(post_params[:main_image])
-    elsif params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
+    # GoogleVisionApiを使ったタグ付けに使用していた。lib/vision.rb参照
+    # if params[:tagging_option] == 'cloud_vision' && post_params[:main_image].present?
+    #   tags = Vision.get_image_data(post_params[:main_image])
+    # elsif params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
+    #   tags = params[:post][:tag_list].split(",").map(&:strip)
+    # else
+    #   tags = []
+    # end
+    
+    if params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
       tags = params[:post][:tag_list].split(",").map(&:strip)
     else
       tags = []
     end
-    
+
     if params[:save_as_draft].present? || params[:submit_post].nil?
       @post.status = 'unpublished'
     else

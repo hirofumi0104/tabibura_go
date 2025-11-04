@@ -15,37 +15,7 @@
       <% end %>
     </div>
 
-    <div class="post-show-contents">
-      <h1 id="post-title"><%= @post.caption %></h1>
-      <% if @post.main_image.attached? %>
-        <span><%= image_tag @post.main_image, id: "post-main-img" %></span>
-      <% end %>
-
-      <hr>
-
-      <% @post.images.each do |image| %>
-        <% if image.image.attached? %>
-          <div id="post-sub-img">
-            <%= image_tag image.image, style: "object-fit: cover; width: 100%; max-height: 390px;" %>
-            <div id="post-sub-text"><%= image.description %></div>
-          </div>
-        <% end %>
-      <% end %>
-
-      <div id="map" style="height: 500px;"></div>
-
-      <% if current_user && !current_user.admin? %>
-        <h5>タグ</h5>
-        <% if @post.tags.any? %>
-          <% @post.tags.each do |tag| %>
-            <% display_name = tag.name.split('-').first %>
-            <%= link_to "##{display_name}", public_posts_path(tag: display_name) %>
-          <% end %>
-        <% else %>
-          <p>タグはありません</p>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render 'show' %>
 
     <div>
       <h1 id="user-profile-title">プロフィール</h1>
@@ -84,7 +54,7 @@
               </div>
             </div>
           </div>
-          <% if !current_user %>
+          <% if user_signed_in? && current_user.id != @post.user_id %>
             <div id="follow-button">
               <%= render "layouts/followbtn", user: @post.user %>
             </div>
@@ -121,10 +91,10 @@
                     <!-- チェックボックス：トグルスイッチ -->
                     <input type="checkbox" id="report-toggle-<%= comment.id %>" class="report-toggle" hidden>
 
-                    <!-- ボタン（ラベルでトグル） -->
+                    <!-- ボタン -->
                     <label for="report-toggle-<%= comment.id %>" class="report-button">通報する</label>
 
-                    <!-- ポップアップ背景（モーダル） -->
+                    <!-- モーダル -->
                     <div class="modal">
                       <div class="modal-content">
                         <label for="report-toggle-<%= comment.id %>" class="close-button">&times;</label>
@@ -151,31 +121,3 @@
     </div>
   </div>
 </div>
-
-
-<script>
-function initMap() {
-  var mapElement = document.getElementById('map');
-  var initialPosition = { lat: 35.6895, lng: 139.6917 };
-
-  var centerPosition;
-  <% if @post.map.present? && @post.map.latitude.present? && @post.map.longitude.present? %>
-    centerPosition = { lat: <%= @post.map.latitude %>, lng: <%= @post.map.longitude %> };
-  <% else %>
-    centerPosition = initialPosition;
-  <% end %>
-
-  var map = new google.maps.Map(mapElement, {
-    center: centerPosition,
-    zoom: 10
-  });
-
-  new google.maps.Marker({
-    position: centerPosition,
-    map: map,
-    draggable: false
-  });
-}
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61O9MImwW7WvEJ_zkkkD08jt_nhgwzPA&callback=initMap" async defer></script>

@@ -49,7 +49,7 @@ class Post < ApplicationRecord
 
     def at_least_one_image
       if images.empty?
-        errors.add(:images, "少なくとも一つの旅先レポート写真を追加してください。")
+        errors.add(:images, "旅先レポート写真を追加してください。")
       end
     end
     
