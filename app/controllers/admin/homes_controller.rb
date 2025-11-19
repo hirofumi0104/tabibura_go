@@ -1,5 +1,4 @@
 class Admin::HomesController < ApplicationController
-  before_action :authenticate_admin!
   def top
     @reported_posts_per_page = 5
     @reported_comments_per_page = 5

@@ -8,32 +8,30 @@ class Public::PostsController < ApplicationController
    # 新規投稿
   def new
     @post = Post.new
-    @post.build_map
     @post.images.build
   end
-
+  
   # 投稿とGoogleマップを取得
   def show
-    @post = Post.includes(:map,images: { image_attachment: :blob }).find(params[:id])
+    @post = Post.includes(images: { image_attachment: :blob }).find(params[:id])
     @posts = Post.where(user: @post.user).order("RANDOM()").limit(5)
   end
 
   def index
-    @users = User.where.not(role: 1).includes(:profile_image_attachment) 
-    @posts = Post.all
+    # 投稿の表示・検索条件(条件はPostモデル)
+    @posts = Post.published 
+             .with_attached_main_image
+             .search(params[:q]) 
+             .with_tag(params[:tag])
+             .by_itinerary(params[:itinerary])           
+             .includes(:tags, :user, :favorites)
+             .page(params[:page]).per(10)
 
-    # 投稿の検索条件(条件はPostモデル)
-    @posts = Post.published
-               .search(params[:q])
-               .with_tag(params[:tag])
-               .by_itinerary(params[:itinerary])
-               .includes(images: { image_attachment: :blob })
-               .page(params[:page]).per(10)
-
-    # ユーザー検索(条件はUserモデル)
+    # ユーザー表示・検索(条件はUserモデル)
     @users = User.excluding_admin
-              .search_name(params[:user_q])
-              .includes(:profile_image_attachment)
+             .is_active
+             .search_name(params[:user_q])
+             .includes(:profile_image_attachment)
               
     # 投稿ページネーション
     post_page = params[:post_page]&.to_i || 1
@@ -63,7 +61,7 @@ class Public::PostsController < ApplicationController
   
   # 投稿の編集
   def edit
-    @from_draft = params[:from_draft] == 'true'
+    @post = Post.includes(:map_pins, images: { image_attachment: :blob }).find(params[:id])
   end
   
   # お気に入り登録している投稿一覧
@@ -106,8 +104,7 @@ class Public::PostsController < ApplicationController
     end
 
     if @post.save
-       tag_objects = tags.map { |tag| { name: tag } }
-       @post.tags.create(tag_objects)
+       @post.tags.create(tags.map { |tag| { name: tag } })
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿の下書きに保存しました。'
       else
@@ -122,16 +119,19 @@ class Public::PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
     
-    if params[:tagging_option] == 'cloud_vision' && post_params[:main_image].present?
-      begin
-        # Cloud Vision APIを使用してタグを取得
-        tags = Vision.get_image_data(post_params[:main_image])
-        Rails.logger.info "Cloud Vision tags: #{tags.inspect}"
-      rescue => e
-        Rails.logger.error "Cloud Vision API error: #{e.message}"
-        tags = []
-      end
-    elsif params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
+    # Cloud Visionは現状使わないのでコメントアウト
+    # if params[:tagging_option] == 'cloud_vision' && post_params[:main_image].present?
+    #   begin
+    #     # Cloud Vision APIを使用してタグを取得
+    #     tags = Vision.get_image_data(post_params[:main_image])
+    #     Rails.logger.info "Cloud Vision tags: #{tags.inspect}"
+    #   rescue => e
+    #     Rails.logger.error "Cloud Vision API error: #{e.message}"
+    #     tags = []
+    #   end
+    
+
+    if params[:tagging_option] == 'manual' && params[:post][:tag_list].present?
       tags = params[:post][:tag_list].split(",").map(&:strip)
     else
       tags = []
@@ -144,14 +144,23 @@ class Public::PostsController < ApplicationController
     end
   
     if @post.update(post_params)
-       @post.tags.destroy_all
-       tag_objects = tags.map { |tag| { name: tag } }
-       @post.tags.create(tag_objects)
+
+      # マップのピン情報を再登録
+      @post.map_pins.destroy_all
+      if params[:post][:map_pins_attributes].present?
+        params[:post][:map_pins_attributes].each do |_, pin_attr|
+          @post.map_pins.create(
+            latitude: pin_attr[:latitude],
+            longitude: pin_attr[:longitude],
+            label: pin_attr[:label]
+          )
+        end
+      end
       
       if @post.unpublished?
         redirect_to draft_posts_path, notice: '投稿を下書きとして保存しました。'
       else
-        redirect_to post_path(@post, referrer: user_path(@post.user)), notice: '投稿を更新しました。'
+        redirect_to public_post_path(@post, referrer: public_user_path(@post.user)), notice: '投稿を更新しました。'
       end
     else
       render :edit
@@ -170,7 +179,7 @@ class Public::PostsController < ApplicationController
         if current_user.admin?
           Notification.create(
             user: @post.user,
-            admin: current_user.admin, # ログインしている管理者
+            sent_by_admin: true, # ログインしている管理者
             post: @post
           )
         end
@@ -206,9 +215,9 @@ class Public::PostsController < ApplicationController
   end
   
   def post_params
-    params.require(:post).permit(:user_id, :itinerary, :caption,:status, :main_image, :tag_list, :latitude, :longitude,
-     map_attributes: [:id, :latitude, :longitude],
-     images_attributes: [:id, :description, :image, :_destroy])
+    params.require(:post).permit(:user_id, :itinerary, :caption, :status, :main_image, :tag_list,
+    map_pins_attributes: [:id, :latitude, :longitude, :label, :_destroy],
+    images_attributes: [:id, :description, :image, :_destroy])
   end
   
 end

@@ -28,27 +28,25 @@
       <tbody>
         <% if @users.any? %>
           <% @users.each do |user| %>
-            <% unless user.guest? %>
-              <tr>
-                <td><%= user.id %></td>
-                <td><%= link_to user.name, admin_user_path(user) %></td>
-                <td><%= user.email %></td>
-                <td class="text-center">
-                  <% if user.is_active %>
-                    <span class="badge bg-success" style="font-size: 1.0em;">ログイン可能</span>
-                  <% else %>
-                    <span class="badge bg-danger " style="font-size: 1.0em;">ログイン不可</span>
-                  <% end %>
-                </td>
-                <td  class="text-center">
-                  <% if user.is_active %>
-                    <%= link_to 'ログイン不可に', deactivate_admin_user_path(user), method: :patch, class: 'badge bg-danger text-dark', data: { confirm: 'このユーザーを無効にしますか？' }, style: 'font-size: 1.0em;'%>
-                  <% else %>
-                    <%= link_to 'ログイン可能に', activate_admin_user_path(user), method: :patch, class: 'badge bg-success text-dark', data: { confirm: 'このユーザーを有効にしますか？' }, style: 'font-size: 1.0em;' %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
+            <tr>
+              <td><%= user.id %></td>
+              <td><%= link_to user.name, admin_user_path(user) %></td>
+              <td><%= user.email %></td>
+              <td class="text-center">
+                <% if user.is_active %>
+                  <span class="badge bg-success" style="font-size: 1.0em;">ログイン可能</span>
+                <% else %>
+                  <span class="badge bg-danger " style="font-size: 1.0em;">ログイン不可</span>
+                <% end %>
+              </td>
+              <td  class="text-center">
+                <% if user.is_active %>
+                  <%= link_to 'ログイン不可に', deactivate_admin_user_path(user), method: :patch, class: 'badge bg-danger text-dark', data: { confirm: 'このユーザーを無効にしますか？' }, style: 'font-size: 1.0em;'%>
+                <% else %>
+                  <%= link_to 'ログイン可能に', activate_admin_user_path(user), method: :patch, class: 'badge bg-success text-dark', data: { confirm: 'このユーザーを有効にしますか？' }, style: 'font-size: 1.0em;' %>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
         <% else %>
           <tr>

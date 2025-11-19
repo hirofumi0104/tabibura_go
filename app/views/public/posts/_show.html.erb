@@ -10,22 +10,29 @@
     <% if image.image.attached? %>
       <div id="post-sub-img">
         <%= image_tag image.image, style: "object-fit: cover; width: 100%; max-height: 390px;" %>
-        <div id="post-sub-text"><%= image.description %></div>
+        <div id="post-sub-text"><%= simple_format(image.description) %></div>
       </div>
     <% end %>
   <% end %>
 
-  <div id="show-map" style="max-width: 100%; height: 400px;"></div>
+  <div class="show-map-view">
+    <div id="show-map"
+      data-map-pins='<%= raw(@post.map_pins.map { |pin|
+        { latlng: { lat: pin.latitude, lng: pin.longitude }, label: pin.label }
+      }.to_json) %>' 
+      style="width: 100%; height: 400px;">
+    </div>
 
-  <% if current_user && !current_user.admin? %>
-    <h5>タグ</h5>
-    <% if @post.tags.any? %>
-      <% @post.tags.each do |tag| %>
-        <% display_name = tag.name.split('-').first %>
-        <%= link_to "##{display_name}", public_posts_path(tag: display_name) %>
+    <% if current_user && !current_user.admin? %>
+      <h5>タグ</h5>
+      <% if @post.tags.any? %>
+        <% @post.tags.each do |tag| %>
+          <% display_name = tag.name.split('-').first %>
+          <%= link_to "##{display_name}", public_posts_path(tag: display_name) %>
+        <% end %>
+      <% else %>
+        <p>タグはありません</p>
       <% end %>
-    <% else %>
-      <p>タグはありません</p>
     <% end %>
-  <% end %>
+  </div>
 </div>

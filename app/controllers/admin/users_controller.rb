@@ -1,5 +1,4 @@
 class Admin::UsersController < ApplicationController
-  before_action :authenticate_admin!
   
   def show
     @user = User.find(params[:id])
@@ -12,13 +11,13 @@ class Admin::UsersController < ApplicationController
   end
   
   def index
-    @users = User.all
+    @users = User.where(role: 0)
     @users = @users.page(params[:page]).per(10)
     # 名前でユーザーを検索する
     if params[:search].present?
       @users = @users.where("name LIKE ?", "%#{params[:search]}%") if params[:search].present?
     end
-    # アクティブ状態のユーザーを表示
+    # アクティブ状態のユーザーを表示 画面側で条件分け
     if params[:status].present?
       @users = @users.where(is_active: params[:status] == 'active')
     end
@@ -38,9 +37,4 @@ class Admin::UsersController < ApplicationController
     redirect_back(fallback_location: admin_users_path, notice: 'ユーザーをログイン不可にしました。')
   end
 
-  private
-
-  def set_user
-    @user = User.find(params[:id])
-  end
 end

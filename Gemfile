@@ -73,6 +73,5 @@ gem "net-imap"
 
 gem 'kaminari'
 
-gem 'geocoder'
 gem 'gmaps4rails'
 gem 'gon'

@@ -4,25 +4,28 @@ class Post < ApplicationRecord
   enum :status, { unpublished: 0, published: 1 }
 
   belongs_to :user
-  has_one_attached :main_image
-  has_one :map, dependent: :destroy
+
   has_many :comments, dependent: :destroy
   has_many :reports, as: :reportable, dependent: :destroy
   has_many :favorites, dependent: :destroy
-  has_many :images, dependent: :destroy
+  
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings, dependent: :destroy
+   
+  # 投稿内容の関連付け
+  has_one_attached :main_image
+  has_many :images, dependent: :destroy
+  has_many :map_pins, dependent: :destroy
+  # 投稿・編集画面のバリデーション
+  validates :itinerary, presence: { message: "旅先を選択してください。" }
+  validates :caption, presence: { message: "テーマを入力してください。" }
+  validates :main_image, presence: { message: "見出し写真をアップロードしてください。" }
+  
   # （画像と地図）
   accepts_nested_attributes_for :images, allow_destroy: true
-  accepts_nested_attributes_for :map, allow_destroy: true
-  attribute :reported, :boolean
-  
-  validates :itinerary, presence: { message: "旅先を選択してください。" }
-  validates :caption, presence: { message: "旅先説明を入力してください。" }
-  validates :main_image, presence: { message: "見出し写真をアップロードしてください。" }
-  validate :at_least_one_image
-  
-  
+  accepts_nested_attributes_for :map_pins, allow_destroy: true
+
+
   
   # タグリストを取得する
   def tag_list
@@ -44,13 +47,5 @@ class Post < ApplicationRecord
           "%#{q}%", "%#{q}%")}
   scope :with_tag, ->(tag) { joins(:tags).where(tags: {name: tag.delete('#')}) if tag.present? }
   scope :by_itinerary, ->(ininerart) { where(ininerart:) if ininerart.present? }
-
-  private
-
-    def at_least_one_image
-      if images.empty?
-        errors.add(:images, "旅先レポート写真を追加してください。")
-      end
-    end
     
 end

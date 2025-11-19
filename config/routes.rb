@@ -83,6 +83,7 @@ Rails.application.routes.draw do
       get 'tags/:tag', to: 'posts#tagged', as: 'tag'
     end
 
+    
   # 管理者用ルーティング
   namespace :admin do
       get 'homes/top'

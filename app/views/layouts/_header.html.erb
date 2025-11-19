@@ -65,11 +65,11 @@
     </div>
     <% if user_signed_in? && current_user.admin? %>
     <nav>
-      <%= link_to "管理者ダッシュボード", admin_root_path %>
+      <%= link_to "管理者ダッシュボード", admin_homes_top_path %>
 
       <ul>
         <li>
-          <%= link_to admin_root_path do %>
+          <%= link_to admin_homes_top_path do %>
             <i class="fas fa-home"></i> ホーム
           <% end %>
         </li>
@@ -92,7 +92,9 @@
     </nav>
     <% end %>
   <% end %>
-  <div id="header-slider"></div>
+  <% if !request.path.start_with?('/admin') %>
+    <div id="header-slider"></div>
+  <% end %>
 </header>
 
 <script>

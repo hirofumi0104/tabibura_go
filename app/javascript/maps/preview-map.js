@@ -23,16 +23,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (window.newMapPins) {
         const { markers = [], itineraryMarker } = window.newMapPins;
 
-        // 通常ピン追加
+        // ユーザー追加ピン
         markers.forEach(pin => {
-          L.marker(pin.latlng).addTo(previewMap).bindPopup(pin.label);
+          L.marker(pin.latlng)
+            .addTo(previewMap)
+            .bindPopup(pin.label)
+            .openPopup();
         });
 
         // 都道府県ピン
         if (itineraryMarker) {
           L.marker(itineraryMarker.latlng)
             .addTo(previewMap)
-            .bindPopup(itineraryMarker.label);
+            .bindPopup(itineraryMarker.label)
+            .openPopup();
         }
 
         // どのピンを中心にするか決定

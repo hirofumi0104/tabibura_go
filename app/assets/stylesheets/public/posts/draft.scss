@@ -1,0 +1,168 @@
+.draft-container {
+  padding: 2rem;
+  font-family: sans-serif;
+
+  .draft-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .draft-layout {
+    display: flex;
+    gap: 2rem;
+
+    .draft-sidebar {
+      flex: 0 0 300px;
+
+      .draft-card {
+        padding: 1rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .draft-card-title {
+          margin-bottom: 1rem;
+          font-weight: bold;
+        }
+
+        .draft-form {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .draft-select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+          }
+
+          .draft-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+          }
+
+          .draft-btn-primary {
+            background-color: #007bff;
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    .draft-main {
+      flex: 1;
+
+      .draft-posts {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+
+        .draft-post {
+          background: #fff;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+          .draft-post-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+          }
+
+          .draft-post-body {
+            padding: 1rem;
+
+            .draft-post-category {
+              font-weight: bold;
+            }
+
+            .draft-post-caption {
+              margin: 0.5rem 0;
+            }
+
+            .draft-divider {
+              margin: 0.5rem 0;
+            }
+
+            .draft-status {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+
+              .draft-radio {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+              }
+
+              .draft-btn-success {
+                background-color: #28a745;
+                color: #fff;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+              }
+            }
+
+            .draft-actions {
+              display: flex;
+              gap: 0.5rem;
+              margin-top: 0.5rem;
+
+              .draft-btn {
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+                text-decoration: none
+              }
+
+              .draft-btn-primary { background-color: #007bff; color: #fff; }
+              .draft-btn-secondary { background-color: #6c757d; color: #fff; }
+              .draft-btn-danger { background-color: #dc3545; color: #fff; }
+            }
+          }
+        }
+      }
+
+      .draft-empty {
+        text-align: center;
+        padding: 2rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+      }
+    }
+  }
+
+  .draft-pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+
+    .draft-page-item {
+      margin: 0 0.25rem;
+
+      .draft-page-link {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &.active {
+          background-color: #007bff;
+          color: #fff;
+          border-color: #007bff;
+        }
+
+        &.disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}

@@ -1,82 +1,140 @@
-<h1>マイページ</h1>
+<div class="mypage-container">
+  <h1>マイページ</h1>
 
-<% if @user.profile_image.attached? %>
-  <%= image_tag rails_blob_path(@user.profile_image, only_path: true), size: "100x100" %>
-<% else %>
-  <%= image_tag "User.png", size: "100x100", alt: "プロフィール画像がありません" %>
-<% end %>
+  <div class="mypage-layout">
 
-<h4><%= @user.name %></h4>
-<p><%= @user.biography %></p>
+    <!-- ============================
+         左：サイドバー
+         ============================ -->
+    <div class="mypage-sidebar">
 
-<div>
-  <h5>フォロー</h5>
-  <p><%= link_to @user.followings.count, public_user_followings_path(@user) %></p>
-  <h5>フォロワー</h5>
-  <p><%= link_to @user.followers.count, public_user_followers_path(@user) %></p>
-</div>
-
-<div>
-  <%= render "layouts/followbtn", user: @user %>
-</div>
-
-<% if current_user == @user %>
-  <div>
-    <%= link_to "会員情報編集", edit_information_public_user_path %>
-    <%= link_to "下書き一覧", draft_public_posts_path %>
-    <%= link_to "いいねした投稿一覧", nice_public_posts_path %>
-  </div>
-<% end %>
-
-<%= form_with(url: public_user_path(@user), method: :get, local: true) do %>
-  <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
-  <%= submit_tag '検索' %>
-<% end %>
-
-<% if current_user == @user && @notifications.any? %>
-  <h4>通知</h4>
-  <ul>
-    <% @notifications.each do |notification| %>
-      <li>
-        <% if notification.post.present? && notification.post.status == 'unpublished' && notification.comment.nil? %>
-          <%= link_to mark_as_read_and_destroy_public_notification_path(notification), method: :patch do %>
-            投稿「<strong><%= notification.post.caption %></strong>」が非公開になりました
-          <% end %>
-        <% elsif notification.comment.present? %>
-          <%= link_to mark_as_read_and_destroy_public_notification_path(notification), method: :patch do %>
-            投稿「<strong><%= notification.comment.post.caption %></strong>」に新しいコメントが追加されました
-          <% end %>
+      <!-- プロフィール -->
+      <div class="mypage-profile">
+        <% if @user.profile_image.attached? %>
+          <%= image_tag rails_blob_path(@user.profile_image, only_path: true), size: "80x80" %>
+        <% else %>
+          <%= image_tag "User.png", size: "80x80", alt: "プロフィール画像" %>
         <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
 
-<% @posts.each do |post| %>
-  <% if post.main_image.attached? %>
-    <%= image_tag post.main_image %>
-  <% else %>
-    <%= image_tag "default_image.jpg" %>
-  <% end %>
+        <div class="mypage-user-info">
+          <h4><%= @user.name %></h4>
+          <p><%= @user.biography %></p>
+        </div>
+      </div>
 
-  <h5><%= link_to post.user.name, (current_user.admin? ? admin_user_path(post.user) : public_user_path(post.user)) %></h5>
-  <p><%= post.itinerary %></p>
-  <p><%= truncate(post.caption, length: 20) %></p>
+      <!-- フォロー状況 -->
+      <div class="mypage-follow-stats">
+        <div>
+          <h5>フォロー</h5>
+          <p><%= link_to @user.followings.count, public_user_followings_path(@user) %></p>
+        </div>
 
-  <% if current_user == @user %>
-    <div>
-      <%= radio_button_tag "post_status_#{post.id}", "published", post.published? %>
-      <%= label_tag "post_status_#{post.id}", "公開" %>
-      <%= radio_button_tag "post_status_#{post.id}", "unpublished", !post.published? %>
-      <%= label_tag "post_status_#{post.id}", "非公開" %>
-      <%= button_to "更新", update_status_public_post_path(post), method: :patch, params: { post: { status: post.published? ? 'unpublished' : 'published' } }, remote: true %>
+        <div>
+          <h5>フォロワー</h5>
+          <p><%= link_to @user.followers.count, public_user_followers_path(@user) %></p>
+        </div>
+      </div>
+
+      <!-- フォローボタン -->
+      <div class="mypage-follow-button">
+        <%= render "layouts/followbtn", user: @user %>
+      </div>
+
+      <!-- 自分の場合のみ表示 -->
+      <% if current_user == @user %>
+        <div class="mypage-actions">
+          <%= link_to "会員情報編集", edit_information_public_user_path %>
+          <%= link_to "下書き一覧", draft_public_posts_path %>
+          <%= link_to "いいねした投稿一覧", nice_public_posts_path %>
+        </div>
+      <% end %>
+
+      <!-- 検索フォーム -->
+      <div class="mypage-search">
+        <%= form_with(url: public_user_path(@user), method: :get, local: true) do %>
+          <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
+          <%= submit_tag '検索' %>
+        <% end %>
+      </div>
+
+      <!-- 通知 -->
+      <% if current_user == @user && @notifications.any? %>
+        <div class="mypage-notifications">
+          <h4>通知</h4>
+          <ul>
+            <% @notifications.each do |notification| %>
+              <li>
+                <% if notification.post.present? && notification.post.status == 'unpublished' && notification.comment.nil? %>
+                  <%= link_to mark_as_read_and_destroy_public_notification_path(notification), method: :patch do %>
+                    投稿「<strong><%= notification.post.caption %></strong>」が非公開になりました
+                  <% end %>
+                <% elsif notification.comment.present? %>
+                  <%= link_to mark_as_read_and_destroy_public_notification_path(notification), method: :patch do %>
+                    投稿「<strong><%= notification.comment.post.caption %></strong>」に新しいコメントが追加されました
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
     </div>
 
-    <div>
-      <%= link_to '編集', edit_public_post_path(post, from_draft: true) %>
-      <%= link_to '削除', public_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' } %>
-    </div>
-  <% end %>
+    <!-- ============================
+     右：メイン（投稿一覧）
+     ============================ -->
+      <div class="mypage-main">
 
-  <%= link_to "詳細を見る", public_post_path(post.id) %>
-<% end %>
+      <!-- ★これが必要！グリッドの親要素 -->
+      <div class="mypage-post-grid">
+
+        <% @posts.each do |post| %>
+          <div class="mypage-post">
+
+            <!-- 画像 -->
+            <% if post.main_image.attached? %>
+              <%= image_tag post.main_image %>
+            <% else %>
+              <%= image_tag "default_image.jpg" %>
+            <% end %>
+
+            <!-- 投稿者名 -->
+            <h5>
+              <%= link_to post.user.name, (current_user.admin? ? admin_user_path(post.user) : public_user_path(post.user)) %>
+            </h5>
+
+            <!-- カテゴリ・キャプション -->
+            <p><%= post.itinerary %></p>
+            <p><%= truncate(post.caption, length: 20) %></p>
+
+            <!-- 本人のみ操作可能 -->
+            <% if current_user == @user %>
+              <div class="mypage-post-status">
+                <%= radio_button_tag "post_status_#{post.id}", "published", post.published? %>
+                <%= label_tag "post_status_#{post.id}", "公開" %>
+
+                <%= radio_button_tag "post_status_#{post.id}", "unpublished", !post.published? %>
+                <%= label_tag "post_status_#{post.id}", "非公開" %>
+
+                <%= button_to "更新", update_status_public_post_path(post),
+                      method: :patch,
+                      params: { post: { status: post.published? ? 'unpublished' : 'published' } },
+                      remote: true %>
+              </div>
+
+              <div class="mypage-post-actions">
+                <%= link_to '編集', edit_public_post_path(post) %>
+                <%= link_to '削除', public_post_path(post),
+                      method: :delete,
+                      data: { confirm: '本当に削除しますか？' } %>
+              </div>
+            <% end %>
+
+            <%= link_to "詳細を見る", public_post_path(post.id) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

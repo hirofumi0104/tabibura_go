@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const captionInput = document.querySelector('#post_caption');
   const mainImageInput = document.querySelector('#post_main_image');
-  const subImageContainers = document.querySelectorAll('.nested-fields');
   const tagInput = document.querySelector('#manual_tag_input');
 
   // JS 用のモーダル内要素
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
           div.id = 'post-sub-img';
           div.innerHTML = `
             <img src="${e.target.result}" style="width:100%; max-height:200px; object-fit:cover;">
-            <div id="post-sub-text">${descInput ? descInput.value : ''}</div>
+            <div id="post-sub-text">${descInput ? descInput.value.replace(/\n/g, '<br>') : ''}</div>
           `;
           subImgContainer.appendChild(div);
         };
@@ -73,10 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // 入力がない場合
-    const hasContent = captionInput.value || mainImageInput.files.length || hasSubContent || tagInput.value.trim();
-
-    if (!hasContent) {
+    if (window.newMapPins.initialMarker.value === 0 ||window.newMapPins.markers.length === 0 ) {
       emptyMsg.style.display = 'block';
       // マップ非表示（内容の入力がない場合）
       document.getElementById('preview-map').style.display = 'none';

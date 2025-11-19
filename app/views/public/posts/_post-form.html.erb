@@ -1,38 +1,44 @@
-<div class="postnew-container">
+<div class="postform-container">
   <div class="post-form">
     <%= form_with(model: [:public, @post], local: true) do |form| %>
-      <% if @post.errors.any? %>
-        <div id="error_explanation" class="alert alert-danger">
-          <h2><%= pluralize(@post.errors.count, "error") %> 入力をお願いします</h2>
-          <ul>
-            <% @post.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
+      <div class="form-top">
+        <div>
+          <% if @post.errors.any? %>
+            <div id="error_explanation">
+              <h2>入力をお願いします</h2>
+              <ul>
+                <% @post.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
         </div>
-      <% end %>
-      <div class="postnew_form">
-        <button type="button" id="preview-btn" class="btn btn-secondary">
-          プレビュー
-        </button>
-        <div class="form-group col-md-6">
-          <h5><%= form.label :itinerary, "旅先" %></h5>
-          <%= form.select :itinerary, options_for_select(itinerary), { prompt: "選択してください" }, id: 'itinerary_select', class: 'form-control' %>
+        <div>
+          <button type="button" id="preview-btn">
+            プレビュー
+          </button>
         </div>
+      </div>
+      
 
-        <div class="form-group">
-          <h5><%= form.label :caption, "旅のテーマ（タイトルなど）" %></h5>
-          <%= form.text_field :caption, class: 'form-control', rows: 6 %>
-        </div>
-
-        <div class="form-group col-md-6">
-          <h3><%= form.label :main_image, "見出し写真" %></h3>
-          <%= form.file_field :main_image, class: 'form-control-file' %>
-        </div>
-        
+      <div class="form-theme">
+        <h3><%= form.label :caption, "旅のテーマ（タイトルなど）" %></h3>
+        <%= form.text_field :caption, class: 'title-form', rows: 6 %>
       </div>
 
-      <div class="form-group">
+      <h3 style="margin-block: 0; padding: 0 0 0 20px;"><%= form.label :main_image, "見出し写真" %>と<%= form.label :itinerary, "旅先" %></h3>
+      <div class="form-main-photo-itinerary">
+        <div class="file-main-photo">
+          <%= form.file_field :main_image, class: 'form-main-photo' %>
+        </div>
+        
+        <div class="form-select">
+          <%= form.select :itinerary, options_for_select(itinerary), { prompt: "旅先を選択してください" }, id: 'itinerary_select', class: 'form-select' %>
+        </div>
+      </div>
+
+      <div class="report-form">
         <h3>旅先レポート</h3>
         <div id="images">
           <%= form.fields_for :images do |image_form| %>
@@ -40,30 +46,12 @@
           <% end %>
         </div>
         <%= link_to 'レポート追加', '#', class: 'add_fields',
-          data: { id: 'new_image',
-          fields: raw(form.fields_for(:images, Image.new, child_index: 'new_image') { |p| render('image_fields', f: p) }.gsub("\n", "")) } %>
+          data: { id: 'image_form',
+          fields: raw(form.fields_for(:images, Image.new, child_index: 'image_form') { |image_form| render('image_fields', f: image_form) }.gsub("\n", "")) } %>
       </div>
-      
-      <div class="form-group">
-        <h5><%= form.label :tag_list, "タグ (例: 旅行, 食べ物)" %></h5>
-        <div>
-         <!--
-          <label>
-            <input type="radio" name="tagging_option" value="manual" checked>
-            自分ででタグ付け
-          </label>
-          <label>
-            <input type="radio" name="tagging_option" value="cloud_vision">
-            AIでタグ付け(精度は低め)
-          </label>
-          -->
-        </div>
-        
-        <%= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'form-control', id: 'manual_tag_input' %>
-      </div>
-    
-      <div class="form-group">
-      <h5><label for="location">場所を検索(例: 東京都 丸の内)</label></h5>
+
+      <div class="map-search">  
+        <h3>場所を検索(例: 東京都 丸の内)</h3>
         <div class="input-group">
           <input type="text" id="location" class="form-control">
           <div class="input-group-append">
@@ -72,24 +60,45 @@
         </div>
       </div>
 
-      <% if action_name == "new" %>
-        <div id="new-map" style="width: 600px; height: 400px;"></div>
-      <% elsif action_name == "edit" %>
-        <div id="edit-map" style="width: 600px; height: 400px;"></div>
-      <% end %>
+      <div 
+        id="new-edit-map"
+        data-pins='<%= raw(@post.map_pins.map { |pin| 
+          { latitude: pin.latitude, longitude: pin.longitude, label: pin.label } 
+        }.to_json) %>'
+        style="width: 100%; height: 400px; border: 2px solid #ccc;">
+      </div>
+      
+      <div class="form-bottom">
+        <div class="tag">
+          <h5><%= form.label :tag_list, "タグ (例: 旅行, 食べ物)" %></h5>
+          <div>
+            <% #!--  google cloud vision APIのタグ付け機能は一旦保留（お金がかかるから） 
+            #   <label>
+            #     <input type="radio" name="tagging_option" value="manual" checked>
+            #     自分ででタグ付け
+            #   </label>
+            #   <label>
+            #     <input type="radio" name="tagging_option" value="cloud_vision">
+            #     AIでタグ付け(精度は低め)
+            #   </label>
+            -- %>
+          </div>
+          <%= form.text_field :tag_list, value: @post.tag_list.is_a?(Array) ? @post.tag_list.join(", ") : @post.tag_list, placeholder: "タグをカンマで区切って入力", class: 'tag-form', id: 'manual_tag_input' %>
+        </div>
+        
+         <% 
+          #!-- ピンの位置情報送信用 -
+         - %>
+        <div class="map-pins-fields-container"></div>
 
-      <%= form.fields_for :map, @post.map || @post.build_map do |map| %>
-        <%= map.hidden_field :latitude, id: 'post_map_latitude' %>
-        <%= map.hidden_field :longitude, id: 'post_map_longitude' %>
-      <% end %>
-
-      <div class="text-center mt-4">
-        <%= button_tag(type: 'submit', name: 'submit_post', class: 'btn btn-primary mr-2') do %>
-          <i class="fas fa-paper-plane"></i> 投稿
-        <% end %>
-        <%= button_tag(type: 'submit', name: 'save_as_draft', class: 'btn btn-secondary') do %>
-          <i class="fas fa-save"></i> 下書きを保存
-        <% end %>
+        <div class="submit">
+          <%= button_tag(type: 'submit', name: 'submit_post', class: 'btn btn-primary mr-2') do %>
+            <i class="fas fa-paper-plane"></i> 投稿
+          <% end %>
+          <%= button_tag(type: 'submit', name: 'save_as_draft', class: 'btn btn-secondary') do %>
+            <i class="fas fa-save"></i> 下書きを保存
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>
@@ -114,5 +123,3 @@
     </div>
   </div>
 </div>
-
-

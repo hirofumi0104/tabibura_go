@@ -2,11 +2,15 @@
 
 // 管理者のスタイルシート
 
-// 一般ユーザーのスタイルシート
+// ユーザーのスタイルシート
 @use "public/top";
 @use "public/posts/posts.scss";
-@use "public/posts/posts_new.scss";
+@use "public/posts/posts_forms.scss";
 @use "public/posts/posts_show.scss";
+@use "public/posts/draft.scss";
+@use "public/posts/nice.scss";
+@use "public/user/user_edit.scss";
+@use "public/user/mypage.scss";
 
 // 共通のスタイルシート
 @use "layouts/header";

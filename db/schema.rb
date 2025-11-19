@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_014639) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_11_045717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -69,14 +69,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_014639) do
     t.index ["post_id"], name: "index_images_on_post_id"
   end
 
-  create_table "maps", force: :cascade do |t|
+  create_table "map_pins", force: :cascade do |t|
     t.bigint "post_id", null: false
-    t.string "address"
     t.float "latitude"
     t.float "longitude"
+    t.string "label"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_maps_on_post_id"
+    t.index ["post_id"], name: "index_map_pins_on_post_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -86,8 +86,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_014639) do
     t.boolean "read", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "admin_id"
-    t.index ["admin_id"], name: "index_notifications_on_admin_id"
+    t.boolean "sent_by_admin", default: false
     t.index ["post_id"], name: "index_notifications_on_post_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -160,7 +159,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_014639) do
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "images", "posts"
-  add_foreign_key "maps", "posts"
+  add_foreign_key "map_pins", "posts"
   add_foreign_key "notifications", "posts"
   add_foreign_key "notifications", "users"
   add_foreign_key "reports", "users"

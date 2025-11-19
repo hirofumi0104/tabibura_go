@@ -58,7 +58,7 @@ class User < ApplicationRecord
   # ページネーションで使用
   scope :is_active, -> { where(is_active: true) }
 
-  # 投稿画面の検索条件 Postコントローラー(index)
+  # 投稿画面のユーザー検索条件 Postコントローラー(index)
   scope :excluding_admin, -> { where.not(role: 1) }
   scope :search_name, ->(q) { where('name LIKE ?', "%#{q}%") if q.present? }
 

@@ -14,16 +14,16 @@
               <% else %>
                 <%= image_tag("User.png", class: "rounded-circle mr-3", width: "70", height: "70", alt: "プロフィール画像がありません") %>
               <% end %>
-              <%= link_to user.name, user, class: "text-decoration-none text-dark font-weight-bold" %>
+              <%= link_to user.name, public_user_path(user), class: "text-decoration-none text-dark font-weight-bold" %>
             </div>
             
             <div class="d-flex flex-column align-items-center ml-auto">
-              <%= link_to user, class: "btn btn-primary btn-sm mb-2", title: "プロフィールを見る" do %>
+              <%= link_to public_user_path(user), class: "btn btn-primary btn-sm mb-2", title: "プロフィールを見る" do %>
                 <i class="fas fa-user fa-lg mb-2"></i>
                 <span>プロフィール</span>
               <% end %>
-              
-              <% unless current_user.nil? || current_user.guest? %>
+
+              <% unless current_user.nil? %>
                 <%= render "layouts/followbtn", user: user, options: { class: "btn-sm" } %>
               <% end %>
             </div>

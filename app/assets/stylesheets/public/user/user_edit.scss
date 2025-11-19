@@ -1,0 +1,176 @@
+/* 包含用ラッパー */
+.profile-edit-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* カード */
+.profile-edit-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  margin-top: 20px;
+}
+
+/* カード内部 */
+.profile-edit-body {
+  padding: 24px;
+}
+
+/* タイトル */
+.profile-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* --- エラー表示 --- */
+.error-box {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+/* --- フォームブロック --- */
+.form-block {
+  margin-bottom: 14px;
+}
+
+.form-block label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* テキスト入力 */
+.input-text,
+.input-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.input-text:focus,
+.input-textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+.input-textarea {
+  resize: vertical;
+}
+
+/* ファイル */
+.input-file {
+  margin-top: 6px;
+}
+
+/* --- チェックボックス --- */
+.checkbox-block {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.checkbox-input {
+  margin-right: 8px;
+}
+
+.checkbox-label {
+  font-size: 15px;
+}
+
+/* --- ボタン共通：やさしいフラットデザイン --- */
+.primary-button,
+.secondary-button,
+.danger-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 10px;          /* Bootstrap感を消すポイント①：角丸を大きめ */
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;            
+  border: 1px solid transparent;
+  background: #f3f4f6;
+  color: #374151;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08); 
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.danger-button:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.primary-button:active,
+.secondary-button:active,
+.danger-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* --- 更新ボタン：落ちついたブルー系 --- */
+.primary-button {
+  background: #4f8df5;
+  color: #ffffff;
+  border-color: #4f8df5;
+}
+
+.primary-button:hover {
+  background: #3c7ae0;
+}
+
+.primary-button:active {
+  background: #356ec7;
+}
+
+/* --- 戻る：ライトグレー（Bootstrap ではない独自色） --- */
+.secondary-button {
+  background: #e5e7eb;
+  color: #374151;
+  border-color: #d1d5db;
+  margin-left: 8px;
+}
+
+.secondary-button:hover {
+  background: #d8dadf;
+}
+
+.secondary-button:active {
+  background: #cfd1d6;
+}
+
+/* --- 危険アクション：柔らかい赤でBootstrap感を消す --- */
+.danger-button {
+  background: #f36b6b;
+  color: #ffffff;
+  border-color: #f36b6b;
+  margin-top: 10px;
+}
+
+.danger-button:hover {
+  background: #e35858;
+}
+
+.danger-button:active {
+  background: #cc4d4d;
+}
+
+/* --- 配置揃え --- */
+.button-area {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* --- 退会ボタンエリア --- */
+.withdrawal-area {
+  text-align: center;
+  margin-bottom: 16px;
+}

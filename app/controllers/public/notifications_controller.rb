@@ -6,7 +6,7 @@ class Public::NotificationsController < ApplicationController
     @notification = Notification.find(params[:id])
     @notification.update(read: true) # 通知を既読
     @notification.destroy
-    redirect_to @notification.post
+    redirect_to public_post_path(@notification.post)
   end
   
 end

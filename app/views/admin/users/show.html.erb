@@ -30,8 +30,8 @@
               <div class="card-body">
                 <h5 class="card-title"><%= post.itinerary %></h5>
                 <p class="card-text"><%= truncate(post.caption, length: 20) %></p>
-                
-                <%= form_for post, url: update_status_post_path(post), method: :patch do |f| %>
+
+                <%= form_for post, url: update_status_public_post_path(post), method: :patch do |f| %>
                   <div class="form-row align-items-center ml-3">
                     <div class="col-auto">
                       <%= f.radio_button :status, 'published', class: "form-check-input", id: "status_published" %>
@@ -46,7 +46,7 @@
                   <%= f.submit '更新', class: 'btn btn-outline-primary btn-sm mt-2 ml-5' %>
                 <% end %>
 
-                <%= link_to "詳細を見る", post_path(post.id), class: 'btn btn-outline-secondary btn-sm mt-2 ml-3' %>
+                <%= link_to "詳細を見る", public_post_path(post.id), class: 'btn btn-outline-secondary btn-sm mt-2 ml-3' %>
                 </div>
                 <%= form_for post, url: admin_delete_reported_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' } do |f| %>
                   <%= f.submit '投稿を削除する', class: 'btn btn-outline-danger btn-block mt-2' %>

@@ -98,7 +98,6 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
-    csv (3.3.5)
     date (3.4.1)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -117,9 +116,6 @@ GEM
     ffi (1.17.2-x86_64-linux-gnu)
     foreman (0.90.0)
       thor (~> 1.4)
-    geocoder (1.8.5)
-      base64 (>= 0.1.0)
-      csv (>= 3.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     gmaps4rails (2.1.2)
@@ -325,7 +321,6 @@ DEPENDENCIES
   devise
   dotenv-rails
   foreman
-  geocoder
   gmaps4rails
   gon
   jbuilder (~> 2.7)

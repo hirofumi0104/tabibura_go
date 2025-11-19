@@ -143,16 +143,16 @@
               </div>
               <!--- タグ --->           
               <div class="tags"> 
-                <span id="tag-text">
-                  <p>タグ:</p>
-                </span>
+                <span class="tag-title">タグ:</span>
+                
                 <% if post.tags.present? %>
                   <% post.tags.each do |tag| %>
-                    <% tag_text = tag.name.split('-').first.truncate(8, omission: '...') %>
-                    <p><%= tag_text %></p>
+                    <% tag_text = tag.name.split('-').first %>
+
+                    <span class="tag-item"><%= tag_text %></span>
                   <% end %>
-                <% elsif %>
-                  <p>タグがありません</p>
+                <% else %>
+                  <span>タグがありません</span>
                 <% end %>
               </div>
             </article>
