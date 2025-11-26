@@ -1,0 +1,105 @@
+.admin-top-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .admin-top-columns {
+    display: flex;
+    gap: 2rem;
+
+    > div {
+      flex: 1;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-post-card,
+  .admin-comment-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    padding: 1rem;
+
+    .admin-post-card-body,
+    .admin-comment-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  .admin-link {
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .admin-radio-group {
+    display: flex;
+    gap: 1rem;
+    margin: 0.5rem 0;
+
+    .admin-radio-label {
+      margin-left: 0.25rem;
+    }
+  }
+
+  .admin-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &.admin-btn-update {
+      background-color: #fff;
+      border: 1px solid #007bff;
+      color: #007bff;
+
+      &:hover {
+        background-color: #007bff;
+        color: #fff;
+      }
+    }
+
+    &.admin-btn-danger {
+      background-color: #dc3545;
+      color: #fff;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+
+    &.admin-btn-warning {
+      background-color: #ffc107;
+      color: #212529;
+
+      &:hover {
+        background-color: #e0a800;
+      }
+    }
+  }
+
+  .admin-post-actions,
+  .admin-comment-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .admin-report-count {
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+}

@@ -4,18 +4,23 @@ class Public::UsersController < ApplicationController
 
   # ユーザーのプロフィール 
   def show
-    @notifications = current_user.notifications.order(created_at: :desc)
     
-    if params[:itinerary].present?
-      @posts = @user.posts.published.where(itinerary: params[:itinerary]).includes(images: { image_attachment: :blob })
-    else
-      @posts = @user.posts.published.includes(images: { image_attachment: :blob })
+    @notifications = current_user.notifications.order(created_at: :desc)
+    @user = User.find(params[:id])
+
+    posts_scope = @user.posts
+
+    case params[:status]
+    when "published"
+      posts_scope = posts_scope.where(status: "published")
+    when "unpublished"
+      posts_scope = posts_scope.where(status: "unpublished")
     end
-    # ページネーション
-    @posts = @posts.page(params[:page]).per(10) 
-    @total_posts = @posts.total_count
-    @posts_per_page = 10
-    @page = params[:page].to_i || 1
+
+    if params[:itinerary].present?
+      posts_scope = posts_scope.where(itinerary: params[:itinerary])
+    end
+    @posts = posts_scope
   end
 
   def edit

@@ -2,15 +2,29 @@ class Public::RelationshipsController < ApplicationController
   before_action :authenticate_user!
   # ユーザーをフォローするアクション
   def create
-    user = User.find(params[:user_id])
-    current_user.follow(user)
-    redirect_to request.referer
+    @user = User.find(params[:user_id])
+    current_user.follow(@user)
+
+    render json: {
+      target_class: "follow-btn-#{@user.id}",
+      html: render_to_string(
+        partial: "layouts/followbtn",
+        locals: { user: @user }
+      )
+    }
   end
-  # ユーザーのフォローを解除するアクション
+
   def destroy
-    user = User.find(params[:user_id])
-    current_user.unfollow(user)
-    redirect_to request.referer
+    @user = User.find(params[:user_id])
+    current_user.unfollow(@user)
+
+    render json: {
+      target_class: "follow-btn-#{@user.id}",
+      html: render_to_string(
+        partial: "layouts/followbtn",
+        locals: { user: @user }
+      )
+    }
   end
   # ユーザーがフォローしているユーザー一覧を表示するアクション
   def followings

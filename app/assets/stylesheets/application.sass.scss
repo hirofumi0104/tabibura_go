@@ -1,16 +1,21 @@
 // Entry point for your Sass build
 
 // 管理者のスタイルシート
-
+@use "admin/admin-top.scss";
+@use "admin/users.scss";
+@use "admin/user-show.scss";
 // ユーザーのスタイルシート
 @use "public/top";
 @use "public/posts/posts.scss";
 @use "public/posts/posts_forms.scss";
 @use "public/posts/posts_show.scss";
-@use "public/posts/draft.scss";
+
+// @use "public/posts/draft.scss";  マイページでのボタン切り替えで不要
 @use "public/posts/nice.scss";
 @use "public/user/user_edit.scss";
 @use "public/user/mypage.scss";
+@use "public/user/followers.scss";
+@use "public/user/followbtn.scss";
 
 // 共通のスタイルシート
 @use "layouts/header";

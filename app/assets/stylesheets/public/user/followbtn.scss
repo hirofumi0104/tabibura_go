@@ -1,0 +1,41 @@
+// フォロー機能ボタン用スタイル
+  
+.follow-btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center; /* ボタンを中央寄せ */
+}
+
+.follow-btn {
+  padding: 5px 5px;
+  font-size: 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  font-weight: bold;
+}
+
+.follow-btn.follow {
+  background-color: #28a745; /* 緑色 */
+  color: #fff;
+  border-color: #28a745;
+}
+
+.follow-btn.follow:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.follow-btn.unfollow {
+  background-color: #fff;
+  color: #17a2b8; /* 青系 */
+  border-color: #17a2b8;
+}
+
+.follow-btn.unfollow:hover {
+  background-color: #17a2b8;
+  color: #fff;
+  border-color: #138496;
+}

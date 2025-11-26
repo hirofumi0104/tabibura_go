@@ -1,3 +1,145 @@
 // Place all the styles related to the admin/users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.admin-users-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-users-search {
+    margin-bottom: 1.5rem;
+
+    .admin-users-search-group {
+      display: flex;
+      gap: 0.5rem;
+
+      .admin-input {
+        flex: 1;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
+
+      .admin-btn-primary {
+        padding: 0.5rem 1rem;
+        background-color: #007bff;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #0069d9;
+        }
+      }
+    }
+  }
+
+  .admin-users-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    .admin-btn {
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+
+      &.admin-btn-outline-secondary {
+        background-color: #fff;
+        border: 1px solid #6c757d;
+        color: #6c757d;
+
+        &:hover {
+          background-color: #6c757d;
+          color: #fff;
+        }
+      }
+
+      &.admin-btn-outline-success {
+        background-color: #fff;
+        border: 1px solid #28a745;
+        color: #28a745;
+
+        &:hover {
+          background-color: #28a745;
+          color: #fff;
+        }
+      }
+
+      &.admin-btn-outline-danger {
+        background-color: #fff;
+        border: 1px solid #dc3545;
+        color: #dc3545;
+
+        &:hover {
+          background-color: #dc3545;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .admin-users-table-container {
+    overflow-x: auto;
+
+    .admin-users-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f8f9fa;
+      }
+
+      .admin-text-center {
+        text-align: center;
+      }
+
+      .admin-link {
+        color: #007bff;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .admin-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+
+        &.admin-badge-success {
+          background-color: #28a745;
+          color: #fff;
+        }
+
+        &.admin-badge-danger {
+          background-color: #dc3545;
+          color: #fff;
+        }
+
+        &.admin-badge-action {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

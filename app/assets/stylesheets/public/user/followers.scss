@@ -1,0 +1,105 @@
+.user-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 700px;
+  margin: 20px auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 500px; // カード全体の高さを固定
+
+  .user-card-header {
+    text-align: center;
+    padding: 20px 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f8f9fa;
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .user-list-scroll {
+    flex: 1; // ヘッダー以外のスペースを使う
+    overflow-y: auto; // 縦スクロール可能
+    padding: 10px 15px;
+
+    .user-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      .user-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 3px solid #eee;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          a {
+            text-decoration: none;
+            color: #212529;
+            font-weight: bold;
+            font-size: 16px;
+          }
+        }
+
+        .user-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+
+          .user-btn {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+
+            i {
+              font-size: 18px;
+            }
+
+            span {
+              font-size: 12px;
+              margin-top: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .user-card-empty {
+    text-align: center;
+    padding: 30px 15px;
+    color: #555;
+  }
+}

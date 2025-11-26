@@ -30,20 +30,25 @@
 
                 <div class="draft-status">
                   <%= form_for post, url: update_status_public_post_path(post), method: :patch, class: "draft-status-form" do |f| %>
-                    <label class="draft-radio">
-                      <%= f.radio_button :status, 'published' %> 公開
-                    </label>
-                    <label class="draft-radio">
-                      <%= f.radio_button :status, 'unpublished' %> 非公開
-                    </label>
+
+                    <div class="draft-radio-group">
+                      <label class="draft-radio">
+                        <%= f.radio_button :status, 'published' %> 公開
+                      </label>
+                      <label class="draft-radio">
+                        <%= f.radio_button :status, 'unpublished' %> 非公開
+                      </label>
+                    </div>
+
                     <%= f.submit '更新', class: "draft-btn draft-btn-success" %>
+
                   <% end %>
                 </div>
 
                 <div class="draft-actions">
-                  <%= link_to "詳細を見る", public_post_path(post.id), class: "draft-btn draft-btn-primary" %>
-                  <%= link_to '編集', edit_public_post_path(post), class: "draft-btn draft-btn-secondary" %>
-                  <%= link_to '削除', public_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'draft-btn draft-btn-danger' %>
+                  <%= link_to "詳細を見る", public_post_path(post.id), class: "draft-btn draft-btn" %>
+                  <%= link_to '編集', edit_public_post_path(post), class: "draft-btn draft-btn" %>
+                  <%= link_to '削除', public_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'draft-btn' %>
                 </div>
               </div>
             </div>

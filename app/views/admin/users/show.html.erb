@@ -1,55 +1,52 @@
-<div class="container mt-5">
-  <h1 class="text-center mb-4">ユーザーのマイページ</h1>
+<div class="admin-user-mypage-container">
+  <h1 class="admin-user-mypage-title">ユーザーのマイページ</h1>
 
-  <div class="profile-section text-center mb-4">
+  <div class="admin-profile-section">
     <% if @user.profile_image.attached? %>
-      <%= image_tag rails_blob_path(@user.profile_image, only_path: true), class: "profile-image rounded-circle", size: "100x100" %>
+      <%= image_tag rails_blob_path(@user.profile_image, only_path: true), class: "admin-profile-image", size: "100x100" %>
     <% else %>
-      <%= image_tag "User.png", class: "profile-image rounded-circle", style: "width: 100px; height: 100px; object-fit: cover;", alt: "デフォルトアイコン" %>
+      <%= image_tag "User.png", class: "admin-profile-image", alt: "デフォルトアイコン" %>
     <% end %>
-    <h2><%= @user.name %></h2>
-    <p><%= @user.biography %></p>
+    <h2 class="admin-profile-name"><%= @user.name %></h2>
+    <p class="admin-profile-bio"><%= @user.biography %></p>
   </div>
 
-  <h2 class="text-center mb-3">ユーザーの投稿</h2>
+  <h2 class="admin-posts-title">ユーザーの投稿</h2>
 
-  <%= form_with(url: admin_user_path(@user), method: :get, local: true) do %>
-    <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ', class: 'form-control mb-2' %>
-    <%= submit_tag '検索', class: 'btn btn-primary btn-block mb-3' %>
+  <%= form_with(url: admin_user_path(@user), method: :get, local: true, class: "admin-posts-filter") do %>
+    <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: '投稿場所選択', class: 'admin-select mb-2' %>
+    <%= submit_tag '検索', class: 'admin-btn admin-btn-primary mb-3' %>
   <% end %>
 
-  <div class="mb-4"></div> <!-- 間隔用の空の要素 -->
-
-  <div class="row justify-content-center">
+  <div class="admin-posts-grid">
     <% if @posts.any? %>
       <% @posts.each_slice(3) do |post_slice| %>
         <% post_slice.each do |post| %>
-          <div class="col-md-4 mb-4">
-            <div class="card h-100">
-              <%= image_tag post.main_image, class: "card-img-top", alt: "投稿画像", style: "object-fit: cover; height: 200px;" %>
-              <div class="card-body">
-                <h5 class="card-title"><%= post.itinerary %></h5>
-                <p class="card-text"><%= truncate(post.caption, length: 20) %></p>
+          <div class="admin-post-card">
+            <div class="admin-post-card-inner">
+              <%= image_tag post.main_image, class: "admin-post-image", alt: "投稿画像" %>
+              <div class="admin-post-card-body">
+                <h5 class="admin-post-itinerary"><%= post.itinerary %></h5>
+                <p class="admin-post-caption"><%= truncate(post.caption, length: 20) %></p>
 
-                <%= form_for post, url: update_status_public_post_path(post), method: :patch do |f| %>
-                  <div class="form-row align-items-center ml-3">
-                    <div class="col-auto">
-                      <%= f.radio_button :status, 'published', class: "form-check-input", id: "status_published" %>
-                      <%= f.label :status_published, '公開する', class: "form-check-label", for: "status_published" %>
+                <%= form_for post, url: update_status_public_post_path(post), method: :patch, class: "admin-post-status-form" do |f| %>
+                  <div class="admin-radio-group">
+                    <div class="admin-radio">
+                      <%= f.radio_button :status, 'published', id: "status_published_#{post.id}" %>
+                      <%= f.label "status_published_#{post.id}", '公開する', class: "admin-radio-label" %>
                     </div>
-                    <div class="col-auto ml-4">
-                      <%= f.radio_button :status, 'unpublished', class: "form-check-input", id: "status_unpublished" %>
-                      <%= f.label :status_unpublished, '非公開にする', class: "form-check-label", for: "status_unpublished" %>
+                    <div class="admin-radio">
+                      <%= f.radio_button :status, 'unpublished', id: "status_unpublished_#{post.id}" %>
+                      <%= f.label "status_unpublished_#{post.id}", '非公開にする', class: "admin-radio-label" %>
                     </div>
                   </div>
-                  <div>
-                  <%= f.submit '更新', class: 'btn btn-outline-primary btn-sm mt-2 ml-5' %>
+                  <%= f.submit '更新', class: 'admin-btn admin-btn-update' %>
                 <% end %>
 
-                <%= link_to "詳細を見る", public_post_path(post.id), class: 'btn btn-outline-secondary btn-sm mt-2 ml-3' %>
-                </div>
+                <%= link_to "詳細を見る", public_post_path(post.id), class: 'admin-btn admin-btn-secondary' %>
+
                 <%= form_for post, url: admin_delete_reported_post_path(post), method: :delete, data: { confirm: '本当に削除しますか？' } do |f| %>
-                  <%= f.submit '投稿を削除する', class: 'btn btn-outline-danger btn-block mt-2' %>
+                  <%= f.submit '投稿を削除する', class: 'admin-btn admin-btn-danger' %>
                 <% end %>
               </div>
             </div>
@@ -57,38 +54,7 @@
         <% end %>
       <% end %>
     <% else %>
-      <div class="col text-center">
-        <p>投稿はありません。</p>
-      </div>
+      <p class="admin-no-posts">投稿はありません。</p>
     <% end %>
-  </div>
-</div>
-
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-          <% if @posts.total_pages > 1 %>
-            <% if @posts.current_page > 1 %>
-              <li class="page-item">
-                <%= link_to '前へ', admin_user_path(@user, page: @posts.current_page - 1, itinerary: params[:itinerary]), class: 'page-link' %>
-              </li>
-            <% end %>
-
-            <% 1.upto(@posts.total_pages) do |page| %>
-              <li class="page-item <%= 'active' if page == @posts.current_page %>">
-                <%= link_to page, admin_user_path(@user, page: page, itinerary: params[:itinerary]), class: 'page-link' %>
-              </li>
-            <% end %>
-
-            <% if @posts.current_page < @posts.total_pages %>
-              <li class="page-item">
-                <%= link_to '次へ', admin_user_path(@user, page: @posts.current_page + 1, itinerary: params[:itinerary]), class: 'page-link' %>
-              </li>
-            <% end %>
-          <% end %>
-        </ul>
-      </nav>
-    </div>
   </div>
 </div>

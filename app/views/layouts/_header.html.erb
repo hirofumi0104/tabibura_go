@@ -1,99 +1,50 @@
 <header style="width: 100%; height: auto;">
-  <% if request.path.start_with?('/public') || (controller_path == 'public/homes' && action_name == 'top') %>   
+  <% is_public = request.path.start_with?('/public') || (controller_path == 'public/homes' && action_name == 'top') %>
+  <% is_admin = user_signed_in? && current_user.admin? %>
+
+  <% if is_admin %>
+    <!-- 管理者ヘッダー -->
+    <div style="background-color: #f8f9fa; padding: 10px; text-align: center;">
+      <strong>管理者ログイン</strong>
+    </div>
+    <nav id="header-nav">
+      <%= link_to "管理者ダッシュボード", admin_homes_top_path %>
+      <span><%= link_to admin_homes_top_path do %><i class="fas fa-home"></i> ホーム<% end %></span>
+      <span><%= link_to admin_users_path do %><i class="fas fa-users"></i> ユーザ一覧<% end %></span>
+      <span><%= link_to public_posts_path do %><i class="fas fa-edit"></i> 投稿一覧<% end %></span>
+      <span><%= link_to destroy_user_session_path, method: :delete do %><i class="fas fa-sign-out-alt"></i> ログアウト<% end %></span>
+    </nav>
+    <hr>
+  <% elsif is_public %>
+    <!-- 一般ユーザー用ヘッダー -->
     <nav id="header-nav">
       <a href="/" class="logo-link">
         <%= image_tag "rogo.png", alt: "旅ぶら_GO", style: "height: 100px; width: auto;" %>
       </a>
 
-     
       <% if user_signed_in? %>
-        <span>
-          <%= link_to show_mypage_public_user_path(current_user) do %>
-            <i class="fas fa-laugh-beam"></i> マイページ
-          <% end %>
-        </span>
-        <span>
-          <%= link_to new_public_post_path do %>
-            <i class="fas fa-edit"></i> 投稿
-          <% end %>
-        </span>
-        <span>
-          <%= link_to public_posts_path do %>
-            <i class="fas fa-book"></i> 投稿一覧
-          <% end %>
-        </span>
-        <span>
-          <%= link_to destroy_user_session_path, method: :delete do %>
-            <i class="fas fa-sign-out-alt"></i> ログアウト
-          <% end %>
-        </span>
+        <span><%= link_to show_mypage_public_user_path(current_user) do %><i class="fas fa-laugh-beam"></i> マイページ<% end %></span>
+        <span><%= link_to new_public_post_path do %><i class="fas fa-edit"></i> 投稿<% end %></span>
+        <span><%= link_to public_posts_path do %><i class="fas fa-book"></i> 投稿一覧<% end %></span>
+        <span><%= link_to destroy_user_session_path, method: :delete do %><i class="fas fa-sign-out-alt"></i> ログアウト<% end %></span>
+
         <span>
           <%= form_with(url: public_posts_path, method: :get, local: true) do |form| %>
             <%= form.text_field :q, value: params[:q], placeholder: 'キーワード検索' %>
             <%= form.text_field :tag, value: params[:tag], placeholder: '#なしタグ検索' %>
-            <%= form.button type: 'submit', title: '検索' do %>
-              <i class="fas fa-search"></i>
-            <% end %>
+            <%= form.button type: 'submit', title: '検索' do %><i class="fas fa-search"></i><% end %>
           <% end %>
         </span>
-      <% else %> 
-        <span>
-          <%= link_to root_path do %>
-            <i class="fas fa-home"></i> Top
-          <% end %>
-        </span>
-        <span>
-          <%= link_to public_homes_about_path do %>
-            <i class="fas fa-link"></i> About
-          <% end %>
-        </span>
-        <span>
-          <%= link_to new_public_registration_path do %>
-            <i class="fas fa-user-plus"></i> 新規登録
-          <% end %>
-        </span>
-        <span>
-          <%= link_to public_login_path do %>
-            <i class="fas fa-user-check"></i> ログイン
-          <% end %>
-        </span>
+      <% else %>
+        <span><%= link_to root_path do %><i class="fas fa-home"></i> Top<% end %></span>
+        <span><%= link_to public_homes_about_path do %><i class="fas fa-link"></i> About<% end %></span>
+        <span><%= link_to new_public_registration_path do %><i class="fas fa-user-plus"></i> 新規登録<% end %></span>
+        <span><%= link_to public_login_path do %><i class="fas fa-user-check"></i> ログイン<% end %></span>
       <% end %>
     </nav>
-  <% elsif request.path.start_with?('/admin')%>
-    <div style="background-color: #f8f9fa; padding: 10px; text-align: center;">
-      <strong>管理者ログイン</strong>
-    </div>
-    <% if user_signed_in? && current_user.admin? %>
-    <nav>
-      <%= link_to "管理者ダッシュボード", admin_homes_top_path %>
-
-      <ul>
-        <li>
-          <%= link_to admin_homes_top_path do %>
-            <i class="fas fa-home"></i> ホーム
-          <% end %>
-        </li>
-        <li>
-          <%= link_to admin_users_path do %>
-            <i class="fas fa-users"></i> ユーザー一覧
-          <% end %>
-        </li>
-        <li>
-          <%= link_to public_posts_path do %>
-            <i class="fas fa-edit"></i> 投稿一覧
-          <% end %>
-        </li>
-        <li>
-          <%= link_to destroy_user_session_path, method: :delete do %>
-            <i class="fas fa-sign-out-alt"></i> ログアウト
-          <% end %>
-        </li>
-      </ul>
-    </nav>
+    <% unless request.path.start_with?('/admin') %>
+      <div id="header-slider"></div>
     <% end %>
-  <% end %>
-  <% if !request.path.start_with?('/admin') %>
-    <div id="header-slider"></div>
   <% end %>
 </header>
 

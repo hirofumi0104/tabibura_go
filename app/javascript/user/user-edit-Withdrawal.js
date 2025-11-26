@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
       // クラスも退会ボタンに変更
       updateButton.className = withdrawalButtonLink.className;
 
-      // submitを退会用リンクに変える
+      // ボタンを退会用リンクに変える
       updateButton.onclick = (e) => {
         e.preventDefault();
         if (confirm("本当に退会しますか？")) {

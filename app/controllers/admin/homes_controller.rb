@@ -13,12 +13,4 @@ class Admin::HomesController < ApplicationController
     @reported_comments_count = @reported_comments.count
     @reported_comments = @reported_comments.offset(offset(@reported_comments_per_page)).limit(@reported_comments_per_page)
   end
-
-
-private
-
-# ページネーション
-  def offset(items_per_page)
-    [(params[:page].to_i - 1) * items_per_page, 0].max
-  end
 end

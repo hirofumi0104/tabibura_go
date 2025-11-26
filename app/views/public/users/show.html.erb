@@ -3,12 +3,8 @@
 
   <div class="mypage-layout">
 
-    <!-- ============================
-         左：サイドバー
-         ============================ -->
+    <%# !-- 左：サイドバー -- %>
     <div class="mypage-sidebar">
-
-      <!-- プロフィール -->
       <div class="mypage-profile">
         <% if @user.profile_image.attached? %>
           <%= image_tag rails_blob_path(@user.profile_image, only_path: true), size: "80x80" %>
@@ -22,7 +18,6 @@
         </div>
       </div>
 
-      <!-- フォロー状況 -->
       <div class="mypage-follow-stats">
         <div>
           <h5>フォロー</h5>
@@ -35,29 +30,32 @@
         </div>
       </div>
 
-      <!-- フォローボタン -->
       <div class="mypage-follow-button">
         <%= render "layouts/followbtn", user: @user %>
       </div>
 
-      <!-- 自分の場合のみ表示 -->
       <% if current_user == @user %>
         <div class="mypage-actions">
           <%= link_to "会員情報編集", edit_information_public_user_path %>
-          <%= link_to "下書き一覧", draft_public_posts_path %>
+          <%= link_to "すべて", public_user_path(@user, status: "all") %>
+          <% if params[:status] != "published" %>
+            <%= link_to "公開中", public_user_path(@user, status: "published") %>
+          <% end %>
+
+          <% if params[:status] != "unpublished" %>
+            <%= link_to "非公開", public_user_path(@user, status: "unpublished") %>
+          <% end %>
           <%= link_to "いいねした投稿一覧", nice_public_posts_path %>
         </div>
       <% end %>
 
-      <!-- 検索フォーム -->
       <div class="mypage-search">
         <%= form_with(url: public_user_path(@user), method: :get, local: true) do %>
-          <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: 'すべてのカテゴリ' %>
+          <%= select_tag :itinerary, options_for_select(itinerary, params[:itinerary]), include_blank: '旅先検索' %>
           <%= submit_tag '検索' %>
         <% end %>
       </div>
 
-      <!-- 通知 -->
       <% if current_user == @user && @notifications.any? %>
         <div class="mypage-notifications">
           <h4>通知</h4>
@@ -78,37 +76,23 @@
           </ul>
         </div>
       <% end %>
-
     </div>
 
-    <!-- ============================
-     右：メイン（投稿一覧）
-     ============================ -->
-      <div class="mypage-main">
-
-      <!-- ★これが必要！グリッドの親要素 -->
+    <%# !-- 右：メイン（投稿一覧） -- %>
+    <div class="mypage-main">
       <div class="mypage-post-grid">
-
         <% @posts.each do |post| %>
           <div class="mypage-post">
-
-            <!-- 画像 -->
             <% if post.main_image.attached? %>
               <%= image_tag post.main_image %>
             <% else %>
               <%= image_tag "default_image.jpg" %>
             <% end %>
-
-            <!-- 投稿者名 -->
-            <h5>
-              <%= link_to post.user.name, (current_user.admin? ? admin_user_path(post.user) : public_user_path(post.user)) %>
-            </h5>
-
-            <!-- カテゴリ・キャプション -->
-            <p><%= post.itinerary %></p>
-            <p><%= truncate(post.caption, length: 20) %></p>
-
-            <!-- 本人のみ操作可能 -->
+            <div class="mypage">
+              <h5 class="mypage-post-catitineraryegory"><%= post.itinerary %></h5>
+              <p class="mypage-post-caption"><%= truncate(post.caption, length: 20) %></p>
+              <hr class="mypage-divider">
+            </div>
             <% if current_user == @user %>
               <div class="mypage-post-status">
                 <%= radio_button_tag "post_status_#{post.id}", "published", post.published? %>
@@ -120,7 +104,7 @@
                 <%= button_to "更新", update_status_public_post_path(post),
                       method: :patch,
                       params: { post: { status: post.published? ? 'unpublished' : 'published' } },
-                      remote: true %>
+                      remote: true, class: "btn-success" %>
               </div>
 
               <div class="mypage-post-actions">
@@ -128,10 +112,9 @@
                 <%= link_to '削除', public_post_path(post),
                       method: :delete,
                       data: { confirm: '本当に削除しますか？' } %>
+                <%= link_to "詳細を見る", public_post_path(post.id) %>      
               </div>
             <% end %>
-
-            <%= link_to "詳細を見る", public_post_path(post.id) %>
           </div>
         <% end %>
       </div>

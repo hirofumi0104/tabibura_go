@@ -1,21 +1,21 @@
-<div class="container mt-5">
+<div class="admin-users-container">
   <h1>ユーザー一覧</h1>
 
-  <%= form_tag(admin_users_path, method: :get, class: "mb-3") do %>
-    <div class="input-group">
-      <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "ユーザー名で検索する" %>
-      <button type="submit" class="btn btn-primary">検索</button>
+  <%= form_tag(admin_users_path, method: :get, class: "admin-users-search") do %>
+    <div class="admin-users-search-group">
+      <%= text_field_tag :search, params[:search], class: "admin-input", placeholder: "ユーザー名で検索する" %>
+      <button type="submit" class="admin-btn admin-btn-primary">検索</button>
     </div>
   <% end %>
 
-  <div class="mb-3 d-flex justify-content-between align-items-center">
-    <%= link_to 'すべてのユーザー', admin_users_path, class: 'btn btn-outline-secondary me-2' %>
-    <%= link_to 'ログイン可能なユーザー', admin_users_path(status: 'active'), class: 'btn btn-outline-success me-2' %>
-    <%= link_to 'ログイン不可なユーザー', admin_users_path(status: 'inactive'), class: 'btn btn-outline-danger me-2' %>
+  <div class="admin-users-filters">
+    <%= link_to 'すべてのユーザー', admin_users_path, class: 'admin-btn admin-btn-outline-secondary' %>
+    <%= link_to 'ログイン可能なユーザー', admin_users_path(status: 'active'), class: 'admin-btn admin-btn-outline-success' %>
+    <%= link_to 'ログイン不可なユーザー', admin_users_path(status: 'inactive'), class: 'admin-btn admin-btn-outline-danger' %>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-bordered">
+  <div class="admin-users-table-container">
+    <table class="admin-users-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -30,20 +30,20 @@
           <% @users.each do |user| %>
             <tr>
               <td><%= user.id %></td>
-              <td><%= link_to user.name, admin_user_path(user) %></td>
+              <td><%= link_to user.name, admin_user_path(user), class: "admin-link" %></td>
               <td><%= user.email %></td>
-              <td class="text-center">
+              <td class="admin-text-center">
                 <% if user.is_active %>
-                  <span class="badge bg-success" style="font-size: 1.0em;">ログイン可能</span>
+                  <span class="admin-badge admin-badge-success">ログイン可能</span>
                 <% else %>
-                  <span class="badge bg-danger " style="font-size: 1.0em;">ログイン不可</span>
+                  <span class="admin-badge admin-badge-danger">ログイン不可</span>
                 <% end %>
               </td>
-              <td  class="text-center">
+              <td class="admin-text-center">
                 <% if user.is_active %>
-                  <%= link_to 'ログイン不可に', deactivate_admin_user_path(user), method: :patch, class: 'badge bg-danger text-dark', data: { confirm: 'このユーザーを無効にしますか？' }, style: 'font-size: 1.0em;'%>
+                  <%= link_to 'ログイン不可に', deactivate_admin_user_path(user), method: :patch, class: 'admin-badge admin-badge-danger admin-badge-action', data: { confirm: 'このユーザーを無効にしますか？' } %>
                 <% else %>
-                  <%= link_to 'ログイン可能に', activate_admin_user_path(user), method: :patch, class: 'badge bg-success text-dark', data: { confirm: 'このユーザーを有効にしますか？' }, style: 'font-size: 1.0em;' %>
+                  <%= link_to 'ログイン可能に', activate_admin_user_path(user), method: :patch, class: 'admin-badge admin-badge-success admin-badge-action', data: { confirm: 'このユーザーを有効にしますか？' } %>
                 <% end %>
               </td>
             </tr>
@@ -56,29 +56,4 @@
       </tbody>
     </table>
   </div>
-</div>
-
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-      <% if @users.total_pages > 1 %>
-        <% if @users.current_page > 1 %>
-          <li class="page-item">
-            <%= link_to '前へ', admin_users_path(page: @users.current_page - 1), class: 'page-link' %>
-          </li>
-        <% end %>
-        
-        <% (1..@users.total_pages).each do |page| %>
-          <li class="page-item <%= 'active' if page == @users.current_page %>">
-            <%= link_to page, admin_users_path(page: page), class: 'page-link' %>
-          </li>
-        <% end %>
-        
-        <% if @users.current_page < @users.total_pages %>
-          <li class="page-item">
-            <%= link_to '次へ', admin_users_path(page: @users.current_page + 1), class: 'page-link' %>
-          </li>
-        <% end %>
-      <% end %>
-    </ul>
-  </nav>
 </div>

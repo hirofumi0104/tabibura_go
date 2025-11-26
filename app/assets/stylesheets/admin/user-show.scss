@@ -1,0 +1,175 @@
+.admin-user-mypage-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .admin-user-mypage-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .admin-profile-section {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .admin-profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-profile-name {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .admin-profile-bio {
+      font-size: 1rem;
+      color: #555;
+    }
+  }
+
+  .admin-posts-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-posts-filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .admin-select {
+      width: 50%;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-btn-primary {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0069d9;
+      }
+    }
+  }
+
+  .admin-posts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+
+    .admin-post-card {
+      width: 300px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+
+      .admin-post-card-inner {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .admin-post-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .admin-post-card-body {
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .admin-post-itinerary {
+          font-weight: bold;
+          margin-bottom: 0.25rem;
+        }
+
+        .admin-post-caption {
+          font-size: 0.95rem;
+          color: #555;
+        }
+
+        .admin-radio-group {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 0.5rem;
+
+          .admin-radio {
+            display: flex;
+            align-items: center;
+
+            .admin-radio-label {
+              margin-left: 0.25rem;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .admin-btn {
+          padding: 0.4rem 0.8rem;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          cursor: pointer;
+          text-align: center;
+          border: 1px solid transparent;
+
+          &.admin-btn-update {
+            background-color: #fff;
+            border: 1px solid #007bff;
+            color: #007bff;
+
+            &:hover {
+              background-color: #007bff;
+              color: #fff;
+            }
+          }
+
+          &.admin-btn-secondary {
+            background-color: #fff;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+
+            &:hover {
+              background-color: #6c757d;
+              color: #fff;
+            }
+          }
+
+          &.admin-btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+
+            &:hover {
+              background-color: #c82333;
+            }
+          }
+        }
+      }
+    }
+
+    .admin-no-posts {
+      text-align: center;
+      font-size: 1rem;
+      color: #555;
+      width: 100%;
+    }
+  }
+}

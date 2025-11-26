@@ -10,6 +10,8 @@ import "./post_screen/preview";
 import { addFields, removeFields } from "./modules/nested-forms";
 // ユーザー情報変更画面の退会ボタン表示のJS
 import "./user/user-edit-Withdrawal"
+// followボタンの非同期通信用JS
+import "./user/follow"
 // map表示用JS
 import "./maps/show_map";
 import "./maps/new_edit_map";

@@ -15,7 +15,6 @@ class User < ApplicationRecord
   # 退会確認用
   attr_accessor :withdrawal_confirmation
   
-  # フォロー機能
   # フォローしている関連付け
   has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
   # フォローされている関連付け

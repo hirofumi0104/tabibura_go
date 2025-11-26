@@ -1,10 +1,10 @@
-<!-- フォロー機能 -->
+<%# !-- フォロー機能 --%>
 <% if current_user && current_user != user && !current_user.admin? %>
-  <div class="btn-group" role="group">
+  <div class="follow-btn-group follow-btn-<%= user.id %>">
     <% if current_user.following?(user) %>
-      <%= link_to "フォロー外す", public_user_relationships_path(user.id), method: :delete, class: "btn btn-outline-info" %>
+      <%= link_to "フォロー中", public_user_relationships_path(user.id), method: :delete, remote: true, class: "follow-btn unfollow" %>
     <% else %>
-      <%= link_to "フォローする", public_user_relationships_path(user.id), method: :post, class: "btn btn-outline-success" %>
+      <%= link_to "＋フォロー", public_user_relationships_path(user.id), method: :post, remote: true, class: "follow-btn follow" %>
     <% end %>
   </div>
 <% end %>

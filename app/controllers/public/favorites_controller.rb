@@ -5,14 +5,26 @@ class Public::FavoritesController < ApplicationController
   # お気に入り登録する
   def create
     @post.favorites.create(user: current_user)
-    redirect_back(fallback_location: root_path)
+
+    render json: {
+      target_class: "favorite-btn-#{@post.id}",
+      html: render_to_string(
+        partial: "layouts/nice",
+        locals: { post: @post }
+      )
+    }
   end
-  
-  # お気に入り解除する
+
   def destroy
-    favorite = @post.favorites.find_by(user: current_user)
-    favorite.destroy if favorite
-    redirect_back(fallback_location: root_path)
+    @post.favorites.find_by(user: current_user)&.destroy
+
+    render json: {
+      target_class: "favorite-btn-#{@post.id}",
+      html: render_to_string(
+        partial: "layouts/nice",
+        locals: { post: @post }
+      )
+    }
   end
 
   private

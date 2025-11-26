@@ -89,17 +89,22 @@
 
             .draft-status {
               display: flex;
-              align-items: center;
+              justify-content: center;
               gap: 0.5rem;
-
               .draft-radio {
+                display: inline-flex;
+                gap: 0.5rem;
+              }
+
+              .draft-radio-group {
                 display: flex;
-                align-items: center;
-                gap: 0.25rem;
+                gap: 1rem;
               }
 
               .draft-btn-success {
                 background-color: #28a745;
+                margin-top: 5%;
+                margin-left: 30%;
                 color: #fff;
                 padding: 0.25rem 0.5rem;
                 border-radius: 4px;
@@ -110,20 +115,17 @@
 
             .draft-actions {
               display: flex;
-              gap: 0.5rem;
+              gap: 20px;
               margin-top: 0.5rem;
-
+              justify-content: center;
               .draft-btn {
-                padding: 0.25rem 0.5rem;
+                padding: 4px 10px;
+                background: #f5f5f5;
                 border-radius: 4px;
-                border: none;
-                cursor: pointer;
-                text-decoration: none
+                text-decoration: none;
+                color: #333;
+                font-size: 12px;
               }
-
-              .draft-btn-primary { background-color: #007bff; color: #fff; }
-              .draft-btn-secondary { background-color: #6c757d; color: #fff; }
-              .draft-btn-danger { background-color: #dc3545; color: #fff; }
             }
           }
         }

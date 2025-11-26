@@ -1,13 +1,19 @@
 <% if current_user && current_user != post.user %>
   <% favorite = current_user.favorites.find_by(post: post) %>
-  <div class="btn-group" role="group">
+  <div class="btn-group favorite-btn-<%= post.id %>" role="group">
     <% if favorite %>
-      <%= link_to public_post_favorites_path(post, favorite), method: :delete, class: 'btn btn-outline-danger' do %>
+      <%= link_to public_post_favorites_path(post, favorite),
+            method: :delete,
+            remote: true,
+            class: 'btn btn-outline-danger' do %>
         <i class="fas fa-heart" style="color: red;"></i>
         <span class="ml-1"><%= post.favorites.size %></span>
       <% end %>
     <% else %>
-      <%= link_to public_post_favorites_path(post_id: post.id), method: :post, class: 'btn btn-outline-secondary' do %>
+      <%= link_to public_post_favorites_path(post_id: post.id),
+          method: :post,
+          remote: true,
+          class: 'btn btn-outline-secondary' do %>
         <i class="far fa-heart"></i>
         <span class="ml-1"><%= post.favorites.size %></span>
       <% end %>

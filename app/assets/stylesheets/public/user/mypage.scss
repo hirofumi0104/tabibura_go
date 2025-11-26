@@ -1,16 +1,17 @@
-/* ================================
-   マイページ画面専用スタイル
-   ================================ */
+/*  マイページ画面専用スタイル */
 
 .mypage-container {
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
   padding: 20px;
 
   h1 {
     font-size: 28px;
-    margin-bottom: 20px;
     font-weight: bold;
+    margin-block-start: 0%;
+    
+    padding: 0 50px ;
+    border-bottom: 1px solid #ddd;
   }
 
   /* --- レイアウト全体 --- */
@@ -18,21 +19,18 @@
     display: flex;
     gap: 40px;
 
-    /* ====================================
-       左側：サイドバー（プロフィール等）
-       ==================================== */
+    /*  左側：サイドバー */
     .mypage-sidebar {
-      width: 280px;
+      width: 15%;
       flex-shrink: 0;
-      position: sticky;
       top: 20px;
 
-      /* --- プロフィール --- */
       .mypage-profile {
         display: flex;
         align-items: center;
         gap: 20px;
         margin-bottom: 25px;
+        justify-content: center;
 
         img {
           border-radius: 50%;
@@ -55,11 +53,11 @@
         }
       }
 
-      /* --- フォロー数 --- */
       .mypage-follow-stats {
         display: flex;
         gap: 40px;
         margin-bottom: 20px;
+        justify-content: center;
 
         div {
           text-align: center;
@@ -79,12 +77,12 @@
         }
       }
 
-      /* --- ボタン類 --- */
       .mypage-actions {
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 25px;
+        text-align: center;
 
         a {
           padding: 8px 16px;
@@ -99,10 +97,11 @@
         }
       }
 
-      /* --- 検索フォーム --- */
       .mypage-search {
         margin: 20px 0;
-
+        display: flex;
+        justify-content: center;
+        
         select,
         input[type="submit"] {
           padding: 6px 10px;
@@ -121,7 +120,6 @@
         }
       }
 
-      /* --- 通知リスト --- */
       .mypage-notifications {
         margin: 20px 0;
 
@@ -150,26 +148,20 @@
       }
     }
 
-    /* ====================================
-       右側：投稿一覧（4列 × 2行）
-       ==================================== */
+    /* 右側：投稿一覧 */
     .mypage-main {
       flex: 1;
 
-      /* 投稿を4列のグリッドで表示 */
       .mypage-post-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 15px 20px;
       }
 
-      /* 各投稿カードのデザイン */
       .mypage-post {
         border: 1px solid #eee;
-        padding: 10px;
         border-radius: 8px;
         background: #fff;
-        text-align: center;
 
         img {
           width: 100%;
@@ -179,22 +171,39 @@
           margin-bottom: 8px;
         }
 
-        h5 {
-          font-size: 16px;
-          margin: 5px 0;
+        .mypage-post-itinerary {
+          font-weight: bold;
         }
 
-        p {
-          margin: 3px 0;
-          font-size: 13px;
-          color: #444;
+        .mypage-post-caption {
+          margin: 0.5rem 0;
+          color: #555;
         }
 
+        .mypage-divider {
+          margin: 0.5rem 0;
+          border: none;
+          border-top: 1px solid #eee;
+        }
+
+        .mypage-post-status {
+          text-align: center;
+          .btn-success{
+            background-color: #28a745;
+            margin-top: 5%;
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+          }
+        }
         .mypage-post-actions {
+          gap: 8px;
+          margin: 10px  0px;
           display: flex;
           justify-content: center;
-          gap: 8px;
-          margin-top: 8px;
+          gap: 5%;
 
           a {
             padding: 4px 10px;
